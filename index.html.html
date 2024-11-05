@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shift Schedule Calendar</title>
+  <style>
+    * {
+      box-sizing: border-box; /* Ensure padding and border are included in element's total width and height */
+      margin: 0; /* Remove default margin */
+      padding: 0; /* Remove default padding */
+    }
+    body {
+      font-family: Arial, sans-serif; /* Set font for the page */
+      background-color: #f0f2f5; /* Light background color */
+      display: flex; /* Use flexbox for centering */
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
+      height: 100vh; /* Full viewport height */
+      overflow: hidden; /* Hide overflow */
+    }
+    .container {
+      display: flex; /* Use flexbox for column layout */
+      flex-direction: column; /* Stack children vertically */
+      height: 100%; /* Full height */
+      width: 100%; /* Full width */
+      padding: 10px; /* Add padding */
+      background-color: white; /* White background for the container */
+      overflow-y: auto; /* Allow vertical scrolling if needed */
+    }
+    h1 {
+      text-align: center; /* Center the title */
+      padding: 15px; /* Add padding around the title */
+      color: #333; /* Dark text color */
+      font-size: 1.5rem; /* Font size for the title */
+      background-color: #4CAF50; /* Green background for the title */
+      color: white; /* White text for the title */
+      margin: 0; /* Remove margin */
+      width: 100%; /* Full width */
+    }
+    .calendar {
+      display: grid; /* Use grid layout for the calendar */
+      grid-template-columns: repeat(7, 1fr); /* Create 7 equal columns for the days of the week */
+      gap: 2px; /* Space between cells */
+      width: 100%; /* Full width */
+      padding: 10px; /* Padding around the calendar */
+    }
+    @media (max-width: 768px) {
+      .calendar {
+        grid-template-columns: repeat(4, 1fr); /* 4 columns for medium screens */
+      }
+    }
+    @media (max-width: 480px) {
+      .calendar {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for small screens */
+      }
+    }
+    .day {
+      padding: 10px; /* Space inside each day cell */
+      text-align: center; /* Center text */
+      border-radius: 4px; /* Rounded corners */
+      display: flex; /* Use flexbox for centering content */
+      flex-direction: column; /* Stack children vertically */
+      justify-content: center; /* Center vertically */
+      align-items: center; /* Center horizontally */
+      font-size: 0.85rem; /* Font size for day cells */
+    }
+    .day.shift {
+      background-color: #d1f0d1; /* Light green background for shift days */
+      color: #2d702d; /* Dark green text for shift days */
+      font-weight: bold; /* Bold text for emphasis */
+    }
+    .day.off {
+      background-color: #f9dada; /* Light red background for off days */
+      color: #a94442; /* Dark red text for off days */
+      font-weight: bold; /* Bold text for emphasis */
+    }
+    .month-label {
+      grid-column: span 7; /* Label spans all columns */
+      text-align: center; /* Center text */
+      font-weight: bold; /* Bold text for month labels */
+      font-size: 1.1rem; /* Font size for month labels */
+      color: #333; /* Dark text color */
+      padding: 10px 0; /* Padding above and below the label */
+      background-color: #f0f2f5; /* Light background for month labels */
+      border-top: 2px solid #ddd; /* Top border for separation */
+    }
+    @media (max-width: 768px) {
+      .month-label {
+        grid-column: span 4; /* 4 columns for month labels on medium screens */
+      }
+    }
+    @media (max-width: 480px) {
+      .month-label {
+        grid-column: span 2; /* 2 columns for month labels on small screens */
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Shift Schedule from November 2024 to December 2025</h1> <!-- Title of the calendar -->
+    <div id="calendar" class="calendar"></div> <!-- Calendar container -->
+  </div>
+
+  <script>
+    // Settings: Start and end date for the calendar
+    const startDate = new Date(2024, 10, 6); // November (month index starts at 0)
+    const endDate = new Date(2025, 11, 31); // December (month index starts at 0)
+    const schedulePattern = ["Смена", "Смена", "Выходной", "Выходной"]; // Shift pattern
+
+    // Calendar element for inserting data
+    const calendar = document.getElementById("calendar");
+
+    let currentDate = new Date(startDate); // Current date starts from startDate
+    let patternIndex = 0; // Index to track the current shift pattern
+
+    // Function to add a month label to the calendar
+    function addMonthLabel(month, year) {
+      const label = document.createElement("div"); // Create a new div for the label
+      label.className = "month-label"; // Assign month label styles
+      label.textContent = `${month} ${year}`; // Set month and year text
+      calendar.appendChild(label); // Add label to the calendar
+    }
+
+    // Current month and year tracking
+    let currentMonth = currentDate.getMonth(); // Get the current month
+    let currentYear = currentDate.getFullYear(); // Get the current year
+
+    // Loop through dates to fill the calendar
+    while (currentDate <= endDate) {
+      // Add month label when the month changes
+      if (currentDate.getMonth() !== currentMonth) {
+        addMonthLabel(
+          currentDate.toLocaleString("ru-RU", { month: "long" }), // Get month name in Russian
+          currentDate.getFullYear() // Get current year
+        );
+        currentMonth = currentDate.getMonth(); // Update current month
+      }
+
+      // Create a day cell for the calendar
+      const dayCell = document.createElement("div");
+      // Set class based on the shift pattern (shift or off)
+      dayCell.classList.add("day", schedulePattern[patternIndex] === "Смена" ? "shift" : "off");
+
+      // Set the date and shift type in the cell
+      dayCell.innerHTML = `
+        <strong>${currentDate.getDate()}</strong> <!-- Day of the month -->
+        <span>${schedulePattern[patternIndex]}</span> <!-- Shift type -->
+      `;
+
+      // Append the day cell to the calendar
+      calendar.appendChild(dayCell);
+
+      // Move to the next day and update the pattern index
+      currentDate.setDate(currentDate.getDate() + 1); // Go to the next day
+      patternIndex = (patternIndex + 1) % schedulePattern.length; // Loop through the pattern
+    }
+  </script>
+</body>
+</html>
