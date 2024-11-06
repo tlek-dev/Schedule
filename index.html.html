@@ -6,155 +6,184 @@
   <title>Shift Schedule Calendar</title>
   <style>
     * {
-      box-sizing: border-box; /* Ensure padding and border are included in element's total width and height */
-      margin: 0; /* Remove default margin */
-      padding: 0; /* Remove default padding */
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
     body {
-      font-family: Arial, sans-serif; /* Set font for the page */
-      background-color: #f0f2f5; /* Light background color */
-      display: flex; /* Use flexbox for centering */
-      justify-content: center; /* Center horizontally */
-      align-items: center; /* Center vertically */
-      height: 100vh; /* Full viewport height */
-      overflow: hidden; /* Hide overflow */
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
     }
     .container {
-      display: flex; /* Use flexbox for column layout */
-      flex-direction: column; /* Stack children vertically */
-      height: 100%; /* Full height */
-      width: 100%; /* Full width */
-      padding: 10px; /* Add padding */
-      background-color: white; /* White background for the container */
-      overflow-y: auto; /* Allow vertical scrolling if needed */
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      width: 100%;
+      padding: 10px;
+      background-color: white;
+      overflow-y: auto;
     }
     h1 {
-      text-align: center; /* Center the title */
-      padding: 15px; /* Add padding around the title */
-      color: #333; /* Dark text color */
-      font-size: 1.5rem; /* Font size for the title */
-      background-color: #4CAF50; /* Green background for the title */
-      color: white; /* White text for the title */
-      margin: 0; /* Remove margin */
-      width: 100%; /* Full width */
+      text-align: center;
+      padding: 15px;
+      color: white;
+      background-color: #4CAF50;
+      margin: 0;
+      font-size: 1.5rem;
     }
     .calendar {
-      display: grid; /* Use grid layout for the calendar */
-      grid-template-columns: repeat(7, 1fr); /* Create 7 equal columns for the days of the week */
-      gap: 2px; /* Space between cells */
-      width: 100%; /* Full width */
-      padding: 10px; /* Padding around the calendar */
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+      width: 100%;
+      padding: 10px;
     }
     @media (max-width: 768px) {
       .calendar {
-        grid-template-columns: repeat(4, 1fr); /* 4 columns for medium screens */
+        grid-template-columns: repeat(4, 1fr);
       }
     }
     @media (max-width: 480px) {
       .calendar {
-        grid-template-columns: repeat(2, 1fr); /* 2 columns for small screens */
+        grid-template-columns: repeat(2, 1fr);
       }
     }
     .day {
-      padding: 10px; /* Space inside each day cell */
-      text-align: center; /* Center text */
-      border-radius: 4px; /* Rounded corners */
-      display: flex; /* Use flexbox for centering content */
-      flex-direction: column; /* Stack children vertically */
-      justify-content: center; /* Center vertically */
-      align-items: center; /* Center horizontally */
-      font-size: 0.85rem; /* Font size for day cells */
+      padding: 10px;
+      text-align: center;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.85rem;
     }
     .day.shift {
-      background-color: #d1f0d1; /* Light green background for shift days */
-      color: #2d702d; /* Dark green text for shift days */
-      font-weight: bold; /* Bold text for emphasis */
+      background-color: #d1f0d1;
+      color: #2d702d;
+      font-weight: bold;
     }
     .day.off {
-      background-color: #f9dada; /* Light red background for off days */
-      color: #a94442; /* Dark red text for off days */
-      font-weight: bold; /* Bold text for emphasis */
+      background-color: #f9dada;
+      color: #a94442;
+      font-weight: bold;
+    }
+    .day.holiday-shift {
+      color: red;
     }
     .month-label {
-      grid-column: span 7; /* Label spans all columns */
-      text-align: center; /* Center text */
-      font-weight: bold; /* Bold text for month labels */
-      font-size: 1.1rem; /* Font size for month labels */
-      color: #333; /* Dark text color */
-      padding: 10px 0; /* Padding above and below the label */
-      background-color: #f0f2f5; /* Light background for month labels */
-      border-top: 2px solid #ddd; /* Top border for separation */
+      grid-column: span 7;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #333;
+      padding: 10px 0;
+      background-color: #f0f2f5;
+      border-top: 2px solid #ddd;
     }
     @media (max-width: 768px) {
       .month-label {
-        grid-column: span 4; /* 4 columns for month labels on medium screens */
+        grid-column: span 4;
       }
     }
     @media (max-width: 480px) {
       .month-label {
-        grid-column: span 2; /* 2 columns for month labels on small screens */
+        grid-column: span 2;
       }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Shift Schedule from November 2024 to December 2025</h1> <!-- Title of the calendar -->
-    <div id="calendar" class="calendar"></div> <!-- Calendar container -->
+    <h1>Shift Schedule from November 2024 to December 2025</h1>
+    <div id="calendar" class="calendar"></div>
   </div>
 
   <script>
-    // Settings: Start and end date for the calendar
-    const startDate = new Date(2024, 10, 6); // November (month index starts at 0)
-    const endDate = new Date(2025, 11, 31); // December (month index starts at 0)
-    const schedulePattern = ["Смена", "Смена", "Выходной", "Выходной"]; // Shift pattern
+    const startDate = new Date(2024, 10, 6);
+    const endDate = new Date(2025, 11, 31);
+    const schedulePattern = ["Смена", "Смена", "Выходной", "Выходной"];
 
-    // Calendar element for inserting data
+    const holidays = [
+      { date: '01-01', name: "Новый год" },
+      { date: '01-02', name: "Новый год" },
+      { date: '03-08', name: "Международный женский день" },
+      { date: '03-21', name: "Наурыз мейрамы" },
+      { date: '03-22', name: "Наурыз мейрамы" },
+      { date: '03-23', name: "Наурыз мейрамы" },
+      { date: '03-25', name: "Наурыз мейрамы" },
+      { date: '05-01', name: "Праздник единства народа Казахстана" },
+      { date: '05-07', name: "День защитника Отечества" },
+      { date: '05-08', name: "День защитника Отечества" },
+      { date: '05-09', name: "День Победы" },
+      { date: '07-06', name: "День Столицы" },
+      { date: '07-08', name: "День Столицы" },
+      { date: '08-30', name: "День Конституции РК" },
+      { date: '10-25', name: "День Республики" },
+      { date: '12-16', name: "День Независимости" }
+    ];
+
     const calendar = document.getElementById("calendar");
 
-    let currentDate = new Date(startDate); // Current date starts from startDate
-    let patternIndex = 0; // Index to track the current shift pattern
+    let currentDate = new Date(startDate);
+    let patternIndex = 0;
 
-    // Function to add a month label to the calendar
     function addMonthLabel(month, year) {
-      const label = document.createElement("div"); // Create a new div for the label
-      label.className = "month-label"; // Assign month label styles
-      label.textContent = `${month} ${year}`; // Set month and year text
-      calendar.appendChild(label); // Add label to the calendar
+      const label = document.createElement("div");
+      label.className = "month-label";
+      label.textContent = `${month} ${year}`;
+      calendar.appendChild(label);
     }
 
-    // Current month and year tracking
-    let currentMonth = currentDate.getMonth(); // Get the current month
-    let currentYear = currentDate.getFullYear(); // Get the current year
+    // Исправленная функция для проверки праздников
+    function isHoliday(date) {
+      const formattedDate = `${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      return holidays.find(holiday => holiday.date === formattedDate);
+    }
 
-    // Loop through dates to fill the calendar
+    let currentMonth = currentDate.getMonth();
+    let currentYear = currentDate.getFullYear();
+
     while (currentDate <= endDate) {
-      // Add month label when the month changes
       if (currentDate.getMonth() !== currentMonth) {
         addMonthLabel(
-          currentDate.toLocaleString("ru-RU", { month: "long" }), // Get month name in Russian
-          currentDate.getFullYear() // Get current year
+          currentDate.toLocaleString("ru-RU", { month: "long" }),
+          currentDate.getFullYear()
         );
-        currentMonth = currentDate.getMonth(); // Update current month
+        currentMonth = currentDate.getMonth();
       }
 
-      // Create a day cell for the calendar
       const dayCell = document.createElement("div");
-      // Set class based on the shift pattern (shift or off)
-      dayCell.classList.add("day", schedulePattern[patternIndex] === "Смена" ? "shift" : "off");
+      const holiday = isHoliday(currentDate);
 
-      // Set the date and shift type in the cell
-      dayCell.innerHTML = `
-        <strong>${currentDate.getDate()}</strong> <!-- Day of the month -->
-        <span>${schedulePattern[patternIndex]}</span> <!-- Shift type -->
-      `;
+      const shiftType = schedulePattern[patternIndex];
+      if (holiday) {
+        if (shiftType === "Смена") {
+          dayCell.classList.add("day", "shift", "holiday-shift");
+        } else {
+          dayCell.classList.add("day", "off");
+        }
+        dayCell.innerHTML = `
+          <strong>${currentDate.getDate()}</strong>
+          <span>${holiday.name} (${shiftType})</span>
+        `;
+      } else {
+        dayCell.classList.add("day", shiftType === "Смена" ? "shift" : "off");
+        dayCell.innerHTML = `
+          <strong>${currentDate.getDate()}</strong>
+          <span>${shiftType}</span>
+        `;
+      }
 
-      // Append the day cell to the calendar
       calendar.appendChild(dayCell);
 
-      // Move to the next day and update the pattern index
-      currentDate.setDate(currentDate.getDate() + 1); // Go to the next day
-      patternIndex = (patternIndex + 1) % schedulePattern.length; // Loop through the pattern
+      currentDate.setDate(currentDate.getDate() + 1);
+      patternIndex = (patternIndex + 1) % schedulePattern.length;
     }
   </script>
 </body>
