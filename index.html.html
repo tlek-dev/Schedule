@@ -17,7 +17,6 @@
       justify-content: center;
       align-items: flex-start;
       height: 100vh;
-      overflow: hidden;
       flex-direction: column;
       padding: 10px;
     }
@@ -49,21 +48,23 @@
       text-align: center;
     }
     .calendar {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
       gap: 2px;
       width: 100%;
       padding: 10px;
     }
     .day {
-      padding: 10px;
-      text-align: center;
-      border-radius: 4px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      text-align: center;
+      padding: 10px;
+      border-radius: 4px;
       font-size: 0.85rem;
+      width: 13%; /* Стандартная ширина для элементов в строке */
     }
     .day.shift {
       background-color: #d1f0d1;
@@ -87,6 +88,7 @@
       padding: 10px 0;
       background-color: #f0f2f5;
       border-top: 2px solid #ddd;
+      width: 100%;
     }
 
     /* Медиазапросы для адаптивности */
@@ -98,11 +100,12 @@
         font-size: 0.85rem;
       }
       .calendar {
-        grid-template-columns: repeat(5, 1fr); /* 5 колонок на экранах до 1024px */
+        gap: 5px;
       }
       .day {
         font-size: 0.8rem;
         padding: 8px;
+        width: 14%; /* Уменьшаем ширину элемента */
       }
     }
 
@@ -114,11 +117,12 @@
         font-size: 0.8rem;
       }
       .calendar {
-        grid-template-columns: repeat(4, 1fr); /* 4 колонки для экранов до 768px */
+        gap: 5px;
       }
       .day {
         font-size: 0.75rem;
         padding: 8px;
+        width: 20%; /* Еще больше уменьшаем ширину */
       }
     }
 
@@ -130,11 +134,12 @@
         font-size: 0.7rem;
       }
       .calendar {
-        grid-template-columns: repeat(3, 1fr); /* 3 колонки для маленьких экранов */
+        gap: 5px;
       }
       .day {
         font-size: 0.7rem;
         padding: 5px;
+        width: 30%; /* Уменьшаем ширину еще больше для мобильных */
       }
     }
   </style>
@@ -233,10 +238,7 @@
 
     while (currentDate <= endDate) {
       if (currentDate.getMonth() !== currentMonth) {
-        addMonthLabel(
-          currentDate.toLocaleString("ru-RU", { month: "long" }),
-          currentDate.getFullYear()
-        );
+        addMonthLabel(currentDate.toLocaleString('default', { month: 'long' }), currentDate.getFullYear());
         currentMonth = currentDate.getMonth();
       }
 
@@ -262,7 +264,6 @@
         `;
       }
 
-      // Подсветка текущей даты
       highlightToday(dayCell, currentDate);
 
       calendar.appendChild(dayCell);
