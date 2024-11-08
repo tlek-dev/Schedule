@@ -23,8 +23,8 @@
     .container {
       display: flex;
       flex-direction: column;
-      height: 100%;
       width: 100%;
+      max-width: 1200px;
       padding: 10px;
       background-color: white;
       overflow-y: auto;
@@ -86,6 +86,39 @@
       padding: 10px 0;
       background-color: #f0f2f5;
       border-top: 2px solid #ddd;
+    }
+
+    /* Медиазапросы для адаптивности */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.2rem;
+      }
+      .currency-rates {
+        font-size: 0.8rem;
+      }
+      .calendar {
+        grid-template-columns: repeat(4, 1fr); /* Меньше колонок на мобильных устройствах */
+      }
+      .day {
+        font-size: 0.75rem;
+        padding: 8px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1rem;
+      }
+      .currency-rates {
+        font-size: 0.7rem;
+      }
+      .calendar {
+        grid-template-columns: repeat(3, 1fr); /* Еще меньше колонок для маленьких экранов */
+      }
+      .day {
+        font-size: 0.7rem;
+        padding: 5px;
+      }
     }
   </style>
 </head>
