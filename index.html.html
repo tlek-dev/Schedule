@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shift Schedule Calendar</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -87,78 +86,32 @@
       padding: 10px 0;
       background-color: #f0f2f5;
       border-top: 2px solid #ddd;
-      border-bottom: 2px solid #ddd;
-    }
-    .month-border {
-      border-top: 2px solid #ddd;
-      border-bottom: 2px solid #ddd;
-      padding: 10px 0;
-    }
-    .dark-theme {
-      background-color: #333;
-      color: #f9f9f9;
-    }
-    .dark-theme h1 {
-      background-color: #444;
-    }
-    .dark-theme .currency-rates {
-      background-color: #222;
-      color: #ccc;
-    }
-    .dark-theme .calendar {
-      background-color: #444;
-    }
-    .dark-theme .day {
-      background-color: #555;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Shift Schedule for 2025</h1>
+    <h1>Shift Schedule from November 2024 to December 2025</h1>
     
+    <!-- Новый блок для курсов валют -->
     <div class="currency-rates" id="currencyRates"></div>
-    
-    <!-- Выпадающее меню для выбора месяца -->
-    <div class="dropdown">
-      <button class="btn btn-primary dropdown-toggle" type="button" id="monthDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-        Выберите месяц
-      </button>
-      <ul class="dropdown-menu" aria-labelledby="monthDropdown">
-        <li><a class="dropdown-item" href="#" onclick="setMonth(0)">Январь</a></li>
-        <li><a class="dropdown-item" href="#" onclick="setMonth(1)">Февраль</a></li>
-        <li><a class="dropdown-item" href="#" onclick="setMonth(2)">Март</a></li>
-        <li><a class="dropdown-item" href="#" onclick="setMonth(3)">Апрель</a></li>
-        <li><a class="dropdown-item" href="#" onclick="setMonth(4)">Май</a></li>
-        <li><a class="dropdown-item" href="#" onclick="setMonth(5)">Июнь</a></li>
-        <li><a class="dropdown-item" href="#" onclick="setMonth(6)">Июль</a></li>
-        <li><a class="dropdown-item" href="#" onclick="setMonth(7)">Август</a></li>
-        <li><a class="dropdown-item" href="#" onclick="setMonth(8)">Сентябрь</a></li>
-        <li><a class="dropdown-item" href="#" onclick="setMonth(9)">Октябрь</a></li>
-        <li><a class="dropdown-item" href="#" onclick="setMonth(10)">Ноябрь</a></li>
-        <li><a class="dropdown-item" href="#" onclick="setMonth(11)">Декабрь</a></li>
-      </ul>
-    </div>
 
-
-    
-    <button class="btn btn-dark mt-3" onclick="toggleTheme()">Переключить тему</button>
-    
     <div id="calendar" class="calendar"></div>
+  </div>
 
-
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   <script>
+    // Ваш API ключ
     const EXCHANGE_RATE_API_KEY = 'deaf76b580b93ec199cb177b';
     const currencyRatesContainer = document.getElementById('currencyRates');
 
+    // Функция получения курсов валют
     async function fetchCurrencyRates() {
       try {
         const response = await fetch(`https://v6.exchangerate-api.com/v6/${EXCHANGE_RATE_API_KEY}/latest/USD`);
         const data = await response.json();
 
         if (data && data.conversion_rates) {
+          // Получаем курсы USD и EUR к KZT
           const usdToKzt = data.conversion_rates.KZT;
           const eurToKzt = usdToKzt / data.conversion_rates.EUR;
 
@@ -175,10 +128,11 @@
       }
     }
 
-    fetchCurrencyRates();
+    fetchCurrencyRates(); // Запуск функции при загрузке страницы
 
-    const startDate = new Date(2025, 0, 1); // Начинаем с января 2025 года
-    const endDate = new Date(2025, 11, 31); // Конец в декабре 2025 года
+    // Ваш текущий код календаря...
+    const startDate = new Date(2024, 10, 6);
+    const endDate = new Date(2025, 11, 31);
     const schedulePattern = ["Смена", "Смена", "Выходной", "Выходной"];
 
     const holidays = [
@@ -192,93 +146,80 @@
       { date: '05-07', name: "День защитника Отечества" },
       { date: '05-09', name: "День Победы" },
       { date: '07-06', name: "День Столицы" },
-      { date: '08-30', name: "День Конституции" },
-      { date: '12-16', name: "День независимости" },
-      { date: '12-17', name: "День независимости" }
+      { date: '08-30', name: "День Конституции РК" },
+      { date: '10-25', name: "День Республики" },
+      { date: '12-16', name: "День Независимости" }
     ];
 
     const calendar = document.getElementById("calendar");
 
-    function isHoliday(date) {
-      const dateString = `${date.getMonth() + 1}-${date.getDate()}`;
-      return holidays.find(holiday => holiday.date === dateString);
+    let currentDate = new Date(startDate);
+    let patternIndex = 0;
+
+    function addMonthLabel(month, year) {
+      const label = document.createElement("div");
+      label.className = "month-label";
+      label.textContent = `${month} ${year}`;
+      calendar.appendChild(label);
     }
 
+    function isHoliday(date) {
+      const formattedDate = `${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      return holidays.find(holiday => holiday.date === formattedDate);
+    }
+
+    let currentMonth = currentDate.getMonth();
+    let currentYear = currentDate.getFullYear();
+
+    // Функция для отображения текущей даты в календаре
     function highlightToday(dayCell, date) {
       const today = new Date();
       if (today.getDate() === date.getDate() && today.getMonth() === date.getMonth() && today.getFullYear() === date.getFullYear()) {
-        dayCell.classList.add("today");
+        dayCell.style.border = "2px solid red"; // Добавляем рамку для выделения текущего дня
+        dayCell.style.backgroundColor = "#f9f9f9"; // Можно поменять фон для выделения
+        dayCell.innerHTML = `<strong>${date.getDate()}</strong><br><span>Сегодня</span>`; // Обновление текста
       }
     }
 
-    function generateCalendar() {
-      let currentDate = new Date(startDate);
-      calendar.innerHTML = "";
+    while (currentDate <= endDate) {
+      if (currentDate.getMonth() !== currentMonth) {
+        addMonthLabel(
+          currentDate.toLocaleString("ru-RU", { month: "long" }),
+          currentDate.getFullYear()
+        );
+        currentMonth = currentDate.getMonth();
+      }
 
-      while (currentDate <= endDate) {
-        const month = currentDate.getMonth();
-        if (month !== startDate.getMonth()) {
-          startDate.setMonth(month);
-          const monthLabel = document.createElement('div');
-          monthLabel.classList.add('month-label');
-          monthLabel.textContent = currentDate.toLocaleString('ru', { month: 'long', year: 'numeric' });
-          calendar.appendChild(monthLabel);
-        }
+      const dayCell = document.createElement("div");
+      const holiday = isHoliday(currentDate);
 
-        const dayCell = document.createElement("div");
-        dayCell.classList.add("day");
-
-        const holiday = isHoliday(currentDate);
-        if (holiday) {
-          dayCell.innerHTML = `${currentDate.getDate()}<br><span class="holiday-shift">${holiday.name} - Праздник</span>`;
+      const shiftType = schedulePattern[patternIndex];
+      if (holiday) {
+        if (shiftType === "Смена") {
+          dayCell.classList.add("day", "shift", "holiday-shift");
         } else {
-          dayCell.innerHTML = currentDate.getDate();
+          dayCell.classList.add("day", "off");
         }
-
-        highlightToday(dayCell, currentDate);
-
-        const patternIndex = (currentDate.getDate() - 1) % schedulePattern.length;
-        if (schedulePattern[patternIndex] === "Смена") {
-          dayCell.classList.add("shift");
-        } else if (schedulePattern[patternIndex] === "Выходной") {
-          dayCell.classList.add("off");
-        }
-
-        calendar.appendChild(dayCell);
-        currentDate.setDate(currentDate.getDate() + 1);
+        dayCell.innerHTML = `
+          <strong>${currentDate.getDate()}</strong>
+          <span>${holiday.name} (${shiftType})</span>
+        `;
+      } else {
+        dayCell.classList.add("day", shiftType === "Смена" ? "shift" : "off");
+        dayCell.innerHTML = `
+          <strong>${currentDate.getDate()}</strong>
+          <span>${shiftType}</span>
+        `;
       }
+
+      // Подсветка текущей даты
+      highlightToday(dayCell, currentDate);
+
+      calendar.appendChild(dayCell);
+
+      currentDate.setDate(currentDate.getDate() + 1);
+      patternIndex = (patternIndex + 1) % schedulePattern.length;
     }
-
-    function setMonth(month) {
-      startDate.setMonth(month);
-      generateCalendar();
-    }
-
-    function setYear(year) {
-      startDate.setFullYear(year);
-      generateCalendar();
-    }
-
-    function toggleTheme() {
-      document.body.classList.toggle("dark-theme");
-    }
-
-    function downloadSchedule() {
-      let csvContent = "Дата,Смены\n";
-      const rows = calendar.querySelectorAll(".day");
-      rows.forEach((row) => {
-        const date = row.querySelector("span") ? row.querySelector("span").innerText : row.innerText;
-        csvContent += `${date},${row.classList.contains("shift") ? "Смена" : "Выходной"}\n`;
-      });
-
-      const blob = new Blob([csvContent], { type: "text/csv" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "shift_schedule.csv";
-      link.click();
-    }
-
-    generateCalendar();
   </script>
 </body>
 </html>
