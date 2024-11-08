@@ -15,20 +15,21 @@
       background-color: #f0f2f5;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       height: 100vh;
       overflow: hidden;
       flex-direction: column;
+      padding: 10px;
     }
     .container {
       display: flex;
       flex-direction: column;
       width: 100%;
       max-width: 1200px;
+      margin-top: 60px;
       padding: 10px;
       background-color: white;
       overflow-y: auto;
-      margin-top: 60px;
     }
     h1 {
       text-align: center;
@@ -89,6 +90,22 @@
     }
 
     /* Медиазапросы для адаптивности */
+    @media (max-width: 1024px) {
+      h1 {
+        font-size: 1.3rem;
+      }
+      .currency-rates {
+        font-size: 0.85rem;
+      }
+      .calendar {
+        grid-template-columns: repeat(5, 1fr); /* 5 колонок на экранах до 1024px */
+      }
+      .day {
+        font-size: 0.8rem;
+        padding: 8px;
+      }
+    }
+
     @media (max-width: 768px) {
       h1 {
         font-size: 1.2rem;
@@ -97,7 +114,7 @@
         font-size: 0.8rem;
       }
       .calendar {
-        grid-template-columns: repeat(4, 1fr); /* Меньше колонок на мобильных устройствах */
+        grid-template-columns: repeat(4, 1fr); /* 4 колонки для экранов до 768px */
       }
       .day {
         font-size: 0.75rem;
@@ -113,7 +130,7 @@
         font-size: 0.7rem;
       }
       .calendar {
-        grid-template-columns: repeat(3, 1fr); /* Еще меньше колонок для маленьких экранов */
+        grid-template-columns: repeat(3, 1fr); /* 3 колонки для маленьких экранов */
       }
       .day {
         font-size: 0.7rem;
