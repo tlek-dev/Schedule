@@ -1,155 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Calendar with Shifts and Holidays</title>
-    <style>
-      * {
-        box-sizing: border-box;
-      }
-      ul {
-        list-style-type: none;
-      }
-      body {
-        font-family: Verdana, sans-serif;
-      }
-      #calendar {
-        max-width: 600px;
-        margin: 0 auto;
-      }
-      .month {
-        padding: 10px;
-        background: #1abc9c;
-        text-align: center;
-        color: white;
-      }
-      #weekdays, #days {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        padding: 10px;
-        background: #eee;
-      }
-      #weekdays li, #days li {
-        text-align: center;
-        padding: 15px;
-        margin: 3px;
-        border: 1px solid #ccc;
-      }
-      #days li.empty {
-        border: none;
-      }
-      #days li.shift {
-        background-color: green;
-        color: white;
-      }
-      #days li.holiday {
-        background-color: red;
-        color: white;
-      }
-      #days li.active {
-        background: #1abc9c;
-        color: white;
-      }
-      #next, #prev {
-        cursor: pointer;
-        color: white;
-        font-weight: bold;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="calendar">
-      <div class="month">
-        <ul>
-          <li id="prev">&#10094;</li>
-          <li id="month"></li>
-          <li id="year"></li>
-          <li id="next">&#10095;</li>
-        </ul>
-      </div>
-      <ul id="weekdays">
-        <li>Пн</li>
-        <li>Вт</li>
-        <li>Ср</li>
-        <li>Чт</li>
-        <li>Пт</li>
-        <li>Сб</li>
-        <li>Вс</li>
-      </ul>
-      <ul id="days"></ul>
-    </div>
-    <script>
-      const today = new Date();
-      let currentMonth = today.getMonth();
-      let currentYear = today.getFullYear();
-      const daysContainer = document.getElementById("days");
-      const months = [
-        "Januari", "Februari", "Maart", "April", "Mei", "Juni",
-        "Juli", "Augustus", "September", "Oktober", "November", "December"
-      ];
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Adaptive Calendar with Shifts and Holidays</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+      body {
+        font-family: Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+      #calendar {
+        max-width: 600px;
+        margin: 20px auto;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .month {
+        padding: 10px;
+        background: #1abc9c;
+        text-align: center;
+        color: white;
+        position: relative;
+      }
+      .month ul {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .month li {
+        flex: 1;
+        text-align: center;
+      }
+      #prev, #next {
+        cursor: pointer;
+        color: white;
+        font-weight: bold;
+      }
+      #weekdays, #days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        padding: 10px;
+        background: #eee;
+        gap: 2px;
+      }
+      #weekdays li, #days li {
+        text-align: center;
+        padding: 10px;
+        margin: 3px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+      #days li.empty {
+        border: none;
+        background: transparent;
+      }
+      #days li.shift {
+        background-color: green;
+        color: white;
+      }
+      #days li.holiday {
+        background-color: red;
+        color: white;
+      }
+      #days li.active {
+        background: #1abc9c;
+        color: white;
+      }
 
-      // Начальная дата цикла смены
-      const cycleStart = new Date(2024, 10, 22); // 22 ноября 2024
-      const cycleDays = 4; // 2 смены + 2 выходных
+      /* Адаптивные стили */
+      @media (max-width: 600px) {
+        #calendar {
+          max-width: 100%;
+          margin: 10px;
+          padding: 5px;
+        }
+        .month li {
+          font-size: 14px;
+        }
+        #weekdays li, #days li {
+          font-size: 12px;
+          padding: 8px;
+        }
+      }
 
-      function isShiftDay(date) {
-        const diffDays = Math.floor((date - cycleStart) / (1000 * 60 * 60 * 24));
-        const cycleIndex = (diffDays % cycleDays + cycleDays) % cycleDays; // Защита от отрицательных значений
-        return cycleIndex < 2; // Первые 2 дня - смены
-      }
+      @media (max-width: 400px) {
+        #weekdays, #days {
+          grid-template-columns: repeat(7, minmax(20px, 1fr));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="calendar">
+      <div class="month">
+        <ul>
+          <li id="prev">&#10094;</li>
+          <li id="month"></li>
+          <li id="year"></li>
+          <li id="next">&#10095;</li>
+        </ul>
+      </div>
+      <ul id="weekdays">
+        <li>Пн</li>
+        <li>Вт</li>
+        <li>Ср</li>
+        <li>Чт</li>
+        <li>Пт</li>
+        <li>Сб</li>
+        <li>Вс</li>
+      </ul>
+      <ul id="days"></ul>
+    </div>
+    <script>
+      const today = new Date();
+      let currentMonth = today.getMonth();
+      let currentYear = today.getFullYear();
+      const daysContainer = document.getElementById("days");
+      const months = [
+        "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+        "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
+      ];
 
-      function isHoliday(date) {
-        const diffDays = Math.floor((date - cycleStart) / (1000 * 60 * 60 * 24));
-        const cycleIndex = (diffDays % cycleDays + cycleDays) % cycleDays; // Защита от отрицательных значений
-        return cycleIndex >= 2; // Последние 2 дня - выходные
-      }
+      const cycleStart = new Date(2024, 10, 22); // 22 ноября 2024
+      const cycleDays = 4;
 
-      function showCalendar(month, year) {
-        const firstDay = new Date(year, month).getDay();
-        const totalDays = new Date(year, month + 1, 0).getDate();
-        daysContainer.innerHTML = "";
+      function isShiftDay(date) {
+        const diffDays = Math.floor((date - cycleStart) / (1000 * 60 * 60 * 24));
+        const cycleIndex = (diffDays % cycleDays + cycleDays) % cycleDays;
+        return cycleIndex < 2;
+      }
 
-        for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
-          const emptyCell = document.createElement("li");
-          emptyCell.classList.add("empty");
-          daysContainer.appendChild(emptyCell);
-        }
+      function isHoliday(date) {
+        const diffDays = Math.floor((date - cycleStart) / (1000 * 60 * 60 * 24));
+        const cycleIndex = (diffDays % cycleDays + cycleDays) % cycleDays;
+        return cycleIndex >= 2;
+      }
 
-        for (let day = 1; day <= totalDays; day++) {
-          const date = new Date(year, month, day);
-          const dayCell = document.createElement("li");
-          dayCell.textContent = day;
+      function showCalendar(month, year) {
+        const firstDay = new Date(year, month).getDay();
+        const totalDays = new Date(year, month + 1, 0).getDate();
+        daysContainer.innerHTML = "";
 
-          if (isShiftDay(date)) dayCell.classList.add("shift");
-          if (isHoliday(date)) dayCell.classList.add("holiday");
-          if (
-            day === today.getDate() &&
-            month === today.getMonth() &&
-            year === today.getFullYear()
-          ) {
-            dayCell.classList.add("active");
-          }
+        for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
+          const emptyCell = document.createElement("li");
+          emptyCell.classList.add("empty");
+          daysContainer.appendChild(emptyCell);
+        }
 
-          daysContainer.appendChild(dayCell);
-        }
+        for (let day = 1; day <= totalDays; day++) {
+          const date = new Date(year, month, day);
+          const dayCell = document.createElement("li");
+          dayCell.textContent = day;
 
-        document.getElementById("month").textContent = months[month];
-        document.getElementById("year").textContent = year;
-      }
+          if (isShiftDay(date)) dayCell.classList.add("shift");
+          if (isHoliday(date)) dayCell.classList.add("holiday");
+          if (
+            day === today.getDate() &&
+            month === today.getMonth() &&
+            year === today.getFullYear()
+          ) {
+            dayCell.classList.add("active");
+          }
 
-      function changeMonth(offset) {
-        currentYear = currentMonth === 0 && offset === -1 ? currentYear - 1 : currentYear;
-        currentYear = currentMonth === 11 && offset === 1 ? currentYear + 1 : currentYear;
-        currentMonth = (currentMonth + offset + 12) % 12;
-        showCalendar(currentMonth, currentYear);
-      }
+          daysContainer.appendChild(dayCell);
+        }
 
-      document.getElementById("prev").onclick = () => changeMonth(-1);
-      document.getElementById("next").onclick = () => changeMonth(1);
+        document.getElementById("month").textContent = months[month];
+        document.getElementById("year").textContent = year;
+      }
 
-      showCalendar(currentMonth, currentYear);
-    </script>
-  </body>
+      function changeMonth(offset) {
+        currentYear = currentMonth === 0 && offset === -1 ? currentYear - 1 : currentYear;
+        currentYear = currentMonth === 11 && offset === 1 ? currentYear + 1 : currentYear;
+        currentMonth = (currentMonth + offset + 12) % 12;
+        showCalendar(currentMonth, currentYear);
+      }
+
+      document.getElementById("prev").onclick = () => changeMonth(-1);
+      document.getElementById("next").onclick = () => changeMonth(1);
+
+      showCalendar(currentMonth, currentYear);
+    </script>
+  </body>
 </html>
