@@ -6,155 +6,190 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Calendar, Crypto, and Currency Rates</title>
 <style>
-  * {
-    box-sizing: border-box;
-  }
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  body {
-    font-family: Verdana, Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    background: #f9f9f9;
-  }
+  * {
+    box-sizing: border-box;
+  }
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  body {
+    font-family: Verdana, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background: #f9f9f9;
+  }
 
-  #calendar,
-  .crypto-container,
-  .weather-container,
-  .currency-container {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: #fff;
-  }
-  h2 {
-    text-align: center;
-    color: #1abc9c;
-  }
+  #calendar,
+  .crypto-container,
+  .weather-container,
+  .currency-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+  }
+  h2 {
+    text-align: center;
+    color: #1abc9c;
+  }
 
-  #calendar .month {
-    padding: 10px;
-    background: #1abc9c;
-    text-align: center;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  #weekdays,
-  #days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    padding: 10px;
-    background: #eee;
-  }
-  #weekdays li,
-  #days li {
-    text-align: center;
-    padding: 10px;
-    margin: 3px;
-    border: 1px solid #ccc;
-    position: relative;
-    font-size: 0.9rem;
-  }
-  #days li.empty {
-    border: none;
-  }
-  #days li.shift {
-    background-color: green;
-    color: white;
-  }
-  #days li.holiday {
-    background-color: red;
-    color: white;
-  }
-  #days li.active {
-    background: #1abc9c;
-    color: white;
-  }
-  #next,
-  #prev {
-    cursor: pointer;
-    color: white;
-    font-weight: bold;
-  }
+  #calendar .month {
+    padding: 10px;
+    background: #1abc9c;
+    text-align: center;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #weekdays,
+  #days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    padding: 10px;
+    background: #eee;
+  }
+  #weekdays li,
+  #days li {
+    text-align: center;
+    padding: 10px;
+    margin: 3px;
+    border: 1px solid #ccc;
+    position: relative;
+    font-size: 0.9rem;
+  }
+  #days li.empty {
+    border: none;
+  }
+  #days li.shift {
+    background-color: green;
+    color: white;
+  }
+  #days li.holiday {
+    background-color: red;
+    color: white;
+  }
+  #days li.active {
+    background: #1abc9c;
+    color: white;
+  }
+  #next,
+  #prev {
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+  }
 
-  .crypto-container .rate-item,
-  .currency-container .rate-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 5px 0;
-    border-bottom: 1px solid #eee;
-  }
-  .crypto-container .rate-item img,
-  .currency-container .rate-item img {
-    width: 24px;
-    height: 24px;
-    margin-right: 10px;
-    border-radius: 50%;
-  }
-  .rate-item:last-child {
-    border-bottom: none;
-  }
-  .left {
-    display: flex;
-    align-items: center;
-  }
+  .crypto-container .rate-item,
+  .currency-container .rate-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+  }
+  .crypto-container .rate-item img,
+  .currency-container .rate-item img {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    border-radius: 50%;
+  }
+  .rate-item:last-child {
+    border-bottom: none;
+  }
+  .left {
+    display: flex;
+    align-items: center;
+  }
 
-  .weather-container {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 10px;
-    background: #f4f4f4;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-  }
+  .weather-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 10px;
+    background: #f4f4f4;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
 
-  .weather-container h2 {
-    text-align: center;
-    color: #1abc9c;
-  }
+  .weather-container h2 {
+    text-align: center;
+    color: #1abc9c;
+  }
 
-  .weather-info {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 0;
-  }
+  .weather-info {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+  }
 
-  @media (max-width: 600px) {
-    #calendar,
-    .crypto-container,
-    .weather-container,
-    .currency-container {
-      max-width: 100%;
-      margin: 10px;
-      padding: 10px;
-    }
-    #weekdays li,
-    #days li {
-      padding: 8px;
-      font-size: 0.8rem;
-    }
-    .crypto-container .rate-item,
-    .currency-container .rate-item {
-      font-size: 0.9rem;
-    }
+  @media (max-width: 768px) {
+    #calendar,
+    .crypto-container,
+    .weather-container,
+    .currency-container {
+      max-width: 100%;
+      margin: 10px;
+      padding: 10px;
+    }
+    #weekdays li,
+    #days li {
+      padding: 8px;
+      font-size: 0.8rem;
+    }
+    .crypto-container .rate-item,
+    .currency-container .rate-item {
+      font-size: 0.9rem;
+    }
 
-    .weather-container {
-      padding: 5px;
-    }
+    .weather-container {
+      padding: 5px;
+    }
 
-    .weather-info {
-      font-size: 0.9rem;
-    }
-  }
+    .weather-info {
+      font-size: 0.9rem;
+    }
+  }
+
+  /* Делаем календарь более удобным для маленьких экранов */
+  @media (max-width: 480px) {
+    #calendar {
+      padding: 5px;
+    }
+    #calendar .month {
+      font-size: 1.2rem;
+      flex-direction: column;
+    }
+    #weekdays,
+    #days {
+      grid-template-columns: repeat(7, 1fr);
+      padding: 5px;
+    }
+    #weekdays li,
+    #days li {
+      padding: 6px;
+      font-size: 0.7rem;
+    }
+    .crypto-container .rate-item,
+    .currency-container .rate-item {
+      font-size: 0.8rem;
+    }
+    .weather-info {
+      font-size: 0.8rem;
+    }
+  }
 </style>
+    
+    
+    
+    
+  
+
+ 
 
   </head>
   <body>
