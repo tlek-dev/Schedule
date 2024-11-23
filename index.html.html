@@ -2,52 +2,53 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Calendar with Shifts and Crypto Rates</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Календарь со сменами, курсами валют и погодой</title>
     <style>
       * {
         box-sizing: border-box;
       }
-      ul {
-        list-style-type: none;
-        padding: 0;
-      }
       body {
-        font-family: Verdana, Arial, sans-serif;
+        font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
-        overflow-x: hidden;
+        background-color: #f9f9f9;
       }
       #calendar {
-        max-width: 600px;
+        max-width: 800px;
         margin: 20px auto;
+        padding: 10px;
+        background: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
       .month {
-        padding: 10px;
-        background: #1abc9c;
-        text-align: center;
-        color: white;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        padding: 10px;
+        background: #1abc9c;
+        color: white;
+        border-radius: 5px 5px 0 0;
       }
       #weekdays,
       #days {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
         padding: 10px;
-        background: #eee;
+        gap: 5px;
       }
       #weekdays li,
       #days li {
         text-align: center;
-        padding: 15px;
-        margin: 3px;
-        border: 1px solid #ccc;
-        position: relative;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background: #fff;
       }
       #days li.empty {
+        background: none;
         border: none;
       }
       #days li.shift {
@@ -62,36 +63,21 @@
         background: #1abc9c;
         color: white;
       }
-      #days li:hover::after {
-        content: attr(data-holiday);
-        position: absolute;
-        top: -30px;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: rgba(0, 0, 0, 0.75);
-        color: white;
-        padding: 5px;
-        border-radius: 5px;
-        font-size: 0.9rem;
-        white-space: nowrap;
-      }
       #next,
       #prev {
         cursor: pointer;
-        color: white;
         font-weight: bold;
       }
-
-      /* Стили для crypto-container и weather-container */
       .crypto-container,
       .weather-container,
       .currency-container {
-        max-width: 600px;
+        max-width: 800px;
         margin: 20px auto;
-        padding: 10px;
-        background: #f4f4f4;
-        border: 1px solid #ccc;
-        border-radius: 8px;
+        padding: 15px;
+        background: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
       .crypto-container h2,
       .weather-container h2,
@@ -101,34 +87,10 @@
       }
       .crypto-rate,
       .weather-info,
-      .weather-info,
       .currency-info {
         display: flex;
         justify-content: space-between;
-        padding: 5px 0;
-      }
-
-      /* Адаптация для мобильных устройств */
-      @media (max-width: 600px) {
-        #calendar {
-          max-width: 100%;
-          margin: 10px;
-        }
-        #weekdays li,
-        #days li {
-          padding: 10px 5px;
-          font-size: 0.8rem;
-        }
-        .crypto-container,
-        .weather-container,
-        .currency-container {
-          padding: 5px;
-        }
-        .crypto-rate,
-        .weather-info,
-        .currency-info {
-          font-size: 0.9rem;
-        }
+        margin: 10px 0;
       }
     </style>
   </head>
@@ -136,12 +98,8 @@
     <div id="calendar">
       <div class="month">
         <span id="prev">&#10094;</span>
-        <span>
-          <span id="month"></span>
-          <span id="year"></span>
-        </span>
+        <span id="monthYear"></span>
         <span id="next">&#10095;</span>
-        <span id="total-hours"></span>
       </div>
       <ul id="weekdays">
         <li>Пн</li>
@@ -154,186 +112,130 @@
       </ul>
       <ul id="days"></ul>
     </div>
+
     <div class="crypto-container">
       <h2>Курсы криптовалют</h2>
       <div id="crypto-rates"></div>
     </div>
+
     <div class="weather-container">
       <h2>Погода в Астане</h2>
       <div id="weather-info"></div>
     </div>
+
     <div class="currency-container">
-      <h2>Курс валют</h2>
+      <h2>Курсы валют</h2>
       <div id="currency-rates"></div>
     </div>
+
     <script>
-      const today = new Date();
-      let currentMonth = today.getMonth();
-      let currentYear = today.getFullYear();
-      const daysContainer = document.getElementById("days");
-      const months = [
-        "Январь",
-        "Февраль",
-        "Март",
-        "Апрель",
-        "Май",
-        "Июнь",
-        "Июль",
-        "Август",
-        "Сентябрь",
-        "Октябрь",
-        "Ноябрь",
-        "Декабрь",
-      ];
-
-      const cycleStart = new Date(2024, 10, 22);
-      const cycleDays = 4;
-
-      // Массив праздников
       const holidays = [
-        { date: '01-01', name: "Новый год" },
-        { date: '01-02', name: "Новый год" },
-        { date: '03-08', name: "Международный женский день" },
-        { date: '03-21', name: "Наурыз мейрамы" },
-        { date: '03-22', name: "Наурыз мейрамы" },
-        { date: '03-23', name: "Наурыз мейрамы" },
-        { date: '05-01', name: "Праздник единства народа Казахстана" },
-        { date: '05-07', name: "День защитника Отечества" },
-        { date: '05-09', name: "День Победы" },
-        { date: '06-28', name: "День журналистики" },
-        { date: '07-06', name: "День Столицы" },
-        { date: '08-30', name: "День Конституции" },
-        { date: '12-16', name: "День независимости" },
-        
+        { date: "01-01", name: "Новый год" },
+        { date: "03-08", name: "Международный женский день" },
       ];
 
-      function getHolidayName(date) {
-        const formattedDate = `${date.getMonth() + 1 < 10 ? '0' : ''}${date.getMonth() + 1}-${date.getDate() < 10 ? '0' : ''}${date.getDate()}`;
-        const holiday = holidays.find((h) => h.date === formattedDate);
-        return holiday ? holiday.name : null;
-      }
+      const shiftsPattern = 2; // 2 смены, 2 выходных
+      const cycleStart = new Date(2024, 10, 6);
 
-      function isShiftDay(date) {
-        const diffDays = Math.floor((date - cycleStart) / (1000 * 60 * 60 * 24));
-        return (diffDays % cycleDays + cycleDays) % cycleDays < 2;
-      }
+      let currentMonth = new Date().getMonth();
+      let currentYear = new Date().getFullYear();
 
       function showCalendar(month, year) {
-        const firstDay = new Date(year, month).getDay();
-        const totalDays = new Date(year, month + 1, 0).getDate();
+        const daysContainer = document.getElementById("days");
+        const monthYear = document.getElementById("monthYear");
         daysContainer.innerHTML = "";
 
-        let shiftCount = 0;
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        monthYear.textContent = `${new Date(year, month).toLocaleString("ru", {
+          month: "long",
+        })} ${year}`;
 
-        for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
+        for (let i = 0; i < firstDay; i++) {
           const emptyCell = document.createElement("li");
           emptyCell.classList.add("empty");
           daysContainer.appendChild(emptyCell);
         }
 
-        for (let day = 1; day <= totalDays; day++) {
+        for (let day = 1; day <= daysInMonth; day++) {
           const date = new Date(year, month, day);
-          const dayCell = document.createElement("li");
-          dayCell.textContent = day;
+          const li = document.createElement("li");
 
-          const holidayName = getHolidayName(date);
-          if (holidayName) {
-            dayCell.setAttribute("data-holiday", holidayName);
-          }
+          const dayCount =
+            (date - cycleStart) / (1000 * 60 * 60 * 24) + shiftsPattern;
+          const isShift = Math.floor(dayCount) % shiftsPattern === 0;
 
-          if (isShiftDay(date)) {
-            dayCell.classList.add("shift");
-            shiftCount++;
-          }
-
-          if (holidayName) {
-            dayCell.classList.add("holiday");
-          }
-
-          daysContainer.appendChild(dayCell);
+          li.textContent = day;
+          li.className = isShift ? "shift" : "holiday";
+          daysContainer.appendChild(li);
         }
-
-        // Подсчёт часов
-        const totalHours = shiftCount * 11;
-        document.getElementById("total-hours").textContent = `${totalHours} часов`;
-
-        // Обновление месяца и года
-        document.getElementById("month").textContent = months[month];
-        document.getElementById("year").textContent = year;
       }
 
       async function fetchCryptoRates() {
-        const response = await fetch(
-          "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd"
+        const rates = await fetch(
+          `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd`
         );
-        const data = await response.json();
-        const cryptoContainer = document.getElementById("crypto-rates");
-        cryptoContainer.innerHTML = `
-          <div class="crypto-rate"><strong>Bitcoin:</strong> $${data.bitcoin.usd}</div>
-          <div class="crypto-rate"><strong>Ethereum:</strong> $${data.ethereum.usd}</div>
-        
-        `;
-      }
+        const data = await rates.json();
 
-      fetchCryptoRates();
+        document.getElementById("crypto-rates").innerHTML = `
+          <div class="crypto-rate">
+            <span>Bitcoin:</span>
+            <span>${data.bitcoin.usd} USD</span>
+          </div>
+          <div class="crypto-rate">
+            <span>Ethereum:</span>
+            <span>${data.ethereum.usd} USD</span>
+          </div>`;
+      }
 
       async function fetchWeather() {
-        const response = await fetch(
-          "https://api.openweathermap.org/data/2.5/weather?q=Astana&appid=90e0d7e79559244cc33afebafbd85ab7&units=metric&lang=ru"
+        const weather = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?q=Astana&units=metric&appid=YOUR_API_KEY`
         );
-        const data = await response.json();
-        const weatherContainer = document.getElementById("weather-info");
-        weatherContainer.innerHTML = `
-          <div class="weather-info"><strong>Температура:</strong> ${data.main.temp}°C</div>
-          <div class="weather-info"><strong>Состояние:</strong> ${data.weather[0].description}</div>
-        `;
+        const data = await weather.json();
+
+        document.getElementById("weather-info").innerHTML = `
+          <div class="weather-info">
+            <span>Температура:</span>
+            <span>${data.main.temp} °C</span>
+          </div>
+          <div class="weather-info">
+            <span>Погода:</span>
+            <span>${data.weather[0].description}</span>
+          </div>`;
       }
 
-      fetchWeather();
-
-      // Курс валют
       async function fetchCurrencyRates() {
-        const response = await fetch(
-          "https://api.exchangerate-api.com/v4/latest/USD"
+        const rates = await fetch(
+          `https://open.er-api.com/v6/latest/USD`
         );
-        const data = await response.json();
-        const currencyContainer = document.getElementById("currency-rates");
-        const kzRates = {
-          usd: data.rates.KZT,
-          eur: data.rates.KZT * 1.2, // Примерная ставка евро
-          rub: data.rates.KZT * 0.014,
-        };
-        currencyContainer.innerHTML = `
-          <p>Доллар: ${kzRates.usd} KZT</p>
-          <p>Евро: ${kzRates.eur} KZT</p>
-          <p>Рубль: ${kzRates.rub} KZT</p>
-        `;
+        const data = await rates.json();
+
+        document.getElementById("currency-rates").innerHTML = `
+          <div class="currency-info">
+            <span>USD to KZT:</span>
+            <span>${data.rates.KZT} KZT</span>
+          </div>`;
       }
 
-      fetchCryptoRates();
-      fetchWeather();
-      fetchCurrencyRates();
-
-      // Переключение месяцев
       document.getElementById("prev").addEventListener("click", () => {
-        currentMonth--;
-        if (currentMonth < 0) {
-          currentMonth = 11;
-          currentYear--;
-        }
+        currentMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+        currentYear = currentMonth === 11 ? currentYear - 1 : currentYear;
         showCalendar(currentMonth, currentYear);
       });
 
       document.getElementById("next").addEventListener("click", () => {
-        currentMonth++;
-        if (currentMonth > 11) {
-          currentMonth = 0;
-          currentYear++;
-        }
+        currentMonth = currentMonth === 11 ? 0 : currentMonth + 1;
+        currentYear = currentMonth === 0 ? currentYear + 1 : currentYear;
         showCalendar(currentMonth, currentYear);
       });
 
-      showCalendar(currentMonth, currentYear);
+      document.addEventListener("DOMContentLoaded", () => {
+        showCalendar(currentMonth, currentYear);
+        fetchCryptoRates();
+        fetchWeather();
+        fetchCurrencyRates();
+      });
     </script>
   </body>
 </html>
