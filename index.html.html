@@ -1,352 +1,748 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Calendar, Crypto, and Currency Rates</title>
-<style>
-  * {
-    box-sizing: border-box;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>График работы</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        -webkit-tap-highlight-color: transparent;
+      }
 
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
+      body {
+        background-color: #f2f2f7;
+        color: #1c1c1e;
+        line-height: 1.5;
+        font-size: 16px;
+      }
 
-  body {
-    font-family: Verdana, Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    background: #f9f9f9;
-  }
+      /* Современные стили для навигации */
+      .nav-tabs {
+        display: flex;
+        justify-content: space-around;
+        background: #fff;
+        padding: 12px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        box-shadow: 0 -1px 10px rgba(0,0,0,0.1);
+      }
 
-  #calendar,
-  .crypto-container,
-  .weather-container,
-  .currency-container {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: #fff;
-  }
+      .nav-tab {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        padding: 8px 16px;
+        border-radius: 12px;
+        color: #666;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        font-weight: 500;
+        font-size: 12px;
+        min-width: 64px;
+      }
 
-  h2 {
-    text-align: center;
-    color: #1abc9c;
-  }
+      .nav-tab i {
+        font-size: 24px;
+        margin-bottom: 2px;
+      }
 
-  #calendar .month {
-    padding: 10px;
-    background: #1abc9c;
-    text-align: center;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+      .nav-tab:hover {
+        color: #1abc9c;
+        transform: translateY(-2px);
+      }
 
-  #weekdays,
-  #days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    padding: 10px;
-    background: #eee;
-  }
+      .nav-tab.active {
+        color: #1abc9c;
+        background: rgba(26, 188, 156, 0.1);
+      }
 
-  #weekdays li,
-  #days li {
-    text-align: center;
-    padding: 10px;
-    margin: 3px;
-    border: 1px solid #ccc;
-    position: relative;
-    font-size: 0.9rem;
-  }
+      /* Оптимизация контейнера для мобильных */
+      .widget-container {
+        padding: 16px;
+        padding-bottom: 80px; /* Для нижней навигации */
+        max-width: 100%;
+        margin: 0 auto;
+      }
 
-  #days li.empty {
-    border: none;
-  }
+      /* Современные карточки */
+      .current-status {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+      }
 
-  #days li.shift {
-    background-color: green;
-    color: white;
-  }
+      .current-date {
+        font-size: 16px;
+        color: #7f8c8d;
+        margin-bottom: 12px;
+      }
 
-  #days li.holiday {
-    background-color: red;
-    color: white;
-  }
+      .status-text {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #2c3e50;
+      }
 
-  #days li.active {
-    background: #1abc9c;
-    color: white;
-  }
+      .status-description {
+        font-size: 16px;
+        color: #7f8c8d;
+      }
 
-  #next,
-  #prev {
-    cursor: pointer;
-    color: white;
-    font-weight: bold;
-  }
+      .status-working {
+        background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
+      }
 
-  .crypto-container .rate-item,
-  .currency-container .rate-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 5px 0;
-    border-bottom: 1px solid #eee;
-  }
+      .status-working .current-date,
+      .status-working .status-text,
+      .status-working .status-description {
+        color: white;
+      }
 
-  .crypto-container .rate-item img,
-  .currency-container .rate-item img {
-    width: 24px;
-    height: 24px;
-    margin-right: 10px;
-    border-radius: 50%;
-  }
+      .status-off .status-text {
+        color: #2c3e50;
+      }
 
-  .rate-item:last-child {
-    border-bottom: none;
-  }
+      @media (max-width: 768px) {
+        .current-status {
+          padding: 15px;
+          margin: 12px;
+        }
 
-  .left {
-    display: flex;
-    align-items: center;
-  }
+        .current-date {
+          font-size: 14px;
+          margin-bottom: 10px;
+        }
 
-  .weather-container {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 10px;
-    background: #f4f4f4;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-  }
+        .status-text {
+          font-size: 20px;
+          margin-bottom: 6px;
+        }
 
-  .weather-container h2 {
-    text-align: center;
-    color: #1abc9c;
-  }
+        .status-description {
+          font-size: 14px;
+        }
+      }
 
-  .weather-info {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 0;
-  }
+      /* Сетка статистики */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        padding: 15px;
+      }
 
-  /* Мобильная адаптация */
-  @media (max-width: 600px) {
-    #calendar,
-    .crypto-container,
-    .weather-container,
-    .currency-container {
-      max-width: 100%;
-      margin: 5px;
-      padding: 10px;
-    }
+      .stat-card {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px 15px;
+        border-radius: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+      }
 
-    #weekdays li,
-    #days li {
-      padding: 5px;
-      font-size: 0.75rem;
-    }
+      .stat-card i {
+        font-size: 24px;
+        color: #1abc9c;
+        margin-bottom: 10px;
+      }
 
-    #calendar .month {
-      flex-wrap: wrap;
-      justify-content: space-between;
-    }
+      .stat-value {
+        font-size: 28px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 5px;
+      }
 
-    #next,
-    #prev {
-      font-size: 1rem;
-    }
+      .stat-label {
+        font-size: 14px;
+        color: #7f8c8d;
+      }
 
-    .crypto-container .rate-item {
-      font-size: 0.85rem;
-      padding: 5px 0;
-    }
+      .shifts-card {
+        background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
+      }
 
-    .crypto-container .rate-item img {
-      width: 20px;
-      height: 20px;
-    }
+      .shifts-card i,
+      .shifts-card .stat-value,
+      .shifts-card .stat-label {
+        color: white;
+      }
 
-    .weather-container {
-      padding: 10px;
-    }
+      @media (max-width: 768px) {
+        .stats-grid {
+          gap: 12px;
+          padding: 12px;
+        }
 
-    .weather-info {
-      flex-wrap: wrap;
-      font-size: 0.85rem;
-      gap: 5px;
-    }
+        .stat-card {
+          padding: 15px 12px;
+        }
 
-    .currency-container .rate-item {
-      font-size: 0.85rem;
-      padding: 5px 0;
-    }
+        .stat-value {
+          font-size: 24px;
+        }
 
-    .currency-container .rate-item img {
-      width: 20px;
-      height: 20px;
-    }
-  }
-</style>
+        .stat-label {
+          font-size: 13px;
+        }
+      }
 
+      /* Календарь */
+      .calendar {
+        background: white;
+        border-radius: 24px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      }
 
+      .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        font-weight: 600;
+      }
+
+      .calendar-header span {
+        font-size: 18px;
+      }
+
+      #weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        text-align: center;
+        font-weight: 600;
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 12px;
+      }
+
+      #calendar-days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
+      }
+
+      .calendar-day {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 500;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .calendar-day:hover {
+        background: rgba(26, 188, 156, 0.1);
+      }
+
+      .calendar-day.shift {
+        background: #1abc9c;
+        color: white;
+      }
+
+      .calendar-day.holiday {
+        background: #FF9500;
+        color: white;
+      }
+
+      /* Мобильная оптимизация */
+      @media (max-width: 768px) {
+        .widget-container {
+          padding: 12px;
+        }
+
+        .current-status {
+          padding: 20px;
+          border-radius: 20px;
+        }
+
+        .status-text {
+          font-size: 24px;
+        }
+
+        .calendar {
+          padding: 16px;
+        }
+
+        .calendar-day {
+          font-size: 13px;
+        }
+      }
+
+      /* Анимации */
+      @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+          transform: translateY(0);
+        }
+        40% {
+          transform: translateY(-20px);
+        }
+        60% {
+          transform: translateY(-10px);
+        }
+      }
+
+      /* Стили для списка праздников */
+      .holidays-container {
+        background: rgba(255, 255, 255, 0.9);
+        margin: 15px;
+        padding: 15px;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .holidays-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        color: #2c3e50;
+        font-weight: 600;
+      }
+
+      .holidays-header i {
+        color: #1abc9c;
+        font-size: 20px;
+      }
+
+      .holidays-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .holiday-item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+      }
+
+      .holiday-item:hover {
+        background: #f1f3f5;
+      }
+
+      .holiday-date {
+        background: #1abc9c;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 6px;
+        margin-right: 12px;
+        font-weight: 600;
+        min-width: 32px;
+        text-align: center;
+      }
+
+      .holiday-name {
+        flex: 1;
+        color: #2c3e50;
+      }
+
+      .holiday-shift {
+        border-left: 3px solid #1abc9c;
+      }
+
+      .holiday-shift-icon {
+        margin-left: 8px;
+        color: #1abc9c;
+      }
+
+      @media (max-width: 768px) {
+        .holidays-container {
+          margin: 12px;
+          padding: 12px;
+        }
+
+        .holiday-item {
+          padding: 8px;
+        }
+
+        .holiday-date {
+          padding: 3px 6px;
+          min-width: 28px;
+          font-size: 14px;
+        }
+      }
+
+      /* Добавленные стили */
+      .widget-header {
+        display: flex;
+        align-items: center;
+        padding: 20px 15px 10px;
+        flex-wrap: wrap;
+      }
+
+      .widget-header i {
+        font-size: 24px;
+        color: #1abc9c;
+        margin-right: 10px;
+      }
+
+      .widget-header span {
+        font-size: 20px;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      .widget-description {
+        width: 100%;
+        margin-top: 8px;
+        font-size: 14px;
+        color: #7f8c8d;
+      }
+
+      .widget-section {
+        margin: 20px 0;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+        margin-bottom: 8px;
+      }
+
+      .section-header i {
+        font-size: 20px;
+        color: #1abc9c;
+        margin-right: 8px;
+      }
+
+      .section-header span {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      .section-description {
+        padding: 0 15px;
+        margin-bottom: 15px;
+        font-size: 14px;
+        color: #7f8c8d;
+        line-height: 1.4;
+      }
+
+      .stat-description {
+        font-size: 12px;
+        color: #95a5a6;
+        text-align: center;
+        margin-top: 8px;
+        line-height: 1.3;
+        opacity: 0.9;
+      }
+
+      .shifts-card .stat-description {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      @media (max-width: 768px) {
+        .widget-header {
+          padding: 15px 12px 8px;
+        }
+
+        .widget-header i {
+          font-size: 20px;
+        }
+
+        .widget-header span {
+          font-size: 18px;
+        }
+
+        .widget-description,
+        .section-description {
+          font-size: 13px;
+        }
+
+        .section-header {
+          padding: 0 12px;
+        }
+
+        .stat-description {
+          font-size: 11px;
+        }
+      }
+
+      /* Стили для погоды */
+      .weather-container {
+        background: white;
+        border-radius: 24px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      }
+
+      .weather-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+
+      .weather-main {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+
+      .weather-temp {
+        font-size: 48px;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      .weather-icon {
+        width: 64px;
+        height: 64px;
+      }
+
+      .weather-description {
+        text-transform: capitalize;
+        color: #7f8c8d;
+        margin-bottom: 10px;
+      }
+
+      .weather-details {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+
+      .weather-detail-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #2c3e50;
+      }
+
+      .weather-detail-item i {
+        color: #1abc9c;
+        font-size: 20px;
+      }
+
+      @media (max-width: 768px) {
+        .weather-container {
+          padding: 16px;
+          margin: 12px;
+        }
+
+        .weather-temp {
+          font-size: 36px;
+        }
+
+        .weather-icon {
+          width: 48px;
+          height: 48px;
+        }
+
+        .weather-details {
+          gap: 12px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div id="calendar">
-      <div class="month">
-        <span id="prev">&#10094;</span>
-        <span>
-          <span id="month"></span>
-          <span id="year"></span>
-        </span>
-        <span id="next">&#10095;</span>
-        <span id="total-hours"></span>
+    <div class="widget-container">
+      <!-- Главная -->
+      <div id="home-widget" class="widget active">
+        <!-- Текущий статус -->
+        <div class="widget-header">
+          <i class="ri-home-line"></i>
+          <span>Главная</span>
+
+        </div>
+
+        <div class="current-status" id="current-status">
+          <div class="current-date" id="current-date">-</div>
+          <div class="status-text" id="status-text">-</div>
+          <div class="status-description" id="status-description">-</div>
+        </div>
+
+        <!-- Статистика -->
+        <div class="widget-section">
+          <div class="section-header">
+            <i class="ri-bar-chart-line"></i>
+            <span>Статистика за месяц</span>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <i class="ri-time-line"></i>
+              <span class="stat-value" id="working-hours">-</span>
+              <span class="stat-label">Рабочих часов</span>
+              <span class="stat-description">Общее количество рабочих часов в месяц (11 часов × кол-во смен)</span>
+            </div>
+            <div class="stat-card">
+              <i class="ri-calendar-event-line"></i>
+              <span class="stat-value" id="holidays-count">-</span>
+              <span class="stat-label">Праздников</span>
+              <span class="stat-description">Количество праздничных дней в текущем месяце</span>
+            </div>
+            <div class="stat-card shifts-card">
+              <i class="ri-calendar-check-line"></i>
+              <span class="stat-value" id="completed-shifts">-</span>
+              <span class="stat-label">Смен</span>
+              <span class="stat-description">Общее количество рабочих смен в месяце</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Праздники -->
+        <div class="widget-section">
+          <div class="section-header">
+            <i class="ri-calendar-event-line"></i>
+            <span>Праздники</span>
+          </div>
+
+          <div class="holidays-list" id="holidays-list"></div>
+        </div>
       </div>
-      <ul id="weekdays">
-        <li>Пн</li>
-        <li>Вт</li>
-        <li>Ср</li>
-        <li>Чт</li>
-        <li>Пт</li>
-        <li>Сб</li>
-        <li>Вс</li>
-      </ul>
-      <ul id="days"></ul>
+
+      <div id="calendar-widget" class="widget">
+        <div class="calendar">
+          <div class="calendar-header">
+            <span id="month"></span>
+            <span id="year"></span>
+          </div>
+          <ul id="weekdays">
+            <li>Пн</li>
+            <li>Вт</li>
+            <li>Ср</li>
+            <li>Чт</li>
+            <li>Пт</li>
+            <li>Сб</li>
+            <li>Вс</li>
+          </ul>
+          <div id="calendar-days"></div>
+        </div>
+      </div>
+
+      <div id="weather-widget" class="widget">
+        <div class="weather-container">
+          <div id="weather-info"></div>
+        </div>
+      </div>
     </div>
 
-    <div class="crypto-container">
-      <h2>Курсы криптовалют</h2>
-      <div id="crypto-rates"></div>
-    </div>
-
-     <div class="weather-container">
-      <h2>Погода в Астане</h2>
-      <div id="weather-info"></div>
-    </div>
-
-    <div class="currency-container">
-      <h2>Курс валют</h2>
-      <div id="currency-rates"></div>
-    </div>
+    <nav class="nav-tabs">
+      <div class="nav-tab active" data-widget="home">
+        <i class="ri-home-4-line"></i>
+        <span>Главная</span>
+      </div>
+      <div class="nav-tab" data-widget="calendar">
+        <i class="ri-calendar-line"></i>
+        <span>Календарь</span>
+      </div>
+      <div class="nav-tab" data-widget="weather">
+        <i class="ri-sun-line"></i>
+        <span>Погода</span>
+      </div>
+    </nav>
 
     <script>
-      // Ваши данные о криптовалютах
-      async function getCryptoRates() {
+      function showWidget(widgetName) {
+        // Hide all widgets
+        document.querySelectorAll('.widget').forEach(widget => {
+          widget.classList.remove('active');
+        });
+        
+        // Remove active class from all tabs
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+          tab.classList.remove('active');
+        });
+        
+        // Show selected widget
+        document.getElementById(widgetName + '-widget').classList.add('active');
+        
+        // Activate selected tab
+        event.target.classList.add('active');
+      }
+
+      async function fetchWeather() {
         try {
-          const response = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd");
-          const data = await response.json();
+          // Используем геокодинг для получения точных координат Астаны
+          const geocodeResponse = await fetch('https://api.openweathermap.org/geo/1.0/direct?q=Astana,KZ&limit=1&appid=90e0d7e79559244cc33afebafbd85ab7');
+          const geocodeData = await geocodeResponse.json();
+          
+          if (geocodeData.length > 0) {
+            const { lat, lon } = geocodeData[0];
+            
+            // Получаем текущую погоду по координатам
+            const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=90e0d7e79559244cc33afebafbd85ab7&units=metric&lang=ru`);
+            const weatherData = await weatherResponse.json();
 
-          const popularCryptos = [
-            "bitcoin",
-            "ethereum",
-            "binancecoin",
-            "ripple",
-            "dogecoin",
-            "toncoin",
-            "shiba-inu",
-            "litecoin",
-            "solana",
-            "cardano",
-            "hamster",
-          ];
-
-          const ratesContainer = document.getElementById("crypto-rates");
-          ratesContainer.innerHTML = data
-            .filter((crypto) => popularCryptos.includes(crypto.id))
-            .map((crypto) => `
-              <div class="rate-item">
-                <div class="left">
-                  <img src="${crypto.image}" alt="${crypto.name}" />
-                  <span>${crypto.name}</span>
-                </div>
-                <span>$${crypto.current_price.toFixed(2)}</span>
+            const weatherInfo = document.getElementById('weather-info');
+            
+            weatherInfo.innerHTML = `
+              <div class="weather-header">
+                <h3>Погода в Астане</h3>
+                <span>${new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}</span>
               </div>
-            `)
-            .join("");
+              <div class="weather-main">
+                <div>
+                  <div class="weather-temp">${Math.round(weatherData.main.temp)}°C</div>
+                  <div class="weather-description">${weatherData.weather[0].description}</div>
+                </div>
+                <img class="weather-icon" src="https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png" alt="${weatherData.weather[0].description}">
+              </div>
+              <div class="weather-details">
+                <div class="weather-detail-item">
+                  <i class="ri-temp-hot-line"></i>
+                  <span>Ощущается как: ${Math.round(weatherData.main.feels_like)}°C</span>
+                </div>
+                <div class="weather-detail-item">
+                  <i class="ri-drop-line"></i>
+                  <span>Влажность: ${weatherData.main.humidity}%</span>
+                </div>
+                <div class="weather-detail-item">
+                  <i class="ri-windy-line"></i>
+                  <span>Ветер: ${Math.round(weatherData.wind.speed)} м/с</span>
+                </div>
+                <div class="weather-detail-item">
+                  <i class="ri-cloud-line"></i>
+                  <span>Облачность: ${weatherData.clouds.all}%</span>
+                </div>
+              </div>
+            `;
+          }
         } catch (error) {
-          console.error("Ошибка получения данных криптовалют:", error);
-          document.getElementById("crypto-rates").innerHTML =
-            "<p>Ошибка загрузки данных криптовалют.</p>";
+          console.error('Ошибка при получении погоды:', error);
+          document.getElementById('weather-info').innerHTML = '<p>Ошибка при загрузке погоды</p>';
         }
       }
 
-      // Получение курса валют
-      async function getCurrencyRates() {
-        try {
-          const response = await fetch("https://open.er-api.com/v6/latest/USD");
-          const data = await response.json();
-
-          const popularCurrencies = [
-            { code: "EUR", name: "Euro" },
-            { code: "KZT", name: "Kazakhstani Tenge" },
-            { code: "RUB", name: "Russian Ruble" },
-            { code: "GBP", name: "British Pound" },
-            { code: "JPY", name: "Japanese Yen" },
-            { code: "CHF", name: "Swiss Franc" },
-            { code: "CNY", name: "Chinese Yuan" },
-            { code: "AUD", name: "Australian Dollar" },
-            { code: "CAD", name: "Canadian Dollar" },
-          ];
-
-          const ratesContainer = document.getElementById("currency-rates");
-          ratesContainer.innerHTML = popularCurrencies
-            .map((currency) => {
-              const rate = data.rates[currency.code];
-              return rate
-                ? `
-                  <div class="rate-item">
-                    <div class="left">
-                      <img src="https://flagcdn.com/w40/${currency.code.slice(0, 2).toLowerCase()}.png" alt="${currency.name}" />
-                      <span>${currency.name} (${currency.code})</span>
-                    </div>
-                    <span>${rate.toFixed(2)}</span>
-                  </div>
-                `
-                : "";
-            })
-            .join("");
-        } catch (error) {
-          console.error("Ошибка получения данных валют:", error);
-          document.getElementById("currency-rates").innerHTML =
-            "<p>Ошибка загрузки данных валют.</p>";
-        }
-      }
-
-async function fetchWeather() {
-    try {
-      const response = await fetch("https://api.openweathermap.org/data/2.5/weather?q=Astana&appid=90e0d7e79559244cc33afebafbd85ab7&units=metric&lang=ru");
-      const data = await response.json();
-      document.getElementById("weather-info").innerHTML = `
-        <div class="weather-info"><strong>Температура:</strong> ${data.main.temp}°C</div>
-        <div class="weather-info"><strong>Состояние:</strong> ${data.weather[0].description}</div>
-      `;
-    } catch (error) {
-      document.getElementById("weather-info").innerHTML = `
-        <div class="weather-info">Ошибка загрузки данных погоды.</div>
-      `;
-      console.error("Ошибка при получении данных погоды:", error);
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    fetchWeather();
-  });
+      // Обновляем погоду каждые 30 минут
+      fetchWeather();
+      setInterval(fetchWeather, 1800000);
 
       // Логика для календаря
       const today = new Date();
       let currentMonth = today.getMonth();
       let currentYear = today.getFullYear();
-      const daysContainer = document.getElementById("days");
+      const daysContainer = document.getElementById("calendar-days");
       const months = [
         "Январь",
         "Февраль",
@@ -400,14 +796,15 @@ async function fetchWeather() {
         let shiftCount = 0;
 
         for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
-          const emptyCell = document.createElement("li");
-          emptyCell.classList.add("empty");
+          const emptyCell = document.createElement("div");
+          emptyCell.classList.add("calendar-day", "empty");
           daysContainer.appendChild(emptyCell);
         }
 
         for (let day = 1; day <= totalDays; day++) {
           const date = new Date(year, month, day);
-          const dayCell = document.createElement("li");
+          const dayCell = document.createElement("div");
+          dayCell.classList.add("calendar-day");
           dayCell.textContent = day;
 
           const holidayName = getHolidayName(date);
@@ -432,39 +829,533 @@ async function fetchWeather() {
           daysContainer.appendChild(dayCell);
         }
 
-        // Подсчёт часов
-        const totalHours = shiftCount * 11;
-        document.getElementById("total-hours").textContent = `${totalHours} часов`;
-
         // Обновление месяца и года
         document.getElementById("month").textContent = months[month];
         document.getElementById("year").textContent = year;
       }
 
       // Навигация по месяцам
-      document.getElementById("next").addEventListener("click", function () {
-        currentMonth++;
+      document.addEventListener("DOMContentLoaded", () => {
+        showCalendar(currentMonth, currentYear);
+      });
+
+      // Обновляем статистику при загрузке страницы
+      document.addEventListener("DOMContentLoaded", () => {
+        const now = new Date();
+        const year = currentYear || now.getFullYear();
+        const month = (currentMonth === undefined) ? now.getMonth() : currentMonth;
+        
+        // Получаем количество рабочих дней в месяце
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        
+        // Динамически рассчитываем рабочие часы на основе календаря
+        let workingHours = 0;
+        
+        for (let day = 1; day <= daysInMonth; day++) {
+          const date = new Date(year, month, day);
+          // Если это день смены, считаем часы независимо от того, праздник это или нет
+          if (isShiftDay(date)) {
+            workingHours += 11; // 11 часов за смену
+          }
+        }
+        
+        // Подсчет праздников и праздничных смен
+        let holidays = [];
+        let holidayShifts = 0;
+        
+        for (let day = 1; day <= daysInMonth; day++) {
+          const date = new Date(year, month, day);
+          const holiday = getHolidayName(date);
+          if (holiday) {
+            holidays.push({
+              date: date,
+              name: holiday,
+              isShift: isShiftDay(date) // Отмечаем, является ли праздник сменой
+            });
+            if (isShiftDay(date)) {
+              holidayShifts++;
+            }
+          }
+        }
+
+        // Подсчет отработанных и оставшихся смен
+        let completedShifts = 0;
+        let totalShifts = 0;
+        const today = new Date();
+
+        for (let day = 1; day <= daysInMonth; day++) {
+          const date = new Date(year, month, day);
+          if (isShiftDay(date)) {
+            totalShifts++;
+            if (date <= today) {
+              completedShifts++;
+            }
+          }
+        }
+
+        // Обновляем статистику на странице
+        document.getElementById('working-hours').textContent = workingHours;
+        document.getElementById('holidays-count').textContent = holidays.length;
+        document.getElementById('completed-shifts').textContent = `${completedShifts} / ${totalShifts}`;
+        document.getElementById('remaining-shifts').textContent = totalShifts - completedShifts;
+
+        // Обновляем список праздников с отметкой о смене
+        const holidaysList = document.getElementById('holidays-list');
+        holidaysList.innerHTML = holidays
+          .map(h => `<div class="holiday-item${h.isShift ? ' holiday-shift' : ''}">${h.date} - ${h.name}${h.isShift ? ' 🔄' : ''}</div>`)
+          .join('');
+      });
+
+      // Обновляем статус текущего дня
+      function updateCurrentDayStatus() {
+        const now = new Date();
+        const status = getDayStatus(now);
+        
+        const currentDate = document.getElementById('current-date');
+        const statusText = document.getElementById('status-text');
+        const statusDescription = document.getElementById('status-description');
+        const statusContainer = document.getElementById('current-status');
+        
+        // Форматируем дату
+        const options = { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        };
+        currentDate.textContent = now.toLocaleDateString('ru-RU', options);
+
+        // Убираем все классы состояния
+        statusContainer.classList.remove('status-working', 'status-off');
+
+        // Обновляем статус
+        if (status.isShift) {
+          statusContainer.classList.add('status-working');
+          statusText.textContent = `${status.shiftDay}-й день рабочей смены`;
+          statusDescription.textContent = 'Продолжительность: 11 часов';
+        } else if (status.isHoliday) {
+          statusContainer.classList.add('status-off');
+          statusText.textContent = 'Праздничный день';
+          statusDescription.textContent = status.holidayName;
+        } else {
+          statusContainer.classList.add('status-off');
+          statusText.textContent = 'Выходной день';
+          statusDescription.textContent = 'Следующая смена начнется ' + getNextShiftDate(now);
+        }
+      }
+
+      function getNextShiftDate(currentDate) {
+        let nextDate = new Date(currentDate);
+        for (let i = 1; i <= 7; i++) {
+          nextDate.setDate(currentDate.getDate() + i);
+          if (isShiftDay(nextDate)) {
+            const options = { month: 'long', day: 'numeric' };
+            return nextDate.toLocaleDateString('ru-RU', options);
+          }
+        }
+        return 'по графику';
+      }
+
+      // Обновляем стили
+      const statusStyles = document.createElement('style');
+      statusStyles.textContent = `
+        .current-status {
+          background: white;
+          border-radius: 15px;
+          padding: 20px;
+          margin: 15px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          transition: all 0.3s ease;
+        }
+
+        .current-date {
+          font-size: 16px;
+          color: #7f8c8d;
+          margin-bottom: 12px;
+        }
+
+        .status-text {
+          font-size: 24px;
+          font-weight: 600;
+          margin-bottom: 8px;
+          color: #2c3e50;
+        }
+
+        .status-description {
+          font-size: 16px;
+          color: #7f8c8d;
+        }
+
+        .status-working {
+          background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
+        }
+
+        .status-working .current-date,
+        .status-working .status-text,
+        .status-working .status-description {
+          color: white;
+        }
+
+        .status-off .status-text {
+          color: #2c3e50;
+        }
+
+        @media (max-width: 768px) {
+          .current-status {
+            padding: 15px;
+            margin: 12px;
+          }
+
+          .current-date {
+            font-size: 14px;
+            margin-bottom: 10px;
+          }
+
+          .status-text {
+            font-size: 20px;
+            margin-bottom: 6px;
+          }
+
+          .status-description {
+            font-size: 14px;
+          }
+        }
+      `;
+      document.head.appendChild(statusStyles);
+
+      // Обновляем статус каждую минуту
+      setInterval(updateCurrentDayStatus, 60000);
+
+      function getWorkingHours(year, month) {
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        let workingHours = 0;
+        
+        for (let day = 1; day <= daysInMonth; day++) {
+          const date = new Date(year, month, day);
+          if (isShiftDay(date)) {
+            workingHours += 11;
+          }
+        }
+        
+        return workingHours;
+      }
+
+      function updateHomeStats() {
+        const now = new Date();
+        const year = currentYear || now.getFullYear();
+        const month = (currentMonth === undefined) ? now.getMonth() : currentMonth;
+        
+        const workingHours = getWorkingHours(year, month);
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        
+        // Подсчет праздников и смен
+        let holidays = [];
+        let completedShifts = 0;
+        let totalShifts = 0;
+        const today = new Date();
+        
+        for (let day = 1; day <= daysInMonth; day++) {
+          const date = new Date(year, month, day);
+          const holiday = getHolidayName(date);
+          
+          if (holiday) {
+            holidays.push({
+              date: date,
+              name: holiday,
+              isShift: isShiftDay(date)
+            });
+          }
+          
+          if (isShiftDay(date)) {
+            totalShifts++;
+            if (date <= today) {
+              completedShifts++;
+            }
+          }
+        }
+
+        // Обновляем статистику
+        document.getElementById('working-hours').textContent = workingHours;
+        document.getElementById('holidays-count').textContent = holidays.length;
+        document.getElementById('completed-shifts').textContent = totalShifts;
+
+        // Обновляем список праздников
+        const holidaysList = document.getElementById('holidays-list');
+        if (holidays.length > 0) {
+          holidaysList.innerHTML = holidays
+            .map(h => {
+              const dateOptions = { day: 'numeric', month: 'long' };
+              const formattedDate = h.date.toLocaleDateString('ru-RU', dateOptions);
+              return `
+                <div class="holiday-item${h.isShift ? ' holiday-shift' : ''}">
+                  <div class="holiday-date">${formattedDate}</div>
+                  <div class="holiday-name">${h.name}</div>
+                  ${h.isShift ? '<div class="holiday-shift-icon">смена</div>' : ''}
+                </div>
+              `;
+            })
+            .join('');
+        } else {
+          holidaysList.innerHTML = '<div class="no-holidays">В этом месяце праздников нет</div>';
+        }
+      }
+
+      // Обновляем стили для праздников
+      const holidayStyles = document.createElement('style');
+      holidayStyles.textContent = `
+        .holiday-item {
+          display: flex;
+          align-items: center;
+          padding: 12px;
+          background: #f8f9fa;
+          border-radius: 12px;
+          margin-bottom: 8px;
+          transition: all 0.2s ease;
+        }
+
+        .holiday-date {
+          background: #1abc9c;
+          color: white;
+          padding: 6px 12px;
+          border-radius: 8px;
+          font-weight: 500;
+          margin-right: 12px;
+          white-space: nowrap;
+        }
+
+        .holiday-name {
+          flex: 1;
+          color: #2c3e50;
+          font-size: 14px;
+        }
+
+        .holiday-shift {
+          background: rgba(26, 188, 156, 0.1);
+          border-left: 3px solid #1abc9c;
+        }
+
+        .holiday-shift-icon {
+          background: #1abc9c;
+          color: white;
+          padding: 4px 8px;
+          border-radius: 6px;
+          font-size: 12px;
+          margin-left: 8px;
+        }
+
+        @media (max-width: 768px) {
+          .holiday-item {
+            padding: 10px;
+          }
+
+          .holiday-date {
+            padding: 4px 8px;
+            font-size: 13px;
+          }
+
+          .holiday-name {
+            font-size: 13px;
+          }
+
+          .holiday-shift-icon {
+            padding: 3px 6px;
+            font-size: 11px;
+          }
+        }
+      `;
+      document.head.appendChild(holidayStyles);
+
+      // Стили для навигации и виджетов
+      const navigationStyles = document.createElement('style');
+      navigationStyles.textContent = `
+        .calendar-nav {
+          cursor: pointer;
+          padding: 8px 16px;
+          background: rgba(26, 188, 156, 0.1);
+          border-radius: 12px;
+          color: #1abc9c;
+          transition: all 0.2s ease;
+        }
+
+        .calendar-nav:hover {
+          background: rgba(26, 188, 156, 0.2);
+        }
+
+        .widget {
+          display: none;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        .widget.active {
+          display: block;
+          opacity: 1;
+        }
+
+        #home-widget {
+          padding-bottom: 80px;
+        }
+
+        .bottom-nav {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: white;
+          padding: 10px 20px;
+          box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+          display: flex;
+          justify-content: space-around;
+          z-index: 1000;
+        }
+
+        .nav-tab {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 8px 16px;
+          color: #95a5a6;
+          text-decoration: none;
+          transition: all 0.2s ease;
+          border-radius: 12px;
+        }
+
+        .nav-tab i {
+          font-size: 24px;
+          margin-bottom: 4px;
+        }
+
+        .nav-tab span {
+          font-size: 12px;
+        }
+
+        .nav-tab.active {
+          color: #1abc9c;
+          background: rgba(26, 188, 156, 0.1);
+        }
+
+        .nav-tab:hover {
+          color: #1abc9c;
+        }
+
+        @media (max-width: 768px) {
+          .bottom-nav {
+            padding: 10px;
+          }
+
+          .nav-tab {
+            padding: 6px 12px;
+          }
+
+          .nav-tab i {
+            font-size: 20px;
+          }
+
+          .nav-tab span {
+            font-size: 11px;
+          }
+        }
+      `;
+      document.head.appendChild(navigationStyles);
+
+      // Активируем первый виджет по умолчанию
+      document.addEventListener('DOMContentLoaded', () => {
+        const defaultTab = document.querySelector('.nav-tab');
+        if (defaultTab) {
+          defaultTab.click();
+        }
+      });
+
+      // Обработчики навигации
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          // Убираем активный класс со всех вкладок
+          document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+          // Добавляем активный класс текущей вкладке
+          tab.classList.add('active');
+          
+          // Скрываем все виджеты
+          document.querySelectorAll('.widget').forEach(w => w.classList.remove('active'));
+          
+          // Показываем нужный виджет
+          const widgetName = tab.getAttribute('data-widget');
+          document.getElementById(`${widgetName}-widget`).classList.add('active');
+        });
+      });
+
+      // Навигация по месяцам
+      function updateMonth(delta) {
+        currentMonth = currentMonth + delta;
         if (currentMonth > 11) {
           currentMonth = 0;
           currentYear++;
-        }
-        showCalendar(currentMonth, currentYear);
-      });
-
-      document.getElementById("prev").addEventListener("click", function () {
-        currentMonth--;
-        if (currentMonth < 0) {
+        } else if (currentMonth < 0) {
           currentMonth = 11;
           currentYear--;
         }
+        
         showCalendar(currentMonth, currentYear);
-      });
+        updateHomeStats();
+        updateCurrentDayStatus();
+      }
 
-      // Инициализация
-      showCalendar(currentMonth, currentYear);
-      getCryptoRates();
-      getCurrencyRates();
-      getWeather();
+      // Добавляем кнопки навигации по месяцам
+      const prevButton = document.createElement('span');
+      prevButton.innerHTML = '&#10094;';
+      prevButton.classList.add('calendar-nav');
+      prevButton.onclick = () => updateMonth(-1);
+
+      const nextButton = document.createElement('span');
+      nextButton.innerHTML = '&#10095;';
+      nextButton.classList.add('calendar-nav');
+      nextButton.onclick = () => updateMonth(1);
+
+      const calendarHeader = document.querySelector('.calendar-header');
+      calendarHeader.insertBefore(prevButton, calendarHeader.firstChild);
+      calendarHeader.appendChild(nextButton);
+
+      function getDayStatus(date) {
+        const isShift = isShiftDay(date);
+        
+        // Определяем, первый или второй день смены
+        let shiftDay = 0;
+        if (isShift) {
+          const prevDate = new Date(date);
+          prevDate.setDate(date.getDate() - 1);
+          
+          if (isShiftDay(prevDate)) {
+            shiftDay = 2;
+          } else {
+            shiftDay = 1;
+          }
+        }
+
+        const holiday = getHolidayName(date);
+
+        return {
+          isShift,
+          shiftDay,
+          isHoliday: !!holiday,
+          holidayName: holiday
+        };
+      }
+
+      // Инициализация при загрузке
+      document.addEventListener("DOMContentLoaded", () => {
+        // Инициализируем все виджеты
+        showCalendar(currentMonth, currentYear);
+        updateHomeStats();
+        updateCurrentDayStatus();
+
+        // Активируем первый виджет
+        const defaultTab = document.querySelector('.nav-tab');
+        if (defaultTab) {
+          defaultTab.click();
+        }
+
+        // Запускаем автообновление статуса
+        setInterval(updateCurrentDayStatus, 60000);
+      });
     </script>
   </body>
 </html>
