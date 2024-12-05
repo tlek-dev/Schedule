@@ -84,12 +84,97 @@
         margin: 15px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         transition: all 0.3s ease;
+        border-left: 5px solid #ddd;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .current-status.status-working {
+        border-left-color: #1abc9c;
+        background: linear-gradient(to right, rgba(26, 188, 156, 0.1), white);
+      }
+
+      .current-status.status-off {
+        border-left-color: #1abc9c;
+        background: linear-gradient(to right, rgba(26, 188, 156, 0.05), white);
+      }
+
+      /* Стили для дневного времени */
+      .current-status.daytime {
+        border-left-color: #1abc9c;
+      }
+
+      /* Стили для ночного времени */
+      .current-status.nighttime {
+        border-left-color: #1abc9c;
+      }
+
+      .time-indicator {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        z-index: 1;
+      }
+
+      .time-indicator i {
+        font-size: 24px;
+        transition: all 0.3s ease;
+        color: #1abc9c;
+      }
+
+      .time-indicator:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        background: rgba(26, 188, 156, 0.1);
+      }
+
+      /* День */
+      .daytime .time-indicator {
+        border: 2px solid rgba(26, 188, 156, 0.2);
+      }
+
+      /* Ночь */
+      .nighttime .time-indicator {
+        border: 2px solid rgba(26, 188, 156, 0.2);
+      }
+
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+      }
+
+      .time-indicator i {
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @media (max-width: 768px) {
+        .time-indicator {
+          width: 36px;
+          height: 36px;
+          top: 15px;
+          right: 15px;
+        }
+
+        .time-indicator i {
+          font-size: 20px;
+        }
       }
 
       .current-date {
         font-size: 16px;
         color: #7f8c8d;
         margin-bottom: 12px;
+        padding-right: 50px;
       }
 
       .status-text {
@@ -100,46 +185,19 @@
       }
 
       .status-description {
-        font-size: 16px;
         color: #7f8c8d;
+        font-size: 16px;
       }
 
-      .status-working {
-        background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
-      }
-
-      .status-working .current-date,
-      .status-working .status-text,
-      .status-working .status-description {
-        color: white;
+      .status-working .status-text {
+        color: #1abc9c;
       }
 
       .status-off .status-text {
-        color: #2c3e50;
+        color: #1abc9c;
       }
 
-      @media (max-width: 768px) {
-        .current-status {
-          padding: 15px;
-          margin: 12px;
-        }
-
-        .current-date {
-          font-size: 14px;
-          margin-bottom: 10px;
-        }
-
-        .status-text {
-          font-size: 20px;
-          margin-bottom: 6px;
-        }
-
-        .status-description {
-          font-size: 14px;
-        }
-      }
-
-      /* Сетка статистики */
+      /* Статистика */
       .stats-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -207,10 +265,21 @@
 
       /* Календарь */
       .calendar {
+        width: 100%;
+        max-width: 800px;
+        margin: 50px auto 20px;
         background: white;
-        border-radius: 24px;
-        padding: 20px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border: 1px solid #ddd;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
+
+      @media (max-width: 768px) {
+        .calendar {
+          margin-top: 60px;
+          margin-bottom: 15px;
+        }
       }
 
       .calendar-header {
@@ -242,19 +311,33 @@
       }
 
       .calendar-day {
+        padding: 10px;
+        text-align: center;
+        cursor: pointer;
+        border: 1px solid #e8e8e8;
+        transition: all 0.2s ease;
+        position: relative;
+        background: white;
         aspect-ratio: 1;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 14px;
         font-weight: 500;
-        border-radius: 12px;
-        cursor: pointer;
-        transition: all 0.2s ease;
       }
 
       .calendar-day:hover {
         background: rgba(26, 188, 156, 0.1);
+      }
+
+      .calendar-day.empty {
+        background: #f8f9fa;
+        cursor: default;
+      }
+
+      .calendar-day.other-month {
+        color: #bdc3c7;
+        background: #f8f9fa;
       }
 
       .calendar-day.shift {
@@ -264,6 +347,118 @@
 
       .calendar-day.holiday {
         background: #FF9500;
+        color: white;
+      }
+
+      .calendar-day.today {
+        background: rgba(26, 188, 156, 0.2) !important;
+        color: #1abc9c;
+        font-weight: bold;
+        border: 2px solid #1abc9c !important;
+      }
+
+      .calendar-day.holiday.shift {
+        background: linear-gradient(to right, #1abc9c 50%, #FF9500 50%);
+        color: white;
+      }
+
+      /* Стили для темной темы */
+      .dark-theme .calendar {
+        background: #2c2c2c;
+        border-color: #444;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      }
+
+      .dark-theme .calendar-header {
+        background: #363636;
+        color: #fff;
+        border-bottom-color: #444;
+      }
+
+      .dark-theme .calendar-weekdays {
+        background: #2c2c2c;
+        border-bottom-color: #444;
+      }
+
+      .dark-theme .calendar-weekdays span {
+        color: #999; /* Цвет для дней недели в темной теме */
+      }
+
+      .dark-theme .calendar-days {
+        background: #2c2c2c;
+      }
+
+      .dark-theme .calendar-day {
+        color: #000; /* Добавляем черный цвет для цифр */
+        border-color: #444;
+      }
+
+      .dark-theme .calendar-day:hover {
+        background: #363636;
+      }
+
+      .dark-theme .calendar-day.current {
+        background: rgba(26, 188, 156, 0.2);
+        color: #1abc9c;
+      }
+
+      .dark-theme .calendar-day.working-day {
+        background: rgba(26, 188, 156, 0.15);
+      }
+
+      .dark-theme .calendar-day.off-day {
+        background: rgba(26, 188, 156, 0.1);
+      }
+
+      .dark-theme .calendar-day.holiday {
+        color: #e74c3c;
+      }
+
+      .dark-theme .calendar-day.other-month {
+        color: #666;
+      }
+
+      .dark-theme .calendar-nav button {
+        color: #fff;
+      }
+
+      .dark-theme .calendar-nav button:hover {
+        background: #363636;
+      }
+
+      .dark-theme .calendar-legend {
+        background: #2c2c2c;
+        border-top-color: #444;
+      }
+
+      .dark-theme .legend-item {
+        color: #999;
+      }
+
+      .dark-theme .legend-color {
+        border-color: #444;
+      }
+
+      .dark-theme .legend-color.working {
+        background: rgba(26, 188, 156, 0.15);
+      }
+
+      .dark-theme .legend-color.off {
+        background: rgba(26, 188, 156, 0.1);
+      }
+
+      .dark-theme .legend-color.holiday {
+        background: rgba(231, 76, 60, 0.1);
+      }
+
+      .dark-theme .calendar-day.today {
+        background: rgba(26, 188, 156, 0.3) !important;
+        color: #1abc9c !important;
+        border-color: #1abc9c !important;
+      }
+
+      .dark-theme .calendar-day.holiday.shift {
+        background: linear-gradient(to right, #1abc9c 50%, #FF9500 50%);
         color: white;
       }
 
@@ -487,11 +682,13 @@
       }
 
       /* Стили для погоды */
-      .weather-container {
+      .weather-widget {
+        margin-top: 20px;
         background: white;
-        border-radius: 24px;
+        border-radius: 20px;
         padding: 20px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        text-align: center;
       }
 
       .weather-header {
@@ -544,7 +741,7 @@
       }
 
       @media (max-width: 768px) {
-        .weather-container {
+        .weather-widget {
           padding: 16px;
           margin: 12px;
         }
@@ -562,9 +759,408 @@
           gap: 12px;
         }
       }
+
+      /* Стили для темной темы */
+      .dark-theme .weather-widget {
+        background: #2c2c2c;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        color: #fff;
+      }
+
+      .dark-theme .weather-header {
+        color: #fff;
+      }
+
+      .dark-theme .weather-temp {
+        color: #fff;
+      }
+
+      .dark-theme .weather-description {
+        color: #fff;
+      }
+
+      .dark-theme .weather-details {
+        color: #fff;
+      }
+
+      .dark-theme .weather-details p {
+        color: #fff !important;
+      }
+
+      .dark-theme .weather-details span {
+        color: #fff !important;
+      }
+
+      .dark-theme .weather-icon {
+        filter: brightness(1.2);
+      }
+
+      /* Стили для калькулятора */
+      .calculator-container {
+        margin-top: 60px; /* Добавляем отступ сверху */
+        background: white;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
+
+      .calculator-input {
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+      }
+
+      .calculator-button {
+        width: 100%;
+        padding: 12px;
+        background: #1abc9c;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        margin: 12px 0;
+        transition: background 0.3s ease;
+      }
+
+      .calculator-button:hover {
+        background: #16a085;
+      }
+
+      .result-container {
+        margin-top: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+      }
+
+      .result-item {
+        display: flex;
+        justify-content: space-between;
+        margin: 8px 0;
+      }
+
+      .result-label {
+        color: #666;
+      }
+
+      .result-value, .tax-value {
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      .fade-in {
+        animation: fadeIn 0.5s ease-in;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      /* Стили для виджетов */
+      .widget {
+        display: none;
+        margin-bottom: 20px;
+      }
+
+      .widget.active {
+        display: block;
+      }
+
+      #weather-widget {
+        padding-top: 60px; /* Добавляем отступ сверху */
+      }
+
+      /* Стили для переключателя темы */
+      .theme-switch-wrapper {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        align-items: center;
+        z-index: 100;
+        background: white;
+        padding: 10px 15px;
+        border-radius: 25px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+      }
+
+      .theme-switch {
+        display: inline-block;
+        position: relative;
+        width: 50px;
+        height: 25px;
+        margin-left: 10px;
+      }
+
+      .theme-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #e8e8e8;
+        transition: .4s;
+        border-radius: 25px;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 19px;
+        width: 19px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+      }
+
+      input:checked + .slider {
+        background-color: #1abc9c;
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(25px);
+      }
+
+      .theme-switch-wrapper i {
+        color: #1abc9c;
+        margin-right: 5px;
+        font-size: 20px;
+      }
+
+      /* Темная тема */
+      body.dark-theme {
+        background-color: #1a1a1a;
+        color: #ffffff;
+      }
+
+      .dark-theme .widget-container {
+        background-color: #1a1a1a;
+      }
+
+      .dark-theme .current-status {
+        background: #2c2c2c;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      }
+
+      .dark-theme .current-status.status-working {
+        background: linear-gradient(to right, rgba(26, 188, 156, 0.2), #2c2c2c);
+      }
+
+      .dark-theme .current-status.status-off {
+        background: linear-gradient(to right, rgba(26, 188, 156, 0.1), #2c2c2c);
+      }
+
+      .dark-theme .current-date {
+        color: #999;
+      }
+
+      .dark-theme .status-description {
+        color: #999;
+      }
+
+      .dark-theme .time-indicator {
+        background: #2c2c2c;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      }
+
+      .dark-theme .time-indicator:hover {
+        background: #363636;
+      }
+
+      .dark-theme .theme-switch-wrapper {
+        background: #2c2c2c;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      }
+
+      .dark-theme .nav-tabs {
+        background: #2c2c2c;
+        box-shadow: 0 -1px 10px rgba(0,0,0,0.3);
+      }
+
+      .dark-theme .nav-tab {
+        color: #999;
+      }
+
+      .dark-theme .nav-tab.active {
+        color: #1abc9c;
+        background: rgba(26, 188, 156, 0.2);
+      }
+
+      .dark-theme .calculator-container {
+        background: #2c2c2c;
+      }
+
+      .dark-theme .calculator-input {
+        background: #363636;
+        border-color: #444;
+        color: #fff;
+      }
+
+      .dark-theme .result-container {
+        background: #363636;
+      }
+
+      .dark-theme .result-label {
+        color: #999;
+      }
+
+      .dark-theme .result-value,
+      .dark-theme .tax-value {
+        color: #fff;
+      }
+
+      @media (max-width: 768px) {
+        .theme-switch-wrapper {
+          top: 10px;
+          right: 10px;
+          padding: 8px 12px;
+        }
+      }
+
+      /* Темная тема для календаря */
+      .dark-theme .calendar {
+        background: #2c2c2c;
+        border-color: #444;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      }
+
+      .dark-theme .calendar-header {
+        background: #363636;
+        color: #fff;
+        border-bottom-color: #444;
+      }
+
+      .dark-theme .calendar-weekdays {
+        background: #2c2c2c;
+        border-bottom-color: #444;
+      }
+
+      .dark-theme .calendar-weekdays span {
+        color: #999;
+      }
+
+      .dark-theme .calendar-days {
+        background: #2c2c2c;
+      }
+
+      .dark-theme .calendar-day {
+        color: #000; /* Добавляем черный цвет для цифр */
+        border-color: #444;
+      }
+
+      .dark-theme .calendar-day:hover {
+        background: #363636;
+      }
+
+      .dark-theme .calendar-day.current {
+        background: rgba(26, 188, 156, 0.2);
+        color: #1abc9c;
+      }
+
+      .dark-theme .calendar-day.working-day {
+        background: rgba(26, 188, 156, 0.15);
+      }
+
+      .dark-theme .calendar-day.off-day {
+        background: rgba(26, 188, 156, 0.1);
+      }
+
+      .dark-theme .calendar-day.holiday {
+        color: #e74c3c;
+      }
+
+      .dark-theme .calendar-day.other-month {
+        color: #666;
+      }
+
+      .dark-theme .calendar-nav button {
+        color: #fff;
+      }
+
+      .dark-theme .calendar-nav button:hover {
+        background: #363636;
+      }
+
+      .dark-theme .calendar-legend {
+        background: #2c2c2c;
+        border-top-color: #444;
+      }
+
+      .dark-theme .legend-item {
+        color: #999;
+      }
+
+      .dark-theme .legend-color {
+        border-color: #444;
+      }
+
+      .dark-theme .legend-color.working {
+        background: rgba(26, 188, 156, 0.15);
+      }
+
+      .dark-theme .legend-color.off {
+        background: rgba(26, 188, 156, 0.1);
+      }
+
+      .dark-theme .legend-color.holiday {
+        background: rgba(231, 76, 60, 0.1);
+      }
+
+      /* Стили для темной темы статистики */
+      .dark-theme .stats-grid {
+        background: #2c2c2c;
+        border-color: #444;
+      }
+
+      .dark-theme .stat-card {
+        background: #363636;
+        border-color: #444;
+      }
+
+      .dark-theme .stat-value {
+        color: #1abc9c;
+      }
+
+      .dark-theme .stat-label {
+        color: #fff;
+      }
+
+      .dark-theme .shifts-card {
+        background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
+      }
+
+      .dark-theme .shifts-card i,
+      .dark-theme .shifts-card .stat-value,
+      .dark-theme .shifts-card .stat-label {
+        color: white;
+      }
     </style>
   </head>
   <body>
+    <!-- Переключатель темы -->
+    <div class="theme-switch-wrapper">
+      <i class="ri-contrast-2-line"></i>
+      <label class="theme-switch">
+        <input type="checkbox" id="theme-toggle">
+        <span class="slider"></span>
+      </label>
+    </div>
     <div class="widget-container">
       <!-- Главная -->
       <div id="home-widget" class="widget active">
@@ -576,6 +1172,9 @@
         </div>
 
         <div class="current-status" id="current-status">
+          <div class="time-indicator">
+            <i class="ri-sun-line"></i>
+          </div>
           <div class="current-date" id="current-date">-</div>
           <div class="status-text" id="status-text">-</div>
           <div class="status-description" id="status-description">-</div>
@@ -641,56 +1240,107 @@
       </div>
 
       <div id="weather-widget" class="widget">
-        <div class="weather-container">
+        <div class="weather-widget">
           <div id="weather-info"></div>
+        </div>
+      </div>
+
+      <!-- Калькулятор -->
+      <div id="calculator-widget" class="widget">
+        <div class="calculator-container">
+          <h2 style="margin-bottom: 20px;">Калькулятор зарплаты</h2>
+          
+          <div>
+            <label for="hourlyRate">Почасовая ставка (₸)</label>
+            <input type="number" id="hourlyRate" class="calculator-input" placeholder="Введите ставку">
+          </div>
+          
+          <div>
+            <label for="regularHours">Обычные часы</label>
+            <input type="number" id="regularHours" class="calculator-input" placeholder="Введите часы">
+          </div>
+          
+          <div>
+            <label for="holidayHours">Праздничные часы</label>
+            <input type="number" id="holidayHours" class="calculator-input" placeholder="Введите часы">
+          </div>
+          
+          <button onclick="calculateSalary()" class="calculator-button">Рассчитать</button>
+          
+          <div class="result-container">
+            <div class="result-item">
+              <span class="result-label">Общая сумма:</span>
+              <span id="salaryResult" class="result-value">0.00 ₸</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Подоходный налог (10%):</span>
+              <span id="incomeTax" class="tax-value">0.00 ₸</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Пенсионный налог (10%):</span>
+              <span id="pensionTax" class="tax-value">0.00 ₸</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Профсоюз (1%):</span>
+              <span id="unionTax" class="tax-value">0.00 ₸</span>
+            </div>
+            <div class="result-item" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
+              <span class="result-label" style="font-weight: 600;">К выдаче:</span>
+              <span id="finalSalary" class="result-value" style="color: #1abc9c;">0.00 ₸</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <nav class="nav-tabs">
-      <div class="nav-tab active" data-widget="home">
+      <div class="nav-tab" onclick="showWidget('home')">
         <i class="ri-home-4-line"></i>
         <span>Главная</span>
       </div>
-      <div class="nav-tab" data-widget="calendar">
+      <div class="nav-tab" onclick="showWidget('calendar')">
         <i class="ri-calendar-line"></i>
         <span>Календарь</span>
       </div>
-      <div class="nav-tab" data-widget="weather">
+      <div class="nav-tab" onclick="showWidget('weather')">
         <i class="ri-sun-line"></i>
         <span>Погода</span>
+      </div>
+      <div class="nav-tab" onclick="showWidget('calculator')">
+        <i class="ri-calculator-line"></i>
+        <span>Калькулятор</span>
       </div>
     </nav>
 
     <script>
       function showWidget(widgetName) {
-        // Hide all widgets
         document.querySelectorAll('.widget').forEach(widget => {
-          widget.classList.remove('active');
+          widget.style.display = 'none';
         });
         
-        // Remove active class from all tabs
         document.querySelectorAll('.nav-tab').forEach(tab => {
           tab.classList.remove('active');
         });
         
-        // Show selected widget
-        document.getElementById(widgetName + '-widget').classList.add('active');
+        const selectedWidget = document.getElementById(widgetName + '-widget');
+        if (selectedWidget) {
+          selectedWidget.style.display = 'block';
+        }
         
-        // Activate selected tab
-        event.target.classList.add('active');
+        const selectedTab = document.querySelector(`.nav-tab[onclick="showWidget('${widgetName}')"]`);
+        if (selectedTab) {
+          selectedTab.classList.add('active');
+        }
       }
 
       async function fetchWeather() {
         try {
-          // Используем геокодинг для получения точных координат Астаны
           const geocodeResponse = await fetch('https://api.openweathermap.org/geo/1.0/direct?q=Astana,KZ&limit=1&appid=90e0d7e79559244cc33afebafbd85ab7');
           const geocodeData = await geocodeResponse.json();
           
           if (geocodeData.length > 0) {
             const { lat, lon } = geocodeData[0];
             
-            // Получаем текущую погоду по координатам
             const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=90e0d7e79559244cc33afebafbd85ab7&units=metric&lang=ru`);
             const weatherData = await weatherResponse.json();
 
@@ -734,11 +1384,9 @@
         }
       }
 
-      // Обновляем погоду каждые 30 минут
       fetchWeather();
       setInterval(fetchWeather, 1800000);
 
-      // Логика для календаря
       const today = new Date();
       let currentMonth = today.getMonth();
       let currentYear = today.getFullYear();
@@ -794,6 +1442,7 @@
         daysContainer.innerHTML = "";
 
         let shiftCount = 0;
+        const today = new Date();
 
         for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
           const emptyCell = document.createElement("div");
@@ -821,92 +1470,30 @@
             dayCell.classList.add("holiday");
           }
 
-          // Проверка на сегодняшний день
-          if (date.toDateString() === today.toDateString()) {
-            dayCell.classList.add("active");
+          // Проверяем, является ли день текущим
+          if (date.getDate() === today.getDate() && 
+              date.getMonth() === today.getMonth() && 
+              date.getFullYear() === today.getFullYear()) {
+            dayCell.classList.add("today");
           }
 
           daysContainer.appendChild(dayCell);
         }
 
-        // Обновление месяца и года
         document.getElementById("month").textContent = months[month];
         document.getElementById("year").textContent = year;
       }
 
-      // Навигация по месяцам
       document.addEventListener("DOMContentLoaded", () => {
         showCalendar(currentMonth, currentYear);
+        updateHomeStats();
+        updateCurrentDayStatus();
+
+        showWidget('home');
+
+        setInterval(updateCurrentDayStatus, 60000);
       });
 
-      // Обновляем статистику при загрузке страницы
-      document.addEventListener("DOMContentLoaded", () => {
-        const now = new Date();
-        const year = currentYear || now.getFullYear();
-        const month = (currentMonth === undefined) ? now.getMonth() : currentMonth;
-        
-        // Получаем количество рабочих дней в месяце
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        
-        // Динамически рассчитываем рабочие часы на основе календаря
-        let workingHours = 0;
-        
-        for (let day = 1; day <= daysInMonth; day++) {
-          const date = new Date(year, month, day);
-          // Если это день смены, считаем часы независимо от того, праздник это или нет
-          if (isShiftDay(date)) {
-            workingHours += 11; // 11 часов за смену
-          }
-        }
-        
-        // Подсчет праздников и праздничных смен
-        let holidays = [];
-        let holidayShifts = 0;
-        
-        for (let day = 1; day <= daysInMonth; day++) {
-          const date = new Date(year, month, day);
-          const holiday = getHolidayName(date);
-          if (holiday) {
-            holidays.push({
-              date: date,
-              name: holiday,
-              isShift: isShiftDay(date) // Отмечаем, является ли праздник сменой
-            });
-            if (isShiftDay(date)) {
-              holidayShifts++;
-            }
-          }
-        }
-
-        // Подсчет отработанных и оставшихся смен
-        let completedShifts = 0;
-        let totalShifts = 0;
-        const today = new Date();
-
-        for (let day = 1; day <= daysInMonth; day++) {
-          const date = new Date(year, month, day);
-          if (isShiftDay(date)) {
-            totalShifts++;
-            if (date <= today) {
-              completedShifts++;
-            }
-          }
-        }
-
-        // Обновляем статистику на странице
-        document.getElementById('working-hours').textContent = workingHours;
-        document.getElementById('holidays-count').textContent = holidays.length;
-        document.getElementById('completed-shifts').textContent = `${completedShifts} / ${totalShifts}`;
-        document.getElementById('remaining-shifts').textContent = totalShifts - completedShifts;
-
-        // Обновляем список праздников с отметкой о смене
-        const holidaysList = document.getElementById('holidays-list');
-        holidaysList.innerHTML = holidays
-          .map(h => `<div class="holiday-item${h.isShift ? ' holiday-shift' : ''}">${h.date} - ${h.name}${h.isShift ? ' 🔄' : ''}</div>`)
-          .join('');
-      });
-
-      // Обновляем статус текущего дня
       function updateCurrentDayStatus() {
         const now = new Date();
         const status = getDayStatus(now);
@@ -915,8 +1502,17 @@
         const statusText = document.getElementById('status-text');
         const statusDescription = document.getElementById('status-description');
         const statusContainer = document.getElementById('current-status');
+        const timeIndicator = statusContainer.querySelector('.time-indicator i');
         
-        // Форматируем дату
+        // Обновляем индикатор времени суток
+        const hour = now.getHours();
+        const isDaytime = hour >= 6 && hour < 20; // День с 6:00 до 20:00
+        
+        // Обновляем иконку и класс
+        timeIndicator.className = isDaytime ? 'ri-sun-line' : 'ri-moon-line';
+        statusContainer.classList.remove('daytime', 'nighttime');
+        statusContainer.classList.add(isDaytime ? 'daytime' : 'nighttime');
+        
         const options = { 
           weekday: 'long', 
           year: 'numeric', 
@@ -925,119 +1521,44 @@
         };
         currentDate.textContent = now.toLocaleDateString('ru-RU', options);
 
-        // Убираем все классы состояния
         statusContainer.classList.remove('status-working', 'status-off');
 
-        // Обновляем статус
         if (status.isShift) {
           statusContainer.classList.add('status-working');
           statusText.textContent = `${status.shiftDay}-й день рабочей смены`;
-          statusDescription.textContent = 'Продолжительность: 11 часов';
-        } else if (status.isHoliday) {
-          statusContainer.classList.add('status-off');
-          statusText.textContent = 'Праздничный день';
-          statusDescription.textContent = status.holidayName;
+          statusDescription.textContent = 'Рабочий день';
         } else {
           statusContainer.classList.add('status-off');
-          statusText.textContent = 'Выходной день';
-          statusDescription.textContent = 'Следующая смена начнется ' + getNextShiftDate(now);
+          if (getHolidayName(now)) {
+            statusText.textContent = 'Праздничный день';
+            statusDescription.textContent = `${getHolidayName(now)}. Следующая смена начнется ${getNextShiftDate(now)}`;
+          } else if (status.offDay > 0) {
+            statusText.textContent = `${status.offDay}-й выходной день`;
+            statusDescription.textContent = `Следующая смена начнется ${getNextShiftDate(now)}`;
+          } else {
+            statusText.textContent = 'Выходной день';
+            statusDescription.textContent = `Следующая смена начнется ${getNextShiftDate(now)}`;
+          }
         }
       }
 
       function getNextShiftDate(currentDate) {
-        let nextDate = new Date(currentDate);
-        for (let i = 1; i <= 7; i++) {
-          nextDate.setDate(currentDate.getDate() + i);
-          if (isShiftDay(nextDate)) {
-            const options = { month: 'long', day: 'numeric' };
-            return nextDate.toLocaleDateString('ru-RU', options);
-          }
-        }
-        return 'по графику';
-      }
-
-      // Обновляем стили
-      const statusStyles = document.createElement('style');
-      statusStyles.textContent = `
-        .current-status {
-          background: white;
-          border-radius: 15px;
-          padding: 20px;
-          margin: 15px;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-          transition: all 0.3s ease;
-        }
-
-        .current-date {
-          font-size: 16px;
-          color: #7f8c8d;
-          margin-bottom: 12px;
-        }
-
-        .status-text {
-          font-size: 24px;
-          font-weight: 600;
-          margin-bottom: 8px;
-          color: #2c3e50;
-        }
-
-        .status-description {
-          font-size: 16px;
-          color: #7f8c8d;
-        }
-
-        .status-working {
-          background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
-        }
-
-        .status-working .current-date,
-        .status-working .status-text,
-        .status-working .status-description {
-          color: white;
-        }
-
-        .status-off .status-text {
-          color: #2c3e50;
-        }
-
-        @media (max-width: 768px) {
-          .current-status {
-            padding: 15px;
-            margin: 12px;
-          }
-
-          .current-date {
-            font-size: 14px;
-            margin-bottom: 10px;
-          }
-
-          .status-text {
-            font-size: 20px;
-            margin-bottom: 6px;
-          }
-
-          .status-description {
-            font-size: 14px;
-          }
-        }
-      `;
-      document.head.appendChild(statusStyles);
-
-      // Обновляем статус каждую минуту
-      setInterval(updateCurrentDayStatus, 60000);
-
-      function getWorkingHours(year, month) {
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        let workingHours = 0;
+        const date = new Date(currentDate);
+        let daysToCheck = 10; // Проверяем следующие 10 дней
         
-        for (let day = 1; day <= daysInMonth; day++) {
-          const date = new Date(year, month, day);
+        // Начинаем с завтрашнего дня
+        date.setDate(date.getDate() + 1);
+        
+        while (daysToCheck > 0) {
           if (isShiftDay(date)) {
-            workingHours += 11;
+            const options = { day: 'numeric', month: 'long' };
+            return date.toLocaleDateString('ru-RU', options);
           }
+          date.setDate(date.getDate() + 1);
+          daysToCheck--;
         }
         
-        return workingHours;
+        return "скоро";
       }
 
       function updateHomeStats() {
@@ -1048,7 +1569,6 @@
         const workingHours = getWorkingHours(year, month);
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         
-        // Подсчет праздников и смен
         let holidays = [];
         let completedShifts = 0;
         let totalShifts = 0;
@@ -1074,12 +1594,10 @@
           }
         }
 
-        // Обновляем статистику
         document.getElementById('working-hours').textContent = workingHours;
         document.getElementById('holidays-count').textContent = holidays.length;
         document.getElementById('completed-shifts').textContent = totalShifts;
 
-        // Обновляем список праздников
         const holidaysList = document.getElementById('holidays-list');
         if (holidays.length > 0) {
           holidaysList.innerHTML = holidays
@@ -1100,7 +1618,87 @@
         }
       }
 
-      // Обновляем стили для праздников
+      function getWorkingHours(year, month) {
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        let workingHours = 0;
+        
+        for (let day = 1; day <= daysInMonth; day++) {
+          const date = new Date(year, month, day);
+          if (isShiftDay(date)) {
+            workingHours += 11;
+          }
+        }
+        
+        return workingHours;
+      }
+
+      function getDayStatus(date) {
+        const isShift = isShiftDay(date);
+        
+        let shiftDay = 0;
+        let offDay = 0;
+        
+        if (isShift) {
+          const prevDate = new Date(date);
+          prevDate.setDate(date.getDate() - 1);
+          if (isShiftDay(prevDate)) {
+            shiftDay = 2;
+          } else {
+            shiftDay = 1;
+          }
+        } else {
+          // Определяем номер выходного дня
+          const currentDate = new Date(date);
+          let dayCount = 0;
+          
+          // Проверяем предыдущие дни, пока не найдем рабочий день
+          while (!isShiftDay(currentDate) && dayCount < 4) {
+            dayCount++;
+            currentDate.setDate(currentDate.getDate() - 1);
+          }
+          
+          // Если это действительно выходной (а не праздник), устанавливаем номер дня
+          if (!getHolidayName(date)) {
+            offDay = dayCount;
+          }
+        }
+
+        return {
+          isShift: isShift,
+          shiftDay: shiftDay,
+          offDay: offDay
+        };
+      }
+
+      function updateMonth(delta) {
+        currentMonth = currentMonth + delta;
+        if (currentMonth > 11) {
+          currentMonth = 0;
+          currentYear++;
+        } else if (currentMonth < 0) {
+          currentMonth = 11;
+          currentYear--;
+        }
+        
+        showCalendar(currentMonth, currentYear);
+        updateHomeStats();
+        updateCurrentDayStatus();
+      }
+
+      const prevButton = document.createElement('span');
+      prevButton.innerHTML = '&#10094;';
+      prevButton.classList.add('calendar-nav');
+      prevButton.onclick = () => updateMonth(-1);
+
+      const nextButton = document.createElement('span');
+      nextButton.innerHTML = '&#10095;';
+      nextButton.classList.add('calendar-nav');
+      nextButton.onclick = () => updateMonth(1);
+
+      const calendarHeader = document.querySelector('.calendar-header');
+      calendarHeader.insertBefore(prevButton, calendarHeader.firstChild);
+      calendarHeader.appendChild(nextButton);
+
       const holidayStyles = document.createElement('style');
       holidayStyles.textContent = `
         .holiday-item {
@@ -1165,7 +1763,6 @@
       `;
       document.head.appendChild(holidayStyles);
 
-      // Стили для навигации и виджетов
       const navigationStyles = document.createElement('style');
       navigationStyles.textContent = `
         .calendar-nav {
@@ -1258,7 +1855,6 @@
       `;
       document.head.appendChild(navigationStyles);
 
-      // Активируем первый виджет по умолчанию
       document.addEventListener('DOMContentLoaded', () => {
         const defaultTab = document.querySelector('.nav-tab');
         if (defaultTab) {
@@ -1266,95 +1862,110 @@
         }
       });
 
-      // Обработчики навигации
       document.querySelectorAll('.nav-tab').forEach(tab => {
         tab.addEventListener('click', () => {
-          // Убираем активный класс со всех вкладок
           document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-          // Добавляем активный класс текущей вкладке
           tab.classList.add('active');
           
-          // Скрываем все виджеты
           document.querySelectorAll('.widget').forEach(w => w.classList.remove('active'));
           
-          // Показываем нужный виджет
-          const widgetName = tab.getAttribute('data-widget');
+          const widgetName = tab.getAttribute('onclick').replace('showWidget(\'', '').replace('\')', '');
           document.getElementById(`${widgetName}-widget`).classList.add('active');
         });
       });
 
-      // Навигация по месяцам
-      function updateMonth(delta) {
-        currentMonth = currentMonth + delta;
-        if (currentMonth > 11) {
-          currentMonth = 0;
-          currentYear++;
-        } else if (currentMonth < 0) {
-          currentMonth = 11;
-          currentYear--;
-        }
+      function calculateSalary() {
+        const hourlyRate = parseFloat(document.getElementById('hourlyRate').value) || 0;
+        const regularHours = parseFloat(document.getElementById('regularHours').value) || 0;
+        const holidayHours = parseFloat(document.getElementById('holidayHours').value) || 0;
         
-        showCalendar(currentMonth, currentYear);
-        updateHomeStats();
-        updateCurrentDayStatus();
+        const regularPay = regularHours * hourlyRate;
+        const holidayPay = holidayHours * hourlyRate * 1.5;
+        const totalPay = regularPay + holidayPay;
+        
+        const incomeTax = totalPay * 0.10;
+        const pensionTax = totalPay * 0.10;
+        const unionTax = totalPay * 0.01;
+        
+        const finalSalary = totalPay - incomeTax - pensionTax - unionTax;
+        
+        document.getElementById('salaryResult').textContent = `${totalPay.toFixed(2)} ₸`;
+        document.getElementById('incomeTax').textContent = `${incomeTax.toFixed(2)} ₸`;
+        document.getElementById('pensionTax').textContent = `${pensionTax.toFixed(2)} ₸`;
+        document.getElementById('unionTax').textContent = `${unionTax.toFixed(2)} ₸`;
+        document.getElementById('finalSalary').textContent = `${finalSalary.toFixed(2)} ₸`;
+        
+        document.querySelectorAll('.result-value, .tax-value').forEach(el => {
+          el.classList.remove('fade-in');
+          void el.offsetWidth; 
+          el.classList.add('fade-in');
+        });
       }
 
-      // Добавляем кнопки навигации по месяцам
-      const prevButton = document.createElement('span');
-      prevButton.innerHTML = '&#10094;';
-      prevButton.classList.add('calendar-nav');
-      prevButton.onclick = () => updateMonth(-1);
+      // Функционал темной темы
+      const themeToggle = document.getElementById('theme-toggle');
+      const body = document.body;
 
-      const nextButton = document.createElement('span');
-      nextButton.innerHTML = '&#10095;';
-      nextButton.classList.add('calendar-nav');
-      nextButton.onclick = () => updateMonth(1);
+      // Проверяем сохраненную тему
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        body.classList.add(savedTheme);
+        themeToggle.checked = savedTheme === 'dark-theme';
+      }
 
-      const calendarHeader = document.querySelector('.calendar-header');
-      calendarHeader.insertBefore(prevButton, calendarHeader.firstChild);
-      calendarHeader.appendChild(nextButton);
+      // Обработчик переключения темы
+      themeToggle.addEventListener('change', function() {
+        if (this.checked) {
+          body.classList.add('dark-theme');
+          localStorage.setItem('theme', 'dark-theme');
+        } else {
+          body.classList.remove('dark-theme');
+          localStorage.setItem('theme', '');
+        }
+      });
 
-      function getDayStatus(date) {
-        const isShift = isShiftDay(date);
+      // Функция для автоматического переключения темы
+      function autoThemeSwitch() {
+        const hour = new Date().getHours();
+        const isDayTime = hour >= 6 && hour < 20; // День с 6:00 до 20:00
         
-        // Определяем, первый или второй день смены
-        let shiftDay = 0;
-        if (isShift) {
-          const prevDate = new Date(date);
-          prevDate.setDate(date.getDate() - 1);
-          
-          if (isShiftDay(prevDate)) {
-            shiftDay = 2;
-          } else {
-            shiftDay = 1;
+        const themeSwitch = document.getElementById('theme-toggle');
+        if (isDayTime && document.body.classList.contains('dark-theme')) {
+          document.body.classList.remove('dark-theme');
+          themeSwitch.checked = false;
+          localStorage.setItem('theme', 'light');
+        } else if (!isDayTime && !document.body.classList.contains('dark-theme')) {
+          document.body.classList.add('dark-theme');
+          themeSwitch.checked = true;
+          localStorage.setItem('theme', 'dark');
+        }
+      }
+
+      // Проверяем тему при загрузке
+      document.addEventListener('DOMContentLoaded', function() {
+        // Проверяем сохраненную тему
+        const savedTheme = localStorage.getItem('theme');
+        const themeSwitch = document.getElementById('theme-toggle');
+        
+        if (savedTheme) {
+          // Если есть сохраненная тема, используем её
+          if (savedTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            themeSwitch.checked = true;
           }
+        } else {
+          // Если нет сохраненной темы, используем автоматическое определение
+          autoThemeSwitch();
         }
 
-        const holiday = getHolidayName(date);
+        // Запускаем проверку каждый час
+        setInterval(autoThemeSwitch, 3600000); // 3600000 мс = 1 час
+      });
 
-        return {
-          isShift,
-          shiftDay,
-          isHoliday: !!holiday,
-          holidayName: holiday
-        };
-      }
-
-      // Инициализация при загрузке
-      document.addEventListener("DOMContentLoaded", () => {
-        // Инициализируем все виджеты
-        showCalendar(currentMonth, currentYear);
-        updateHomeStats();
-        updateCurrentDayStatus();
-
-        // Активируем первый виджет
-        const defaultTab = document.querySelector('.nav-tab');
-        if (defaultTab) {
-          defaultTab.click();
-        }
-
-        // Запускаем автообновление статуса
-        setInterval(updateCurrentDayStatus, 60000);
+      // Обработчик переключателя темы
+      document.getElementById('themeSwitch').addEventListener('change', function() {
+        document.body.classList.toggle('dark-theme');
+        localStorage.setItem('theme', this.checked ? 'dark' : 'light');
       });
     </script>
   </body>
