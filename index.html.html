@@ -263,6 +263,57 @@
         }
       }
 
+      @media (max-width: 360px) {
+        .stats-grid {
+          grid-template-columns: 1fr;
+          gap: 10px;
+          padding: 10px;
+        }
+
+        .stat-card {
+          padding: 12px 8px;
+        }
+
+        .stat-value {
+          font-size: 22px;
+        }
+
+        .stat-label {
+          font-size: 12px;
+        }
+
+        .stat-description {
+          font-size: 10px;
+        }
+
+        .weather-widget {
+          padding: 12px;
+          margin: 10px;
+        }
+
+        .weather-temp {
+          font-size: 32px;
+        }
+
+        .weather-icon {
+          width: 40px;
+          height: 40px;
+        }
+
+        .weather-details {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+
+        .weather-detail-item {
+          font-size: 12px;
+        }
+
+        .weather-detail-item i {
+          font-size: 16px;
+        }
+      }
+
       /* Календарь */
       .calendar {
         width: 100%;
@@ -797,69 +848,224 @@
 
       /* Стили для калькулятора */
       .calculator-container {
-        margin-top: 60px; /* Добавляем отступ сверху */
-        background: white;
-        border-radius: 20px;
-        padding: 20px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        background: var(--widget-bg);
+        border-radius: 15px;
+        padding: 15px;
+        margin: 10px;
+        margin-top: 50px;
+        box-shadow: var(--widget-shadow);
       }
 
-      .calculator-input {
-        width: 100%;
-        padding: 12px;
-        margin: 8px 0;
-        border: 1px solid #ddd;
-        border-radius: 8px;
+      .calculator-container h2 {
+        margin-bottom: 15px;
         font-size: 16px;
+        color: var(--text-color);
+      }
+
+      .input-group {
+        margin-bottom: 12px;
+      }
+
+      .input-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 13px;
+        color: var(--text-color);
+      }
+
+      .input-group input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 13px;
+        background: var(--input-bg);
+        color: var(--text-color);
+        transition: all 0.3s ease;
       }
 
       .calculator-button {
         width: 100%;
-        padding: 12px;
-        background: #1abc9c;
+        padding: 10px;
+        background: var(--accent-color);
         color: white;
         border: none;
         border-radius: 8px;
-        font-size: 16px;
-        font-weight: 600;
+        font-size: 13px;
+        font-weight: 500;
         cursor: pointer;
         margin: 12px 0;
-        transition: background 0.3s ease;
-      }
-
-      .calculator-button:hover {
-        background: #16a085;
+        transition: all 0.3s ease;
       }
 
       .result-container {
-        margin-top: 20px;
-        padding: 15px;
-        background: #f8f9fa;
+        margin-top: 15px;
+        padding: 12px;
+        background: var(--result-bg);
         border-radius: 8px;
       }
 
       .result-item {
         display: flex;
         justify-content: space-between;
-        margin: 8px 0;
+        align-items: center;
+        margin-bottom: 8px;
+        font-size: 13px;
+        color: var(--text-color);
       }
 
-      .result-label {
-        color: #666;
+      .final-salary {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border-color);
       }
 
-      .result-value, .tax-value {
-        font-weight: 600;
+      @media (max-width: 360px) {
+        .calculator-container {
+          padding: 12px;
+          margin: 5px;
+          margin-top: 50px;
+        }
+
+        .input-group label,
+        .input-group input,
+        .result-item {
+          font-size: 12px;
+        }
+
+        .calculator-button {
+          padding: 8px;
+          font-size: 12px;
+          margin: 8px 0;
+        }
+
+        .result-container {
+          padding: 10px;
+        }
+
+        .result-item {
+          margin-bottom: 6px;
+        }
+
+        .final-salary {
+          margin-top: 10px;
+          padding-top: 10px;
+        }
+      }
+
+      /* Стили для рекомендаций погоды */
+      .weather-recommendations {
+        margin-top: 20px;
+        padding: 15px;
+        background: rgba(26, 188, 156, 0.05);
+        border-radius: 12px;
+        border: 1px solid rgba(26, 188, 156, 0.1);
+      }
+
+      .weather-recommendation-item {
+        display: flex;
+        align-items: flex-start;
+        padding: 12px;
+        margin-bottom: 10px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .weather-recommendation-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .weather-recommendation-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .weather-recommendation-item i {
+        margin-right: 12px;
+        font-size: 20px;
+        color: #1abc9c;
+        background: rgba(26, 188, 156, 0.1);
+        padding: 8px;
+        border-radius: 8px;
+        min-width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .weather-recommendation-item span {
+        flex: 1;
+        font-size: 14px;
+        line-height: 1.5;
+        padding: 8px 0;
         color: #2c3e50;
       }
 
-      .fade-in {
-        animation: fadeIn 0.5s ease-in;
+      /* Темная тема */
+      .dark-theme .weather-recommendations {
+        background: rgba(26, 188, 156, 0.05);
+        border-color: rgba(26, 188, 156, 0.15);
       }
 
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-10px); }
-        to { opacity: 1; transform: translateY(0); }
+      .dark-theme .weather-recommendation-item {
+        background: rgba(44, 62, 80, 0.3);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .dark-theme .weather-recommendation-item:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .dark-theme .weather-recommendation-item span {
+        color: #ecf0f1;
+      }
+
+      .dark-theme .weather-recommendation-item i {
+        background: rgba(26, 188, 156, 0.15);
+      }
+
+      /* Мобильная версия */
+      @media (max-width: 360px) {
+        .weather-recommendations {
+          margin-top: 15px;
+          padding: 10px;
+        }
+
+        .weather-recommendation-item {
+          padding: 10px;
+          margin-bottom: 8px;
+        }
+
+        .weather-recommendation-item i {
+          font-size: 18px;
+          padding: 6px;
+          min-width: 32px;
+          height: 32px;
+          margin-right: 10px;
+        }
+
+        .weather-recommendation-item span {
+          font-size: 13px;
+          padding: 6px 0;
+        }
+      }
+
+      :root {
+        --accent-color: #1abc9c;
+        --accent-color-hover: #16a085;
+        --accent-color-transparent: rgba(26, 188, 156, 0.2);
+        --border-color: rgba(0, 0, 0, 0.1);
+        --input-bg: rgba(255, 255, 255, 0.05);
+        --result-bg: rgba(0, 0, 0, 0.03);
+      }
+
+      .dark-theme {
+        --border-color: rgba(255, 255, 255, 0.1);
+        --input-bg: rgba(255, 255, 255, 0.05);
+        --result-bg: rgba(255, 255, 255, 0.05);
       }
 
       /* Стили для виджетов */
@@ -1150,6 +1356,70 @@
       .dark-theme .shifts-card .stat-label {
         color: white;
       }
+
+      .progress-container {
+        width: 100%;
+        height: 6px;
+        background: #e9ecef;
+        border-radius: 3px;
+        margin-top: 15px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: #1abc9c;
+        border-radius: 3px;
+        transition: width 0.3s ease;
+      }
+
+      @media (max-width: 360px) {
+        .calculator-button {
+          padding: 8px;
+          font-size: 13px;
+          margin: 8px 0;
+        }
+      }
+
+      /* Стили для рекомендаций погоды */
+      .weather-recommendations {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+      }
+
+      .weather-recommendation-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 10px;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      .weather-recommendation-item i {
+        margin-right: 10px;
+        font-size: 18px;
+        color: #1abc9c;
+        margin-top: 2px;
+      }
+
+      .weather-recommendation-item span {
+        flex: 1;
+      }
+
+      .dark-theme .weather-recommendations {
+        border-top-color: #444;
+      }
+
+      @media (max-width: 360px) {
+        .weather-recommendation-item {
+          font-size: 13px;
+        }
+        
+        .weather-recommendation-item i {
+          font-size: 16px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -1178,6 +1448,9 @@
           <div class="current-date" id="current-date">-</div>
           <div class="status-text" id="status-text">-</div>
           <div class="status-description" id="status-description">-</div>
+          <div class="progress-container">
+            <div id="workdayProgress" class="progress-fill" style="width: 0%"></div>
+          </div>
         </div>
 
         <!-- Статистика -->
@@ -1248,25 +1521,25 @@
       <!-- Калькулятор -->
       <div id="calculator-widget" class="widget">
         <div class="calculator-container">
-          <h2 style="margin-bottom: 20px;">Калькулятор зарплаты</h2>
+          <h2>Калькулятор зарплаты</h2>
           
-          <div>
+          <div class="input-group">
             <label for="hourlyRate">Почасовая ставка (₸)</label>
-            <input type="number" id="hourlyRate" class="calculator-input" placeholder="Введите ставку">
+            <input type="number" id="hourlyRate" placeholder="Введите ставку">
           </div>
           
-          <div>
+          <div class="input-group">
             <label for="regularHours">Обычные часы</label>
-            <input type="number" id="regularHours" class="calculator-input" placeholder="Введите часы">
+            <input type="number" id="regularHours" placeholder="Введите часы">
           </div>
           
-          <div>
+          <div class="input-group">
             <label for="holidayHours">Праздничные часы</label>
-            <input type="number" id="holidayHours" class="calculator-input" placeholder="Введите часы">
+            <input type="number" id="holidayHours" placeholder="Введите часы">
           </div>
-          
+
           <button onclick="calculateSalary()" class="calculator-button">Рассчитать</button>
-          
+
           <div class="result-container">
             <div class="result-item">
               <span class="result-label">Общая сумма:</span>
@@ -1277,16 +1550,20 @@
               <span id="incomeTax" class="tax-value">0.00 ₸</span>
             </div>
             <div class="result-item">
-              <span class="result-label">Пенсионный налог (10%):</span>
+              <span class="result-label">Пенсионные отчисления (10%):</span>
               <span id="pensionTax" class="tax-value">0.00 ₸</span>
             </div>
             <div class="result-item">
               <span class="result-label">Профсоюз (1%):</span>
               <span id="unionTax" class="tax-value">0.00 ₸</span>
             </div>
-            <div class="result-item" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
-              <span class="result-label" style="font-weight: 600;">К выдаче:</span>
-              <span id="finalSalary" class="result-value" style="color: #1abc9c;">0.00 ₸</span>
+            <div class="result-item">
+              <span class="result-label">Медицинская страховка (2%):</span>
+              <span id="medicalInsurance" class="tax-value">0.00 ₸</span>
+            </div>
+            <div class="result-item final-salary">
+              <span class="result-label">К выдаче:</span>
+              <span id="finalSalary" class="result-value">0.00 ₸</span>
             </div>
           </div>
         </div>
@@ -1346,6 +1623,12 @@
 
             const weatherInfo = document.getElementById('weather-info');
             
+            const recommendations = getWeatherRecommendations(
+              weatherData.main.temp,
+              weatherData.weather[0].description,
+              weatherData.wind.speed
+            );
+            
             weatherInfo.innerHTML = `
               <div class="weather-header">
                 <h3>Погода в Астане</h3>
@@ -1376,12 +1659,64 @@
                   <span>Облачность: ${weatherData.clouds.all}%</span>
                 </div>
               </div>
+              <div class="weather-recommendations">
+                <div class="weather-recommendation-item">
+                  <i class="ri-t-shirt-line"></i>
+                  <span>${recommendations.clothing}</span>
+                </div>
+                <div class="weather-recommendation-item">
+                  <i class="ri-car-line"></i>
+                  <span>${recommendations.car}</span>
+                </div>
+              </div>
             `;
           }
         } catch (error) {
           console.error('Ошибка при получении погоды:', error);
           document.getElementById('weather-info').innerHTML = '<p>Ошибка при загрузке погоды</p>';
         }
+      }
+
+      function getWeatherRecommendations(temp, description, windSpeed) {
+        let clothing = '';
+        let car = '';
+        
+        // Рекомендации по одежде
+        if (temp <= -20) {
+          clothing = 'Наденьте теплую зимнюю куртку, шапку, шарф, теплые перчатки и зимнюю обувь. Желательно многослойная одежда.';
+          car = 'Прогрев двигателя 15-20 минут. Проверьте аккумулятор и незамерзайку.';
+        } else if (temp <= -10) {
+          clothing = 'Наденьте зимнюю куртку, шапку, перчатки и теплую обувь.';
+          car = 'Прогрев двигателя 10-15 минут. Держите бак заполненным минимум наполовину.';
+        } else if (temp <= 0) {
+          clothing = 'Наденьте демисезонную куртку, шапку и перчатки.';
+          car = 'Прогрев двигателя 5-10 минут.';
+        } else if (temp <= 10) {
+          clothing = 'Легкая куртка или пальто будет достаточно.';
+          car = 'Достаточно 2-3 минут прогрева.';
+        } else if (temp <= 20) {
+          clothing = 'Достаточно легкой кофты или ветровки.';
+          car = 'Прогрев не требуется.';
+        } else {
+          clothing = 'Легкая одежда, желательно из натуральных тканей.';
+          car = 'Прогрев не требуется. Проверьте систему охлаждения.';
+        }
+
+        // Дополнительные рекомендации по погоде
+        if (description.includes('дождь')) {
+          clothing += ' Возьмите зонт или дождевик.';
+          car += ' Включите противотуманные фары, соблюдайте дистанцию.';
+        } else if (description.includes('снег')) {
+          clothing += ' Наденьте водонепроницаемую обувь.';
+          car += ' Будьте осторожны, возможен гололед. Держите дистанцию.';
+        }
+
+        if (windSpeed > 15) {
+          clothing += ' Наденьте ветрозащитную одежду.';
+          car += ' Будьте осторожны при открывании дверей.';
+        }
+
+        return { clothing, car };
       }
 
       fetchWeather();
@@ -1501,6 +1836,8 @@
         const currentDate = document.getElementById('current-date');
         const statusText = document.getElementById('status-text');
         const statusDescription = document.getElementById('status-description');
+        const progressBar = document.getElementById('workdayProgress');
+        
         const statusContainer = document.getElementById('current-status');
         const timeIndicator = statusContainer.querySelector('.time-indicator i');
         
@@ -1520,13 +1857,30 @@
           day: 'numeric' 
         };
         currentDate.textContent = now.toLocaleDateString('ru-RU', options);
-
+        
         statusContainer.classList.remove('status-working', 'status-off');
+
+        // Получаем следующий рабочий день и обновляем прогресс
+        const nextWorkDay = getNextWorkDay(now);
+        const daysUntilWork = Math.ceil((nextWorkDay - now) / (1000 * 60 * 60 * 24));
+        let progress = 0;
+        
+        // Логика прогресса:
+        // 2 дня до работы - 0%
+        // 1 день до работы - 50%
+        // Рабочий день - 100%
+        if (daysUntilWork === 1) {
+          progress = 50;
+        } else if (daysUntilWork === 0) {
+          progress = 100;
+        }
+        progressBar.style.width = `${progress}%`;
 
         if (status.isShift) {
           statusContainer.classList.add('status-working');
           statusText.textContent = `${status.shiftDay}-й день рабочей смены`;
           statusDescription.textContent = 'Рабочий день';
+          progressBar.style.width = '100%';
         } else {
           statusContainer.classList.add('status-off');
           if (getHolidayName(now)) {
@@ -1559,115 +1913,6 @@
         }
         
         return "скоро";
-      }
-
-      function updateHomeStats() {
-        const now = new Date();
-        const year = currentYear || now.getFullYear();
-        const month = (currentMonth === undefined) ? now.getMonth() : currentMonth;
-        
-        const workingHours = getWorkingHours(year, month);
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        
-        let holidays = [];
-        let completedShifts = 0;
-        let totalShifts = 0;
-        const today = new Date();
-        
-        for (let day = 1; day <= daysInMonth; day++) {
-          const date = new Date(year, month, day);
-          const holiday = getHolidayName(date);
-          
-          if (holiday) {
-            holidays.push({
-              date: date,
-              name: holiday,
-              isShift: isShiftDay(date)
-            });
-          }
-          
-          if (isShiftDay(date)) {
-            totalShifts++;
-            if (date <= today) {
-              completedShifts++;
-            }
-          }
-        }
-
-        document.getElementById('working-hours').textContent = workingHours;
-        document.getElementById('holidays-count').textContent = holidays.length;
-        document.getElementById('completed-shifts').textContent = totalShifts;
-
-        const holidaysList = document.getElementById('holidays-list');
-        if (holidays.length > 0) {
-          holidaysList.innerHTML = holidays
-            .map(h => {
-              const dateOptions = { day: 'numeric', month: 'long' };
-              const formattedDate = h.date.toLocaleDateString('ru-RU', dateOptions);
-              return `
-                <div class="holiday-item${h.isShift ? ' holiday-shift' : ''}">
-                  <div class="holiday-date">${formattedDate}</div>
-                  <div class="holiday-name">${h.name}</div>
-                  ${h.isShift ? '<div class="holiday-shift-icon">смена</div>' : ''}
-                </div>
-              `;
-            })
-            .join('');
-        } else {
-          holidaysList.innerHTML = '<div class="no-holidays">В этом месяце праздников нет</div>';
-        }
-      }
-
-      function getWorkingHours(year, month) {
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        let workingHours = 0;
-        
-        for (let day = 1; day <= daysInMonth; day++) {
-          const date = new Date(year, month, day);
-          if (isShiftDay(date)) {
-            workingHours += 11;
-          }
-        }
-        
-        return workingHours;
-      }
-
-      function getDayStatus(date) {
-        const isShift = isShiftDay(date);
-        
-        let shiftDay = 0;
-        let offDay = 0;
-        
-        if (isShift) {
-          const prevDate = new Date(date);
-          prevDate.setDate(date.getDate() - 1);
-          if (isShiftDay(prevDate)) {
-            shiftDay = 2;
-          } else {
-            shiftDay = 1;
-          }
-        } else {
-          // Определяем номер выходного дня
-          const currentDate = new Date(date);
-          let dayCount = 0;
-          
-          // Проверяем предыдущие дни, пока не найдем рабочий день
-          while (!isShiftDay(currentDate) && dayCount < 4) {
-            dayCount++;
-            currentDate.setDate(currentDate.getDate() - 1);
-          }
-          
-          // Если это действительно выходной (а не праздник), устанавливаем номер дня
-          if (!getHolidayName(date)) {
-            offDay = dayCount;
-          }
-        }
-
-        return {
-          isShift: isShift,
-          shiftDay: shiftDay,
-          offDay: offDay
-        };
       }
 
       function updateMonth(delta) {
@@ -1886,13 +2131,15 @@
         const incomeTax = totalPay * 0.10;
         const pensionTax = totalPay * 0.10;
         const unionTax = totalPay * 0.01;
+        const medicalInsurance = totalPay * 0.02;
         
-        const finalSalary = totalPay - incomeTax - pensionTax - unionTax;
+        const finalSalary = totalPay - incomeTax - pensionTax - unionTax - medicalInsurance;
         
         document.getElementById('salaryResult').textContent = `${totalPay.toFixed(2)} ₸`;
         document.getElementById('incomeTax').textContent = `${incomeTax.toFixed(2)} ₸`;
         document.getElementById('pensionTax').textContent = `${pensionTax.toFixed(2)} ₸`;
         document.getElementById('unionTax').textContent = `${unionTax.toFixed(2)} ₸`;
+        document.getElementById('medicalInsurance').textContent = `${medicalInsurance.toFixed(2)} ₸`;
         document.getElementById('finalSalary').textContent = `${finalSalary.toFixed(2)} ₸`;
         
         document.querySelectorAll('.result-value, .tax-value').forEach(el => {
@@ -1967,6 +2214,127 @@
         document.body.classList.toggle('dark-theme');
         localStorage.setItem('theme', this.checked ? 'dark' : 'light');
       });
+
+      function updateHomeStats() {
+        const now = new Date();
+        const year = currentYear || now.getFullYear();
+        const month = (currentMonth === undefined) ? now.getMonth() : currentMonth;
+        
+        const workingHours = getWorkingHours(year, month);
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        
+        let holidays = [];
+        let completedShifts = 0;
+        let totalShifts = 0;
+        const today = new Date();
+        
+        for (let day = 1; day <= daysInMonth; day++) {
+          const date = new Date(year, month, day);
+          const holiday = getHolidayName(date);
+          
+          if (holiday) {
+            holidays.push({
+              date: date,
+              name: holiday,
+              isShift: isShiftDay(date)
+            });
+          }
+          
+          if (isShiftDay(date)) {
+            totalShifts++;
+            if (date <= today) {
+              completedShifts++;
+            }
+          }
+        }
+
+        document.getElementById('working-hours').textContent = workingHours;
+        document.getElementById('holidays-count').textContent = holidays.length;
+        document.getElementById('completed-shifts').textContent = totalShifts;
+
+        const holidaysList = document.getElementById('holidays-list');
+        if (holidays.length > 0) {
+          holidaysList.innerHTML = holidays
+            .map(h => {
+              const dateOptions = { day: 'numeric', month: 'long' };
+              const formattedDate = h.date.toLocaleDateString('ru-RU', dateOptions);
+              return `
+                <div class="holiday-item${h.isShift ? ' holiday-shift' : ''}">
+                  <div class="holiday-date">${formattedDate}</div>
+                  <div class="holiday-name">${h.name}</div>
+                  ${h.isShift ? '<div class="holiday-shift-icon">смена</div>' : ''}
+                </div>
+              `;
+            })
+            .join('');
+        } else {
+          holidaysList.innerHTML = '<div class="no-holidays">В этом месяце праздников нет</div>';
+        }
+      }
+
+      function getWorkingHours(year, month) {
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        let workingHours = 0;
+        
+        for (let day = 1; day <= daysInMonth; day++) {
+          const date = new Date(year, month, day);
+          if (isShiftDay(date)) {
+            workingHours += 11;
+          }
+        }
+        
+        return workingHours;
+      }
+
+      function getDayStatus(date) {
+        const isShift = isShiftDay(date);
+        
+        let shiftDay = 0;
+        let offDay = 0;
+        
+        if (isShift) {
+          const prevDate = new Date(date);
+          prevDate.setDate(date.getDate() - 1);
+          if (isShiftDay(prevDate)) {
+            shiftDay = 2;
+          } else {
+            shiftDay = 1;
+          }
+        } else {
+          // Определяем номер выходного дня
+          const currentDate = new Date(date);
+          let dayCount = 0;
+          
+          // Проверяем предыдущие дни, пока не найдем рабочий день
+          while (!isShiftDay(currentDate) && dayCount < 4) {
+            dayCount++;
+            currentDate.setDate(currentDate.getDate() - 1);
+          }
+          
+          // Если это действительно выходной (а не праздник), устанавливаем номер дня
+          if (!getHolidayName(date)) {
+            offDay = dayCount;
+          }
+        }
+        
+        return {
+          isShift: isShift,
+          shiftDay: shiftDay,
+          offDay: offDay
+        };
+      }
+
+      function getNextWorkDay(date) {
+        const nextDay = new Date(date);
+        nextDay.setHours(0, 0, 0, 0);
+        
+        // Ищем следующий рабочий день
+        while (!isShiftDay(nextDay)) {
+          nextDay.setDate(nextDay.getDate() + 1);
+        }
+        
+        return nextDay;
+      }
     </script>
   </body>
 </html>
