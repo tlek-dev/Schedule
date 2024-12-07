@@ -1568,6 +1568,62 @@
           </div>
         </div>
       </div>
+
+      <div id="chat-widget" class="widget">
+        <div class="widget-header">
+          <h2>Чат смены</h2>
+        </div>
+        <div style="padding: 20px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+          <!-- WhatsApp кнопка -->
+          <a href="https://chat.whatsapp.com/DvmBnJAxOOn76H4ohIgwmp" 
+             target="_blank"
+             style="display: flex; 
+                    align-items: center;
+                    background-color: #25D366; 
+                    color: white; 
+                    padding: 16px 32px; 
+                    border-radius: 12px; 
+                    text-decoration: none; 
+                    font-size: 18px;
+                    font-weight: 500;
+                    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
+                    transition: all 0.3s ease;
+                    transform: translateY(0);">
+            <i class="ri-whatsapp-fill" style="font-size: 24px; margin-right: 10px;"></i>
+            WhatsApp
+          </a>
+
+          <!-- Telegram кнопка -->
+          <a href="https://t.me/+your-telegram-link" 
+             target="_blank"
+             style="display: flex; 
+                    align-items: center;
+                    background-color: #229ED9; 
+                    color: white; 
+                    padding: 16px 32px; 
+                    border-radius: 12px; 
+                    text-decoration: none; 
+                    font-size: 18px;
+                    font-weight: 500;
+                    box-shadow: 0 4px 12px rgba(34, 158, 217, 0.2);
+                    transition: all 0.3s ease;
+                    transform: translateY(0);">
+            <i class="ri-telegram-fill" style="font-size: 24px; margin-right: 10px;"></i>
+            Telegram
+          </a>
+        </div>
+
+        <style>
+          #chat-widget a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+          }
+          
+          #chat-widget a:active {
+            transform: translateY(0);
+          }
+        </style>
+      </div>
     </div>
 
     <nav class="nav-tabs">
@@ -1587,31 +1643,34 @@
         <i class="ri-calculator-line"></i>
         <span>Калькулятор</span>
       </div>
-      <a href="https://chat.whatsapp.com/DvmBnJAxOOn76H4ohIgwmp" class="nav-tab" target="_blank">
+      <div class="nav-tab" onclick="showWidget('chat')">
         <i class="ri-whatsapp-line"></i>
         <span>Чат смены</span>
-      </a>
+      </div>
     </nav>
 
     <script>
       function showWidget(widgetName) {
+        // Скрываем все виджеты
         document.querySelectorAll('.widget').forEach(widget => {
-          widget.style.display = 'none';
+          widget.classList.remove('active');
         });
         
+        // Показываем выбранный виджет
+        document.getElementById(widgetName + '-widget').classList.add('active');
+        
+        // Обновляем активную вкладку
         document.querySelectorAll('.nav-tab').forEach(tab => {
           tab.classList.remove('active');
         });
         
-        const selectedWidget = document.getElementById(widgetName + '-widget');
-        if (selectedWidget) {
-          selectedWidget.style.display = 'block';
-        }
-        
-        const selectedTab = document.querySelector(`.nav-tab[onclick="showWidget('${widgetName}')"]`);
-        if (selectedTab) {
-          selectedTab.classList.add('active');
-        }
+        // Находим и активируем нужную вкладку
+        const tabs = document.querySelectorAll('.nav-tab');
+        tabs.forEach(tab => {
+          if (tab.getAttribute('onclick').includes(widgetName)) {
+            tab.classList.add('active');
+          }
+        });
       }
 
       async function fetchWeather() {
