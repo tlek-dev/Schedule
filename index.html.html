@@ -1921,6 +1921,7 @@
       </div>
     </nav>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
     <script>
       function showWidget(widgetName) {
         // Скрываем все виджеты
@@ -2880,6 +2881,60 @@
       // Обновляем активные смены при загрузке и каждую минуту
       document.addEventListener('DOMContentLoaded', updateHomeActiveShifts);
       setInterval(updateHomeActiveShifts, 60000);
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const container = document.querySelector('.widget-container');
+        const hammer = new Hammer(container);
+        
+        hammer.get('swipe').set({
+          direction: Hammer.DIRECTION_HORIZONTAL
+        });
+
+        const widgetOrder = ['home', 'calendar', 'weather', 'calculator', 'chat', 'shift-schedule'];
+
+        hammer.on('swipeleft swiperight', function(ev) {
+          const currentWidget = document.querySelector('.widget.active');
+          if (!currentWidget) {
+            showWidget('home');
+            return;
+          }
+
+          const currentId = currentWidget.id.replace('-widget', '');
+          let currentIndex = widgetOrder.indexOf(currentId);
+          
+          if (currentIndex === -1) {
+            currentIndex = 0;
+          }
+
+          if (ev.type === 'swipeleft') {
+            currentIndex = (currentIndex + 1) % widgetOrder.length;
+          } else {
+            currentIndex = (currentIndex - 1 + widgetOrder.length) % widgetOrder.length;
+          }
+
+          const nextWidgetId = widgetOrder[currentIndex];
+          try {
+            showWidget(nextWidgetId);
+            
+            // Обновляем навигацию
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+              tab.classList.remove('active');
+              if (tab.getAttribute('onclick').includes(nextWidgetId)) {
+                tab.classList.add('active');
+              }
+            });
+
+            // Инициализируем прогресс-бар для графика смен
+            if (nextWidgetId === 'shift-schedule') {
+              initializeShiftProgress();
+            }
+          } catch (error) {
+            console.error('Ошибка переключения виджета:', error);
+            showWidget('home');
+          }
+        });
+      });
     </script>
   </body>
 </html>
