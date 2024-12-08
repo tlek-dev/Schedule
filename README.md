@@ -1,72 +1,112 @@
-# График работы
+# Work Schedule Dashboard
 
-Веб-приложение для отслеживания рабочего графика, расчета зарплаты и просмотра погоды.
+A web application for tracking work schedules, calculating salaries, and monitoring weather conditions.
 
-## 🌟 Основные функции
+## 🌟 Key Features
 
-### 1. Главный экран
-- Отображение текущего рабочего статуса
-- Прогресс-бар оставшегося времени смены/выходных
-- Статистика за месяц
-- Список праздников
-- Рекомендации по погоде
+### 1. Home Screen
+- Real-time work status display
+- Progress bar for remaining shift/off time
+- Monthly statistics overview
+- Holiday calendar
+- Weather-based recommendations
 
-### 2. Календарь
-- Интерактивный месячный календарь
-- Выделение рабочих дней
-- Отметка праздников
-- Индикация текущего дня
+### 2. Calendar
+- Interactive monthly calendar
+- Work day highlighting
+- Holiday markers
+- Current day indication
+- 4-day work/rest cycle tracking
 
-### 3. Погода
-- Актуальная погода для города Астана
-- Температура и описание погоды
-- Влажность и скорость ветра
-- Рекомендации по одежде
-- Советы для автомобилистов
+### 3. Weather Integration
+- Live weather updates for Astana
+- Temperature and weather description
+- Humidity and wind speed data
+- Clothing recommendations
+- Driver advisory information
 
-### 4. Калькулятор зарплаты
-- Расчет общей суммы
-- Учет налогов (ИПН, пенсионные отчисления)
-- Учет профсоюзных взносов
-- Детальная разбивка начислений
+### 4. Salary Calculator
+- Gross salary computation
+- Tax calculations (IIT, pension contributions)
+- Union dues tracking
+- Detailed payment breakdown
+- Medical insurance deductions
 
-## 🔧 Технические характеристики
+## 🔧 Technical Specifications
 
-### API
-- OpenWeatherMap для погодных данных
-- Поддержка геолокации
-- Автоматическое обновление каждые 30 минут
+### API Integration
+- OpenWeatherMap API implementation
+- Geolocation support
+- 30-minute automatic updates
+- Error handling and fallback options
 
-### Дизайн
-- Адаптивная верстка
-- Поддержка темной темы
-- Минималистичный интерфейс
-- Основной цвет: #1abc9c
+### Design Features
+- Responsive layout
+- Dark/Light theme support
+- Minimalist interface
+- Primary color scheme: #1abc9c
+- Modern UI components
 
-## 💻 Использованные технологии
+### Shift Management
+- Four distinct shift schedules:
+  * 06:00 - 18:00
+  * 09:00 - 21:00
+  * 10:00 - 22:00
+  * 14:00 - 02:00
+- Real-time progress tracking
+- Automatic shift detection
+- Break time calculations
+
+## 💻 Technology Stack
 - HTML5
-- CSS3
-- JavaScript (Vanilla)
+- CSS3 (with CSS Variables)
+- Vanilla JavaScript
 - OpenWeatherMap API
+- ProgressBar.js for visualizations
+- Remixicon for icons
 
-## 🚀 Установка и запуск
-1. Скачайте репозиторий
-2. Откройте index.html в браузере
-3. Готово к использованию!
+## 🚀 Installation & Setup
+1. Clone the repository
+2. Open index.html in a web browser
+3. No additional setup required!
 
-## 🔄 Обновления
-- Добавлены рекомендации по погоде
-- Улучшен прогресс-бар с учетом времени
-- Оптимизирована мобильная версия
-- Добавлена поддержка праздничных дней
+## 🔄 Recent Updates
+- Added weather-based recommendations
+- Enhanced progress bar timing system
+- Mobile responsiveness optimization
+- Holiday support implementation
+- Dark theme improvements
+- Shift progress visualization
 
-## 📱 Поддержка устройств
-- Десктоп (1200px+)
-- Планшет (768px - 1199px)
-- Мобильные устройства (до 767px)
-- Малые экраны (до 360px)
+## 📱 Device Support
+- Desktop (1200px+)
+- Tablet (768px - 1199px)
+- Mobile (up to 767px)
+- Small screens (up to 360px)
 
-## 🔒 Безопасность
-- Безопасное использование API ключей
-- Отсутствие хранения чувствительных данных
-- Локальная обработка всех вычислений
+## 🔒 Security Features
+- Secure API key handling
+- No sensitive data storage
+- Local computation processing
+- Cross-browser compatibility
+
+## 🎨 UI/UX Features
+- Intuitive navigation
+- Real-time updates
+- Smooth animations
+- Accessible design
+- Theme persistence
+- Error state handling
+
+## 📊 Data Management
+- Local storage utilization
+- Automatic data updates
+- Offline functionality
+- Performance optimization
+
+## 🌐 Browser Support
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+- Mobile browsers
