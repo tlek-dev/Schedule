@@ -504,7 +504,7 @@
 
       .dark-theme .calendar-day.today {
         background: rgba(26, 188, 156, 0.3) !important;
-        color: #1abc9c !important;
+        color: #1abc9c;
         border-color: #1abc9c !important;
       }
 
@@ -1053,6 +1053,176 @@
         }
       }
 
+      /* Стили для активных смен на главной */
+      .active-shifts {
+        margin-top: 20px;
+        padding: 12px;
+        background: var(--widget-bg);
+        border-radius: 15px;
+        box-shadow: var(--widget-shadow);
+      }
+
+      .active-shifts-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-color);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .active-shifts-title i {
+        color: #1abc9c;
+        font-size: 12px;
+      }
+
+      .active-shift-item {
+        padding: 6px 8px;
+        border-radius: 8px;
+        background: var(--card-bg);
+        margin-bottom: 8px;
+        position: relative;
+        min-height: 45px;
+      }
+
+      .active-shift-time {
+        font-weight: 500;
+        color: #1abc9c;
+        font-size: 10px;
+        line-height: 1;
+      }
+
+      .active-shift-progress {
+        height: 1px;
+        margin: 4px 0;
+        width: calc(100% - 35px);
+      }
+
+      .active-shift-info {
+        font-size: 10px;
+        color: var(--text-secondary);
+        margin-top: 4px;
+        line-height: 1;
+      }
+
+      .dark-theme .active-shifts {
+        background: #2c2c2c;
+      }
+
+      .dark-theme .active-shifts-title {
+        color: #fff;
+      }
+
+      .dark-theme .active-shift-item {
+        background: #363636;
+      }
+
+      .dark-theme .active-shift-info {
+        color: #bdc3c7;
+      }
+
+      /* Стили для графика смен */
+      .shift-schedule {
+        margin-top: 20px;
+        padding: 20px;
+        background: var(--widget-bg);
+        border-radius: 15px;
+        box-shadow: var(--widget-shadow);
+      }
+
+      .shift-schedule-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-color);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .shift-schedule-title i {
+        color: #1abc9c;
+        font-size: 20px;
+      }
+
+      /* Стили для праздников */
+      .holidays {
+        margin-top: 20px;
+        padding: 15px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
+
+      .holidays-title {
+        font-size: 16px;
+        color: #2c3e50;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .holidays-title i {
+        color: #1abc9c;
+      }
+
+      .holiday-item {
+        padding: 12px;
+        border-radius: 10px;
+        background: rgba(26, 188, 156, 0.1);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .holiday-date {
+        padding: 4px 8px;
+        font-size: 13px;
+      }
+
+      .holiday-name {
+        font-size: 13px;
+      }
+
+      .holiday-shift-icon {
+        font-size: 12px;
+        color: #1abc9c;
+        background: rgba(26, 188, 156, 0.15);
+        padding: 4px 8px;
+        border-radius: 6px;
+      }
+
+      .no-holidays {
+        color: #7f8c8d;
+        text-align: center;
+        padding: 15px;
+        font-size: 14px;
+      }
+
+      .dark-theme .holidays {
+        background: #2c2c2c;
+      }
+
+      .dark-theme .holidays-title {
+        color: #fff;
+      }
+
+      .dark-theme .holiday-item {
+        background: rgba(26, 188, 156, 0.2);
+      }
+
+      .dark-theme .holiday-date,
+      .dark-theme .holiday-name {
+        color: #ecf0f1;
+      }
+
+      .dark-theme .no-holidays {
+        color: #bdc3c7;
+      }
+
       :root {
         --accent-color: #1abc9c;
         --accent-color-hover: #16a085;
@@ -1391,6 +1561,7 @@
       .weather-recommendation-item {
         display: flex;
         align-items: flex-start;
+        padding: 12px;
         margin-bottom: 10px;
         font-size: 14px;
         line-height: 1.4;
@@ -1418,6 +1589,63 @@
         
         .weather-recommendation-item i {
           font-size: 16px;
+        }
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/progressbar.js@1.1.0/dist/progressbar.min.js"></script>
+    <style>
+      /* Стили для графика смен */
+      #shift-schedule-widget {
+        padding: 20px;
+      }
+      
+      .shift-progress-container {
+        width: 100%;
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
+      
+      .shift-item {
+        margin-bottom: 30px;
+      }
+      
+      .shift-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 15px;
+      }
+      
+      .progress-line {
+        width: 100%;
+        height: 8px;
+        margin: 10px 0;
+      }
+      
+      .shift-info {
+        text-align: center;
+        margin: 10px 0;
+        font-size: 14px;
+        color: #2c3e50;
+      }
+      
+      .dark-theme .shift-progress-container {
+        background: #2c2c2c;
+      }
+      
+      .dark-theme .shift-title,
+      .dark-theme .shift-info {
+        color: #fff;
+      }
+      
+      @media (max-width: 768px) {
+        .shift-progress-container {
+          margin: 10px;
+          padding: 15px;
         }
       }
     </style>
@@ -1479,6 +1707,17 @@
               <span class="stat-label">Смен</span>
               <span class="stat-description">Общее количество рабочих смен в месяце</span>
             </div>
+          </div>
+        </div>
+
+        <!-- Активные смены -->
+        <div class="active-shifts">
+          <div class="active-shifts-title">
+            <i class="ri-time-line"></i>
+            <span>Активные смены</span>
+          </div>
+          <div id="home-active-shifts">
+            <!-- Здесь будут отображаться активные смены -->
           </div>
         </div>
 
@@ -1624,6 +1863,35 @@
           }
         </style>
       </div>
+
+      <div id="shift-schedule-widget" class="widget">
+        <div class="widget-header">
+          <i class="ri-time-line"></i>
+          <span>График смен</span>
+        </div>
+        <div class="shift-progress-container">
+          <div class="shift-item">
+            <div class="shift-title">График смены: 06:00 - 18:00</div>
+            <div class="progress-line" id="shift-progress-1"></div>
+            <div class="shift-info" id="shift-info-1">Загрузка...</div>
+          </div>
+          <div class="shift-item">
+            <div class="shift-title">График смены: 09:00 - 21:00</div>
+            <div class="progress-line" id="shift-progress-2"></div>
+            <div class="shift-info" id="shift-info-2">Загрузка...</div>
+          </div>
+          <div class="shift-item">
+            <div class="shift-title">График смены: 10:00 - 22:00</div>
+            <div class="progress-line" id="shift-progress-3"></div>
+            <div class="shift-info" id="shift-info-3">Загрузка...</div>
+          </div>
+          <div class="shift-item">
+            <div class="shift-title">График смены: 14:00 - 02:00</div>
+            <div class="progress-line" id="shift-progress-4"></div>
+            <div class="shift-info" id="shift-info-4">Загрузка...</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <nav class="nav-tabs">
@@ -1646,6 +1914,10 @@
       <div class="nav-tab" onclick="showWidget('chat')">
         <i class="ri-whatsapp-line"></i>
         <span>Чат смены</span>
+      </div>
+      <div class="nav-tab" onclick="showWidget('shift-schedule')">
+        <i class="ri-time-line"></i>
+        <span>График смен</span>
       </div>
     </nav>
 
@@ -1671,6 +1943,11 @@
             tab.classList.add('active');
           }
         });
+
+        // Инициализируем прогресс бар при открытии вкладки графика смен
+        if (widgetName === 'shift-schedule') {
+          initializeShiftProgress();
+        }
       }
 
       async function fetchWeather() {
@@ -1886,10 +2163,12 @@
         showCalendar(currentMonth, currentYear);
         updateHomeStats();
         updateCurrentDayStatus();
+        updateHomeActiveShifts();
 
         showWidget('home');
 
         setInterval(updateCurrentDayStatus, 60000);
+        setInterval(updateHomeActiveShifts, 60000);
       });
 
       function updateCurrentDayStatus() {
@@ -1966,13 +2245,16 @@
         // Начинаем с завтрашнего дня
         date.setDate(date.getDate() + 1);
         
-        while (daysToCheck > 0) {
-          if (isShiftDay(date)) {
-            const options = { day: 'numeric', month: 'long' };
-            return date.toLocaleDateString('ru-RU', options);
-          }
+        while (!isShiftDay(date) && daysToCheck > 0) {
+          dayCount++;
           date.setDate(date.getDate() + 1);
           daysToCheck--;
+        }
+        
+        // Если это действительно рабочий день, возвращаем дату
+        if (isShiftDay(date)) {
+          const options = { day: 'numeric', month: 'long' };
+          return date.toLocaleDateString('ru-RU', options);
         }
         
         return "скоро";
@@ -2035,17 +2317,12 @@
         }
 
         .holiday-shift {
-          background: rgba(26, 188, 156, 0.1);
           border-left: 3px solid #1abc9c;
         }
 
         .holiday-shift-icon {
-          background: #1abc9c;
-          color: white;
-          padding: 4px 8px;
-          border-radius: 6px;
-          font-size: 12px;
           margin-left: 8px;
+          color: #1abc9c;
         }
 
         @media (max-width: 768px) {
@@ -2397,6 +2674,212 @@
         
         return nextDay;
       }
+
+      // Функция для обновления прогресса смены
+      function updateShiftProgress() {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const currentTime = hours + minutes / 60;
+
+        // Массив с информацией о сменах
+        const shifts = [
+          { id: 1, start: 6, end: 18 },
+          { id: 2, start: 9, end: 21 },
+          { id: 3, start: 10, end: 22 },
+          { id: 4, start: 14, end: 26 } // 26 = 02:00 следующего дня
+        ];
+
+        const isWorkingDay = isShiftDay(now);
+
+        shifts.forEach(shift => {
+          let progress = 0;
+          let adjustedCurrentTime = currentTime;
+          const shiftDuration = shift.end - shift.start;
+
+          // Корректировка для смены, переходящей на следующий день
+          if (shift.end > 24) {
+            if (currentTime < (shift.end - 24)) {
+              adjustedCurrentTime += 24;
+            }
+          }
+
+          // Проверяем, идет ли сейчас смена
+          const isShiftTime = adjustedCurrentTime >= shift.start && adjustedCurrentTime < shift.end;
+          
+          // Рассчитываем прогресс только если это рабочий день
+          if (isWorkingDay) {
+            if (isShiftTime) {
+              progress = (adjustedCurrentTime - shift.start) / shiftDuration;
+            } else if (adjustedCurrentTime >= shift.end || (shift.end > 24 && adjustedCurrentTime + 24 >= shift.end)) {
+              progress = 1;
+            }
+          }
+
+          // Обновляем прогресс-бар
+          window[`shiftProgressBar${shift.id}`].animate(progress);
+
+          // Обновляем информацию о смене
+          const shiftInfo = document.getElementById(`shift-info-${shift.id}`);
+          if (shiftInfo) {
+            if (!isWorkingDay) {
+              shiftInfo.textContent = 'Сегодня выходной';
+            } else if (isShiftTime) {
+              const remainingHours = Math.floor(shift.end - adjustedCurrentTime);
+              const remainingMinutes = Math.floor(((shift.end - adjustedCurrentTime) % 1) * 60);
+              shiftInfo.textContent = `До конца смены: ${remainingHours}ч ${remainingMinutes}мин`;
+            } else if (adjustedCurrentTime < shift.start) {
+              const startHour = shift.start % 24;
+              shiftInfo.textContent = `Смена начнется в ${String(startHour).padStart(2, '0')}:00`;
+            } else {
+              shiftInfo.textContent = 'Смена закончилась';
+            }
+          }
+        });
+      }
+
+      // Обновляем прогресс каждую минуту
+      setInterval(updateShiftProgress, 60000);
+
+      // Функция для инициализации прогресс-бара
+      function initializeShiftProgress() {
+        const shifts = [
+          { id: 1, start: 6, end: 18 },
+          { id: 2, start: 9, end: 21 },
+          { id: 3, start: 10, end: 22 },
+          { id: 4, start: 14, end: 26 } // 26 = 02:00 следующего дня
+        ];
+
+        shifts.forEach(shift => {
+          const progressElement = document.getElementById(`shift-progress-${shift.id}`);
+          if (!window[`shiftProgressBar${shift.id}`] && progressElement) {
+            window[`shiftProgressBar${shift.id}`] = new ProgressBar.Line(progressElement, {
+              color: '#1abc9c',
+              strokeWidth: 4,
+              trailWidth: 1,
+              duration: 1400,
+              text: {
+                value: '0%',
+                style: {
+                  position: 'absolute',
+                  right: '0',
+                  top: '-25px',
+                  padding: 0,
+                  margin: 0,
+                  transform: null
+                }
+              },
+              step: function(state, line) {
+                const value = Math.round(line.value() * 100);
+                line.setText(value + '%');
+              }
+            });
+          }
+        });
+        // Сразу обновляем прогресс после инициализации
+        updateShiftProgress();
+      }
+
+      // Инициализируем прогресс-бар, если открыта вкладка графика смен
+      document.addEventListener('DOMContentLoaded', () => {
+        if (document.getElementById('shift-schedule-widget').classList.contains('active')) {
+          initializeShiftProgress();
+        }
+      });
+
+      // Обновляем прогресс при переключении на вкладку графика смен
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          if (tab.getAttribute('onclick').includes('shift-schedule')) {
+            setTimeout(initializeShiftProgress, 100);
+          }
+        });
+      });
+
+      // Функция для обновления активных смен на главной
+      function updateHomeActiveShifts() {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const currentTime = hours + minutes / 60;
+
+        const shifts = [
+          { id: 1, start: 6, end: 18 },
+          { id: 2, start: 9, end: 21 },
+          { id: 3, start: 10, end: 22 },
+          { id: 4, start: 14, end: 26 }
+        ];
+
+        const isWorkingDay = isShiftDay(now);
+        const activeShiftsContainer = document.getElementById('home-active-shifts');
+        activeShiftsContainer.innerHTML = '';
+
+        if (!isWorkingDay) {
+          activeShiftsContainer.innerHTML = '<div class="active-shift-item">Сегодня выходной</div>';
+          return;
+        }
+
+        let hasActiveShifts = false;
+
+        shifts.forEach(shift => {
+          let adjustedCurrentTime = currentTime;
+          if (shift.end > 24 && currentTime < (shift.end - 24)) {
+            adjustedCurrentTime += 24;
+          }
+
+          const isShiftTime = adjustedCurrentTime >= shift.start && adjustedCurrentTime < shift.end;
+          
+          if (isShiftTime) {
+            hasActiveShifts = true;
+            const progress = (adjustedCurrentTime - shift.start) / (shift.end - shift.start);
+            const remainingHours = Math.floor(shift.end - adjustedCurrentTime);
+            const remainingMinutes = Math.floor(((shift.end - adjustedCurrentTime) % 1) * 60);
+
+            const startHour = shift.start % 24;
+            const endHour = shift.end % 24 || 24;
+
+            const shiftEl = document.createElement('div');
+            shiftEl.className = 'active-shift-item';
+            shiftEl.innerHTML = `
+              <div class="active-shift-time">${String(startHour).padStart(2, '0')}:00 - ${String(endHour).padStart(2, '0')}:00</div>
+              <div class="active-shift-progress" id="home-shift-progress-${shift.id}"></div>
+              <div class="active-shift-info">До конца смены: ${remainingHours}ч ${remainingMinutes}мин</div>
+            `;
+            activeShiftsContainer.appendChild(shiftEl);
+
+            // Создаем прогресс бар для смены
+            new ProgressBar.Line(`#home-shift-progress-${shift.id}`, {
+              color: '#1abc9c',
+              strokeWidth: 1,
+              trailWidth: 0.2,
+              duration: 1400,
+              text: {
+                value: Math.round(progress * 100) + '%',
+                style: {
+                  position: 'absolute',
+                  right: '-30px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  padding: 0,
+                  margin: 0,
+                  fontSize: '9px',
+                  fontWeight: '400',
+                  color: 'var(--text-secondary)',
+                  minWidth: '25px'
+                }
+              }
+            }).animate(progress);
+          }
+        });
+
+        if (!hasActiveShifts) {
+          activeShiftsContainer.innerHTML = '<div class="active-shift-item">Сейчас нет активных смен</div>';
+        }
+      }
+
+      // Обновляем активные смены при загрузке и каждую минуту
+      document.addEventListener('DOMContentLoaded', updateHomeActiveShifts);
+      setInterval(updateHomeActiveShifts, 60000);
     </script>
   </body>
 </html>
