@@ -2246,18 +2246,17 @@
         // Начинаем с завтрашнего дня
         date.setDate(date.getDate() + 1);
         
-        while (!isShiftDay(date) && daysToCheck > 0) {
-          dayCount++;
+        while (daysToCheck > 0) {
+          if (isShiftDay(date)) {
+            const options = { day: 'numeric', month: 'long' };
+            console.log(`Следующая смена найдена: ${date.toLocaleDateString('ru-RU', options)}`);
+            return date.toLocaleDateString('ru-RU', options);
+          }
           date.setDate(date.getDate() + 1);
           daysToCheck--;
         }
         
-        // Если это действительно рабочий день, возвращаем дату
-        if (isShiftDay(date)) {
-          const options = { day: 'numeric', month: 'long' };
-          return date.toLocaleDateString('ru-RU', options);
-        }
-        
+        console.log('Следующая смена не найдена в ближайшие 10 дней.');
         return "скоро";
       }
 
@@ -2901,9 +2900,12 @@
           }
 
           const currentId = currentWidget.id.replace('-widget', '');
+          console.log('Текущий виджет:', currentId); // Логирование текущего виджета
+
           let currentIndex = widgetOrder.indexOf(currentId);
           
           if (currentIndex === -1) {
+            console.warn('Виджет не найден в порядке:', currentId);
             currentIndex = 0;
           }
 
@@ -2914,6 +2916,17 @@
           }
 
           const nextWidgetId = widgetOrder[currentIndex];
+          console.log('Следующий виджет:', nextWidgetId); // Логирование следующего виджета
+          
+          // Проверка существования виджета перед переключением
+          const nextWidget = document.getElementById(nextWidgetId + '-widget');
+          if (!nextWidget) {
+            console.error('Виджет не найден:', nextWidgetId);
+            showWidget('home');
+            return;
+          }
+
+          // Принудительное переключение виджета
           try {
             showWidget(nextWidgetId);
             
