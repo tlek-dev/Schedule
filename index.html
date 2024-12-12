@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>График работы</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/progressbar.js@1.1.0/dist/progressbar.min.js"></script>
+
+  </head>
+  <body>
+    <!-- Переключатель темы -->
+    <div class="theme-switch-wrapper">
+      <i class="ri-contrast-2-line"></i>
+      <label class="theme-switch">
+        <input type="checkbox" id="theme-toggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="widget-container">
+      <!-- Главная -->
+      <div id="home-widget" class="widget active">
+        <!-- Текущий статус -->
+        <div class="widget-header">
+          <i class="ri-home-line"></i>
+          <span>Главная</span>
+
+        </div>
+        <div class="current-status" id="current-status">
+          <div class="time-indicator">
+            <i class="ri-sun-line"></i>
+          </div>
+          <div class="current-date" id="current-date">-</div>
+          <div class="status-text" id="status-text">-</div>
+          <div class="status-description" id="status-description">-</div>
+          <div class="progress-container">
+            <div id="workdayProgress" class="progress-fill" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- Статистика -->
+        <div class="widget-section">
+          <div class="section-header">
+            <i class="ri-bar-chart-line"></i>
+            <span>Статистика за месяц</span>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <i class="ri-time-line"></i>
+              <span class="stat-value" id="working-hours">-</span>
+              <span class="stat-label">Рабочих часов</span>
+              <span class="stat-description">Общее количество рабочих часов в месяц (11 часов × кол-во смен)</span>
+            </div>
+            <div class="stat-card">
+              <i class="ri-calendar-event-line"></i>
+              <span class="stat-value" id="holidays-count">-</span>
+              <span class="stat-label">Праздников</span>
+              <span class="stat-description">Количество праздничных дней в текущем месяце</span>
+            </div>
+            <div class="stat-card shifts-card">
+              <i class="ri-calendar-check-line"></i>
+              <span class="stat-value" id="completed-shifts">-</span>
+              <span class="stat-label">Смен</span>
+              <span class="stat-description">Общее количество рабочих смен в месяце</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Активные смены -->
+        <div class="active-shifts">
+          <div class="active-shifts-title">
+            <i class="ri-time-line"></i>
+            <span>Активные смены</span>
+          </div>
+          <div id="home-active-shifts">
+            <!-- Здесь будут отображаться активные смены -->
+          </div>
+        </div>
+
+        <!-- Праздники -->
+        <div class="widget-section">
+          <div class="section-header">
+            <i class="ri-calendar-event-line"></i>
+            <span>Праздники</span>
+          </div>
+
+          <div class="holidays-list" id="holidays-list"></div>
+        </div>
+      </div>
+
+      <div id="calendar-widget" class="widget">
+        <div class="calendar">
+          <div class="calendar-header">
+            <span id="month"></span>
+            <span id="year"></span>
+          </div>
+          <ul id="weekdays">
+            <li>Пн</li>
+            <li>Вт</li>
+            <li>Ср</li>
+            <li>Чт</li>
+            <li>Пт</li>
+            <li>Сб</li>
+            <li>Вс</li>
+          </ul>
+          <div id="calendar-days"></div>
+        </div>
+      </div>
+
+      <div id="weather-widget" class="widget">
+        <div class="weather-widget">
+          <div id="weather-info"></div>
+        </div>
+      </div>
+
+      <!-- Калькулятор -->
+      <div id="calculator-widget" class="widget">
+        <div class="calculator-container">
+          <h2>Калькулятор зарплаты</h2>
+          
+          <div class="input-group">
+            <label for="hourlyRate">Почасовая ставка (₸)</label>
+            <input type="number" id="hourlyRate" placeholder="Введите ставку">
+          </div>
+          
+          <div class="input-group">
+            <label for="regularHours">Обычные часы</label>
+            <input type="number" id="regularHours" placeholder="Введите часы">
+          </div>
+          
+          <div class="input-group">
+            <label for="holidayHours">Праздничные часы</label>
+            <input type="number" id="holidayHours" placeholder="Введите часы">
+          </div>
+
+          <button onclick="calculateSalary()" class="calculator-button">Рассчитать</button>
+
+          <div class="result-container">
+            <div class="result-item">
+              <span class="result-label">Общая сумма:</span>
+              <span id="salaryResult" class="result-value">0.00 ₸</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Подоходный налог (10%):</span>
+              <span id="incomeTax" class="tax-value">0.00 ₸</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Пенсионные отчисления (10%):</span>
+              <span id="pensionTax" class="tax-value">0.00 ₸</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Профсоюз (1%):</span>
+              <span id="unionTax" class="tax-value">0.00 ₸</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Медицинская страховка (2%):</span>
+              <span id="medicalInsurance" class="tax-value">0.00 ₸</span>
+            </div>
+            <div class="result-item final-salary">
+              <span class="result-label">К выдаче:</span>
+              <span id="finalSalary" class="result-value">0.00 ₸</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="chat-widget" class="widget">
+        <div class="widget-header">
+          <h2>Чат смены</h2>
+        </div>
+        <div style="padding: 20px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+          <!-- WhatsApp кнопка -->
+          <a href="https://chat.whatsapp.com/DvmBnJAxOOn76H4ohIgwmp" 
+             target="_blank"
+             style="display: flex; 
+                    align-items: center;
+                    background-color: #25D366; 
+                    color: white; 
+                    padding: 16px 32px; 
+                    border-radius: 12px; 
+                    text-decoration: none; 
+                    font-size: 18px;
+                    font-weight: 500;
+                    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
+                    transition: all 0.3s ease;
+                    transform: translateY(0);">
+            <i class="ri-whatsapp-fill" style="font-size: 24px; margin-right: 10px;"></i>
+            WhatsApp
+          </a>
+
+          <!-- Telegram кнопка -->
+          <a href="https://t.me/+your-telegram-link" 
+             target="_blank"
+             style="display: flex; 
+                    align-items: center;
+                    background-color: #229ED9; 
+                    color: white; 
+                    padding: 16px 32px; 
+                    border-radius: 12px; 
+                    text-decoration: none; 
+                    font-size: 18px;
+                    font-weight: 500;
+                    box-shadow: 0 4px 12px rgba(34, 158, 217, 0.2);
+                    transition: all 0.3s ease;
+                    transform: translateY(0);">
+            <i class="ri-telegram-fill" style="font-size: 24px; margin-right: 10px;"></i>
+            Telegram
+          </a>
+        </div>
+
+        <style>
+          #chat-widget a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+          }
+          
+          #chat-widget a:active {
+            transform: translateY(0);
+          }
+        </style>
+      </div>
+
+      <div id="shift-schedule-widget" class="widget">
+        <div class="widget-header">
+          <i class="ri-time-line"></i>
+          <span>График смен</span>
+        </div>
+        <div class="shift-progress-container">
+          <div class="shift-item">
+            <div class="shift-title">График смены: 06:00 - 18:00</div>
+            <div class="progress-line" id="shift-progress-1"></div>
+            <div class="shift-info" id="shift-info-1">Загрузка...</div>
+          </div>
+          <div class="shift-item">
+            <div class="shift-title">График смены: 09:00 - 21:00</div>
+            <div class="progress-line" id="shift-progress-2"></div>
+            <div class="shift-info" id="shift-info-2">Загрузка...</div>
+          </div>
+          <div class="shift-item">
+            <div class="shift-title">График смены: 10:00 - 22:00</div>
+            <div class="progress-line" id="shift-progress-3"></div>
+            <div class="shift-info" id="shift-info-3">Загрузка...</div>
+          </div>
+          <div class="shift-item">
+            <div class="shift-title">График смены: 14:00 - 02:00</div>
+            <div class="progress-line" id="shift-progress-4"></div>
+            <div class="shift-info" id="shift-info-4">Загрузка...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav-tabs">
+      <div class="nav-tab" onclick="showWidget('home')">
+        <i class="ri-home-4-line"></i>
+        <span>Главная</span>
+      </div>
+      <div class="nav-tab" onclick="showWidget('calendar')">
+        <i class="ri-calendar-line"></i>
+        <span>Календарь</span>
+      </div>
+      <div class="nav-tab" onclick="showWidget('weather')">
+        <i class="ri-sun-line"></i>
+        <span>Погода</span>
+      </div>
+      <div class="nav-tab" onclick="showWidget('calculator')">
+        <i class="ri-calculator-line"></i>
+        <span>Калькулятор</span>
+      </div>
+      <div class="nav-tab" onclick="showWidget('chat')">
+        <i class="ri-whatsapp-line"></i>
+        <span>Чат смены</span>
+      </div>
+      <div class="nav-tab" onclick="showWidget('shift-schedule')">
+        <i class="ri-time-line"></i>
+        <span>График смен</span>
+      </div>
+    </nav>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="scripts.js"></script>
+    <script src="schedule.js"></script>
+  </body>
+</html>
