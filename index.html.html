@@ -1,111 +1,2953 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="ru">
+  <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Сен далбаебсынба?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>График работы</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      body {
+        background-color: #f2f2f7;
+        color: #1c1c1e;
+        line-height: 1.5;
+        font-size: 16px;
+      }
+
+      /* Современные стили для навигации */
+      .nav-tabs {
+        display: flex;
+        justify-content: space-around;
+        background: #fff;
+        padding: 12px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        box-shadow: 0 -1px 10px rgba(0,0,0,0.1);
+      }
+
+      .nav-tab {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        padding: 8px 16px;
+        border-radius: 12px;
+        color: #666;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        font-weight: 500;
+        font-size: 12px;
+        min-width: 64px;
+      }
+
+      .nav-tab i {
+        font-size: 24px;
+        margin-bottom: 2px;
+      }
+
+      .nav-tab:hover {
+        color: #1abc9c;
+        transform: translateY(-2px);
+      }
+
+      .nav-tab.active {
+        color: #1abc9c;
+        background: rgba(26, 188, 156, 0.1);
+      }
+
+      /* Оптимизация контейнера для мобильных */
+      .widget-container {
+        padding: 16px;
+        padding-bottom: 80px; /* Для нижней навигации */
+        max-width: 100%;
+        margin: 0 auto;
+      }
+
+      /* Современные карточки */
+      .current-status {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        border-left: 5px solid #ddd;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .current-status.status-working {
+        border-left-color: #1abc9c;
+        background: linear-gradient(to right, rgba(26, 188, 156, 0.1), white);
+      }
+
+      .current-status.status-off {
+        border-left-color: #1abc9c;
+        background: linear-gradient(to right, rgba(26, 188, 156, 0.05), white);
+      }
+
+      /* Стили для дневного времени */
+      .current-status.daytime {
+        border-left-color: #1abc9c;
+      }
+
+      /* Стили для ночного времени */
+      .current-status.nighttime {
+        border-left-color: #1abc9c;
+      }
+
+      .time-indicator {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        z-index: 1;
+      }
+
+      .time-indicator i {
+        font-size: 24px;
+        transition: all 0.3s ease;
+        color: #1abc9c;
+      }
+
+      .time-indicator:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        background: rgba(26, 188, 156, 0.1);
+      }
+
+      /* День */
+      .daytime .time-indicator {
+        border: 2px solid rgba(26, 188, 156, 0.2);
+      }
+
+      /* Ночь */
+      .nighttime .time-indicator {
+        border: 2px solid rgba(26, 188, 156, 0.2);
+      }
+
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+      }
+
+      .time-indicator i {
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @media (max-width: 768px) {
+        .time-indicator {
+          width: 36px;
+          height: 36px;
+          top: 15px;
+          right: 15px;
         }
 
-        .container {
-            text-align: center;
+        .time-indicator i {
+          font-size: 20px;
+        }
+      }
+
+      .current-date {
+        font-size: 16px;
+        color: #7f8c8d;
+        margin-bottom: 12px;
+        padding-right: 50px;
+      }
+
+      .status-text {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #2c3e50;
+      }
+
+      .status-description {
+        color: #7f8c8d;
+        font-size: 16px;
+      }
+
+      .status-working .status-text {
+        color: #1abc9c;
+      }
+
+      .status-off .status-text {
+        color: #1abc9c;
+      }
+
+      /* Статистика */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        padding: 15px;
+      }
+
+      .stat-card {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px 15px;
+        border-radius: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+      }
+
+      .stat-card i {
+        font-size: 24px;
+        color: #1abc9c;
+        margin-bottom: 10px;
+      }
+
+      .stat-value {
+        font-size: 28px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        font-size: 14px;
+        color: #7f8c8d;
+      }
+
+      .shifts-card {
+        background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
+      }
+
+      .shifts-card i,
+      .shifts-card .stat-value,
+      .shifts-card .stat-label {
+        color: white;
+      }
+
+      @media (max-width: 768px) {
+        .stats-grid {
+          gap: 12px;
+          padding: 12px;
         }
 
-        .question {
-            font-size: 2rem;
-            margin-bottom: 2rem;
+        .stat-card {
+          padding: 15px 12px;
         }
 
-        .buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            position: relative;
+        .stat-value {
+          font-size: 24px;
         }
 
-        .button {
-            padding: 1rem 2rem;
-            font-size: 1.2rem;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            transition: transform 0.2s, top 0.2s, left 0.2s;
+        .stat-label {
+          font-size: 13px;
+        }
+      }
+
+      @media (max-width: 360px) {
+        .stats-grid {
+          grid-template-columns: 1fr;
+          gap: 10px;
+          padding: 10px;
         }
 
-        .button.yes {
-            background-color: #28a745;
-            color: white;
+        .stat-card {
+          padding: 12px 8px;
         }
 
-        .button.no {
-            background-color: #dc3545;
-            color: white;
-            position: absolute;
+        .stat-value {
+          font-size: 22px;
         }
 
-        .button.no:hover {
-            transform: translate(100px, 50px);
+        .stat-label {
+          font-size: 12px;
         }
 
-        @media (hover: none) {
-            .button.no {
-                top: 0;
-                left: 0;
-            }
+        .stat-description {
+          font-size: 10px;
+        }
 
-            .button.no:active {
-                transform: translate(100px, 50px);
-            }
+        .weather-widget {
+          padding: 12px;
+          margin: 10px;
+        }
+
+        .weather-temp {
+          font-size: 32px;
+        }
+
+        .weather-icon {
+          width: 40px;
+          height: 40px;
+        }
+
+        .weather-details {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+
+        .weather-detail-item {
+          font-size: 12px;
+        }
+
+        .weather-detail-item i {
+          font-size: 16px;
+        }
+      }
+
+      /* Календарь */
+      .calendar {
+        width: 100%;
+        max-width: 800px;
+        margin: 50px auto 20px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
+
+      @media (max-width: 768px) {
+        .calendar {
+          margin-top: 60px;
+          margin-bottom: 15px;
+        }
+      }
+
+      .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        font-weight: 600;
+      }
+
+      .calendar-header span {
+        font-size: 18px;
+      }
+
+      #weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        text-align: center;
+        font-weight: 600;
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 12px;
+      }
+
+      #calendar-days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
+      }
+
+      .calendar-day {
+        padding: 10px;
+        text-align: center;
+        cursor: pointer;
+        border: 1px solid #e8e8e8;
+        transition: all 0.2s ease;
+        position: relative;
+        background: white;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .calendar-day:hover {
+        background: rgba(26, 188, 156, 0.1);
+      }
+
+      .calendar-day.empty {
+        background: #f8f9fa;
+        cursor: default;
+      }
+
+      .calendar-day.other-month {
+        color: #bdc3c7;
+        background: #f8f9fa;
+      }
+
+      .calendar-day.shift {
+        background: #1abc9c;
+        color: white;
+      }
+
+      .calendar-day.holiday {
+        background: #FF9500;
+        color: white;
+      }
+
+      .calendar-day.today {
+        background: rgba(26, 188, 156, 0.2) !important;
+        color: #1abc9c;
+        font-weight: bold;
+        border: 2px solid #1abc9c !important;
+      }
+
+      .calendar-day.holiday.shift {
+        background: linear-gradient(to right, #1abc9c 50%, #FF9500 50%);
+        color: white;
+      }
+
+      /* Стили для темной темы */
+      .dark-theme .calendar {
+        background: #2c2c2c;
+        border-color: #444;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      }
+
+      .dark-theme .calendar-header {
+        background: #363636;
+        color: #fff;
+        border-bottom-color: #444;
+      }
+
+      .dark-theme .calendar-weekdays {
+        background: #2c2c2c;
+        border-bottom-color: #444;
+      }
+
+      .dark-theme .calendar-weekdays span {
+        color: #999; /* Цвет для дней недели в темной теме */
+      }
+
+      .dark-theme .calendar-days {
+        background: #2c2c2c;
+      }
+
+      .dark-theme .calendar-day {
+        color: #000; /* Добавляем черный цвет для цифр */
+        border-color: #444;
+      }
+
+      .dark-theme .calendar-day:hover {
+        background: #363636;
+      }
+
+      .dark-theme .calendar-day.current {
+        background: rgba(26, 188, 156, 0.2);
+        color: #1abc9c;
+      }
+
+      .dark-theme .calendar-day.working-day {
+        background: rgba(26, 188, 156, 0.15);
+      }
+
+      .dark-theme .calendar-day.off-day {
+        background: rgba(26, 188, 156, 0.1);
+      }
+
+      .dark-theme .calendar-day.holiday {
+        color: #e74c3c;
+      }
+
+      .dark-theme .calendar-day.other-month {
+        color: #666;
+      }
+
+      .dark-theme .calendar-nav button {
+        color: #fff;
+      }
+
+      .dark-theme .calendar-nav button:hover {
+        background: #363636;
+      }
+
+      .dark-theme .calendar-legend {
+        background: #2c2c2c;
+        border-top-color: #444;
+      }
+
+      .dark-theme .legend-item {
+        color: #999;
+      }
+
+      .dark-theme .legend-color {
+        border-color: #444;
+      }
+
+      .dark-theme .legend-color.working {
+        background: rgba(26, 188, 156, 0.15);
+      }
+
+      .dark-theme .legend-color.off {
+        background: rgba(26, 188, 156, 0.1);
+      }
+
+      .dark-theme .legend-color.holiday {
+        background: rgba(231, 76, 60, 0.1);
+      }
+
+      .dark-theme .calendar-day.today {
+        background: rgba(26, 188, 156, 0.3) !important;
+        color: #1abc9c;
+        border-color: #1abc9c !important;
+      }
+
+      .dark-theme .calendar-day.holiday.shift {
+        background: linear-gradient(to right, #1abc9c 50%, #FF9500 50%);
+        color: white;
+      }
+
+      /* Мобильная оптимизация */
+      @media (max-width: 768px) {
+        .widget-container {
+          padding: 12px;
+        }
+
+        .current-status {
+          padding: 20px;
+          border-radius: 20px;
+        }
+
+        .status-text {
+          font-size: 24px;
+        }
+
+        .calendar {
+          padding: 16px;
+        }
+
+        .calendar-day {
+          font-size: 13px;
+        }
+      }
+
+      /* Анимации */
+      @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+          transform: translateY(0);
+        }
+        40% {
+          transform: translateY(-20px);
+        }
+        60% {
+          transform: translateY(-10px);
+        }
+      }
+
+      /* Стили для списка праздников */
+      .holidays-container {
+        background: rgba(255, 255, 255, 0.9);
+        margin: 15px;
+        padding: 15px;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .holidays-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        color: #2c3e50;
+        font-weight: 600;
+      }
+
+      .holidays-header i {
+        color: #1abc9c;
+        font-size: 20px;
+      }
+
+      .holidays-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .holiday-item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+      }
+
+      .holiday-item:hover {
+        background: #f1f3f5;
+      }
+
+      .holiday-date {
+        background: #1abc9c;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 6px;
+        margin-right: 12px;
+        font-weight: 600;
+        min-width: 32px;
+        text-align: center;
+      }
+
+      .holiday-name {
+        flex: 1;
+        color: #2c3e50;
+      }
+
+      .holiday-shift {
+        border-left: 3px solid #1abc9c;
+      }
+
+      .holiday-shift-icon {
+        margin-left: 8px;
+        color: #1abc9c;
+      }
+
+      @media (max-width: 768px) {
+        .holidays-container {
+          margin: 12px;
+          padding: 12px;
+        }
+
+        .holiday-item {
+          padding: 8px;
+        }
+
+        .holiday-date {
+          padding: 3px 6px;
+          min-width: 28px;
+          font-size: 14px;
+        }
+      }
+
+      /* Добавленные стили */
+      .widget-header {
+        display: flex;
+        align-items: center;
+        padding: 20px 15px 10px;
+        flex-wrap: wrap;
+      }
+
+      .widget-header i {
+        font-size: 24px;
+        color: #1abc9c;
+        margin-right: 10px;
+      }
+
+      .widget-header span {
+        font-size: 20px;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      .widget-description {
+        width: 100%;
+        margin-top: 8px;
+        font-size: 14px;
+        color: #7f8c8d;
+      }
+
+      .widget-section {
+        margin: 20px 0;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+        margin-bottom: 8px;
+      }
+
+      .section-header i {
+        font-size: 20px;
+        color: #1abc9c;
+        margin-right: 8px;
+      }
+
+      .section-header span {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      .section-description {
+        padding: 0 15px;
+        margin-bottom: 15px;
+        font-size: 14px;
+        color: #7f8c8d;
+        line-height: 1.4;
+      }
+
+      .stat-description {
+        font-size: 12px;
+        color: #95a5a6;
+        text-align: center;
+        margin-top: 8px;
+        line-height: 1.3;
+        opacity: 0.9;
+      }
+
+      .shifts-card .stat-description {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      @media (max-width: 768px) {
+        .widget-header {
+          padding: 15px 12px 8px;
+        }
+
+        .widget-header i {
+          font-size: 20px;
+        }
+
+        .widget-header span {
+          font-size: 18px;
+        }
+
+        .widget-description,
+        .section-description {
+          font-size: 13px;
+        }
+
+        .section-header {
+          padding: 0 12px;
+        }
+
+        .stat-description {
+          font-size: 11px;
+        }
+      }
+
+      /* Стили для погоды */
+      .weather-widget {
+        margin-top: 20px;
+        background: white;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        text-align: center;
+      }
+
+      .weather-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+
+      .weather-main {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+
+      .weather-temp {
+        font-size: 48px;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      .weather-icon {
+        width: 64px;
+        height: 64px;
+      }
+
+      .weather-description {
+        text-transform: capitalize;
+        color: #7f8c8d;
+        margin-bottom: 10px;
+      }
+
+      .weather-details {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+
+      .weather-detail-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #2c3e50;
+      }
+
+      .weather-detail-item i {
+        color: #1abc9c;
+        font-size: 20px;
+      }
+
+      @media (max-width: 768px) {
+        .weather-widget {
+          padding: 16px;
+          margin: 12px;
+        }
+
+        .weather-temp {
+          font-size: 36px;
+        }
+
+        .weather-icon {
+          width: 48px;
+          height: 48px;
+        }
+
+        .weather-details {
+          gap: 12px;
+        }
+      }
+
+      /* Стили для темной темы */
+      .dark-theme .weather-widget {
+        background: #2c2c2c;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        color: #fff;
+      }
+
+      .dark-theme .weather-header {
+        color: #fff;
+      }
+
+      .dark-theme .weather-temp {
+        color: #fff;
+      }
+
+      .dark-theme .weather-description {
+        color: #fff;
+      }
+
+      .dark-theme .weather-details {
+        color: #fff;
+      }
+
+      .dark-theme .weather-details p {
+        color: #fff !important;
+      }
+
+      .dark-theme .weather-details span {
+        color: #fff !important;
+      }
+
+      .dark-theme .weather-icon {
+        filter: brightness(1.2);
+      }
+
+      /* Стили для калькулятора */
+      .calculator-container {
+        background: var(--widget-bg);
+        border-radius: 15px;
+        padding: 15px;
+        margin: 10px;
+        margin-top: 50px;
+        box-shadow: var(--widget-shadow);
+      }
+
+      .calculator-container h2 {
+        margin-bottom: 15px;
+        font-size: 16px;
+        color: var(--text-color);
+      }
+
+      .input-group {
+        margin-bottom: 12px;
+      }
+
+      .input-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 13px;
+        color: var(--text-color);
+      }
+
+      .input-group input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 13px;
+        background: var(--input-bg);
+        color: var(--text-color);
+        transition: all 0.3s ease;
+      }
+
+      .calculator-button {
+        width: 100%;
+        padding: 10px;
+        background: var(--accent-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        margin: 12px 0;
+        transition: all 0.3s ease;
+      }
+
+      .result-container {
+        margin-top: 15px;
+        padding: 12px;
+        background: var(--result-bg);
+        border-radius: 8px;
+      }
+
+      .result-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+        font-size: 13px;
+        color: var(--text-color);
+      }
+
+      .final-salary {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border-color);
+      }
+
+      @media (max-width: 360px) {
+        .calculator-container {
+          padding: 12px;
+          margin: 5px;
+          margin-top: 50px;
+        }
+
+        .input-group label,
+        .input-group input,
+        .result-item {
+          font-size: 12px;
+        }
+
+        .calculator-button {
+          padding: 8px;
+          font-size: 12px;
+          margin: 8px 0;
+        }
+
+        .result-container {
+          padding: 10px;
+        }
+
+        .result-item {
+          margin-bottom: 6px;
+        }
+
+        .final-salary {
+          margin-top: 10px;
+          padding-top: 10px;
+        }
+      }
+
+      /* Стили для рекомендаций погоды */
+      .weather-recommendations {
+        margin-top: 20px;
+        padding: 15px;
+        background: rgba(26, 188, 156, 0.05);
+        border-radius: 12px;
+        border: 1px solid rgba(26, 188, 156, 0.1);
+      }
+
+      .weather-recommendation-item {
+        display: flex;
+        align-items: flex-start;
+        padding: 12px;
+        margin-bottom: 10px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .weather-recommendation-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .weather-recommendation-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .weather-recommendation-item i {
+        margin-right: 12px;
+        font-size: 20px;
+        color: #1abc9c;
+        background: rgba(26, 188, 156, 0.1);
+        padding: 8px;
+        border-radius: 8px;
+        min-width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .weather-recommendation-item span {
+        flex: 1;
+        font-size: 14px;
+        line-height: 1.5;
+        padding: 8px 0;
+        color: #2c3e50;
+      }
+
+      /* Темная тема */
+      .dark-theme .weather-recommendations {
+        background: rgba(26, 188, 156, 0.05);
+        border-color: rgba(26, 188, 156, 0.15);
+      }
+
+      .dark-theme .weather-recommendation-item {
+        background: rgba(44, 62, 80, 0.3);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .dark-theme .weather-recommendation-item:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .dark-theme .weather-recommendation-item span {
+        color: #ecf0f1;
+      }
+
+      .dark-theme .weather-recommendation-item i {
+        background: rgba(26, 188, 156, 0.15);
+      }
+
+      /* Мобильная версия */
+      @media (max-width: 360px) {
+        .weather-recommendations {
+          margin-top: 15px;
+          padding: 10px;
+        }
+
+        .weather-recommendation-item {
+          padding: 10px;
+          margin-bottom: 8px;
+        }
+
+        .weather-recommendation-item i {
+          font-size: 18px;
+          padding: 6px;
+          min-width: 32px;
+          height: 32px;
+          margin-right: 10px;
+        }
+
+        .weather-recommendation-item span {
+          font-size: 13px;
+          padding: 6px 0;
+        }
+      }
+
+      /* Стили для активных смен на главной */
+      .active-shifts {
+        margin-top: 20px;
+        padding: 12px;
+        background: var(--widget-bg);
+        border-radius: 15px;
+        box-shadow: var(--widget-shadow);
+      }
+
+      .active-shifts-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-color);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .active-shifts-title i {
+        color: #1abc9c;
+        font-size: 12px;
+      }
+
+      .active-shift-item {
+        padding: 6px 8px;
+        border-radius: 8px;
+        background: var(--card-bg);
+        margin-bottom: 8px;
+        position: relative;
+        min-height: 45px;
+      }
+
+      .active-shift-time {
+        font-weight: 500;
+        color: #1abc9c;
+        font-size: 10px;
+        line-height: 1;
+      }
+
+      .active-shift-progress {
+        height: 1px;
+        margin: 4px 0;
+        width: calc(100% - 35px);
+      }
+
+      .active-shift-info {
+        font-size: 10px;
+        color: var(--text-secondary);
+        margin-top: 4px;
+        line-height: 1;
+      }
+
+      .dark-theme .active-shifts {
+        background: #2c2c2c;
+      }
+
+      .dark-theme .active-shifts-title {
+        color: #fff;
+      }
+
+      .dark-theme .active-shift-item {
+        background: #363636;
+      }
+
+      .dark-theme .active-shift-info {
+        color: #bdc3c7;
+      }
+
+      /* Стили для графика смен */
+      .shift-schedule {
+        margin-top: 20px;
+        padding: 20px;
+        background: var(--widget-bg);
+        border-radius: 15px;
+        box-shadow: var(--widget-shadow);
+      }
+
+      .shift-schedule-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-color);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .shift-schedule-title i {
+        color: #1abc9c;
+        font-size: 20px;
+      }
+
+      /* Стили для праздников */
+      .holidays {
+        margin-top: 20px;
+        padding: 15px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
+
+      .holidays-title {
+        font-size: 16px;
+        color: #2c3e50;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .holidays-title i {
+        color: #1abc9c;
+      }
+
+      .holiday-item {
+        padding: 12px;
+        border-radius: 10px;
+        background: rgba(26, 188, 156, 0.1);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .holiday-date {
+        padding: 4px 8px;
+        font-size: 13px;
+      }
+
+      .holiday-name {
+        font-size: 13px;
+      }
+
+      .holiday-shift-icon {
+        font-size: 12px;
+        color: #1abc9c;
+        background: rgba(26, 188, 156, 0.15);
+        padding: 4px 8px;
+        border-radius: 6px;
+      }
+
+      .no-holidays {
+        color: #7f8c8d;
+        text-align: center;
+        padding: 15px;
+        font-size: 14px;
+      }
+
+      .dark-theme .holidays {
+        background: #2c2c2c;
+      }
+
+      .dark-theme .holidays-title {
+        color: #fff;
+      }
+
+      .dark-theme .holiday-item {
+        background: rgba(26, 188, 156, 0.2);
+      }
+
+      .dark-theme .holiday-date,
+      .dark-theme .holiday-name {
+        color: #ecf0f1;
+      }
+
+      .dark-theme .no-holidays {
+        color: #bdc3c7;
+      }
+
+      :root {
+        --accent-color: #1abc9c;
+        --accent-color-hover: #16a085;
+        --accent-color-transparent: rgba(26, 188, 156, 0.2);
+        --border-color: rgba(0, 0, 0, 0.1);
+        --input-bg: rgba(255, 255, 255, 0.05);
+        --result-bg: rgba(0, 0, 0, 0.03);
+      }
+
+      .dark-theme {
+        --border-color: rgba(255, 255, 255, 0.1);
+        --input-bg: rgba(255, 255, 255, 0.05);
+        --result-bg: rgba(255, 255, 255, 0.05);
+      }
+
+      /* Стили для виджетов */
+      .widget {
+        display: none;
+        margin-bottom: 20px;
+      }
+
+      .widget.active {
+        display: block;
+      }
+
+      #weather-widget {
+        padding-top: 60px; /* Добавляем отступ сверху */
+      }
+
+      /* Стили для переключателя темы */
+      .theme-switch-wrapper {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        align-items: center;
+        z-index: 100;
+        background: white;
+        padding: 10px 15px;
+        border-radius: 25px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+      }
+
+      .theme-switch {
+        display: inline-block;
+        position: relative;
+        width: 50px;
+        height: 25px;
+        margin-left: 10px;
+      }
+
+      .theme-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #e8e8e8;
+        transition: .4s;
+        border-radius: 25px;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 19px;
+        width: 19px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+      }
+
+      input:checked + .slider {
+        background-color: #1abc9c;
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(25px);
+      }
+
+      .theme-switch-wrapper i {
+        color: #1abc9c;
+        margin-right: 5px;
+        font-size: 20px;
+      }
+
+      /* Темная тема */
+      body.dark-theme {
+        background-color: #1a1a1a;
+        color: #ffffff;
+      }
+
+      .dark-theme .widget-container {
+        background-color: #1a1a1a;
+      }
+
+      .dark-theme .current-status {
+        background: #2c2c2c;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      }
+
+      .dark-theme .current-status.status-working {
+        background: linear-gradient(to right, rgba(26, 188, 156, 0.2), #2c2c2c);
+      }
+
+      .dark-theme .current-status.status-off {
+        background: linear-gradient(to right, rgba(26, 188, 156, 0.1), #2c2c2c);
+      }
+
+      .dark-theme .current-date {
+        color: #999;
+      }
+
+      .dark-theme .status-description {
+        color: #999;
+      }
+
+      .dark-theme .time-indicator {
+        background: #2c2c2c;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      }
+
+      .dark-theme .time-indicator:hover {
+        background: #363636;
+      }
+
+      .dark-theme .theme-switch-wrapper {
+        background: #2c2c2c;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      }
+
+      .dark-theme .nav-tabs {
+        background: #2c2c2c;
+        box-shadow: 0 -1px 10px rgba(0,0,0,0.3);
+      }
+
+      .dark-theme .nav-tab {
+        color: #999;
+      }
+
+      .dark-theme .nav-tab.active {
+        color: #1abc9c;
+        background: rgba(26, 188, 156, 0.2);
+      }
+
+      .dark-theme .calculator-container {
+        background: #2c2c2c;
+      }
+
+      .dark-theme .calculator-input {
+        background: #363636;
+        border-color: #444;
+        color: #fff;
+      }
+
+      .dark-theme .result-container {
+        background: #363636;
+      }
+
+      .dark-theme .result-label {
+        color: #999;
+      }
+
+      .dark-theme .result-value,
+      .dark-theme .tax-value {
+        color: #fff;
+      }
+
+      @media (max-width: 768px) {
+        .theme-switch-wrapper {
+          top: 10px;
+          right: 10px;
+          padding: 8px 12px;
+        }
+      }
+
+      /* Темная тема для календаря */
+      .dark-theme .calendar {
+        background: #2c2c2c;
+        border-color: #444;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      }
+
+      .dark-theme .calendar-header {
+        background: #363636;
+        color: #fff;
+        border-bottom-color: #444;
+      }
+
+      .dark-theme .calendar-weekdays {
+        background: #2c2c2c;
+        border-bottom-color: #444;
+      }
+
+      .dark-theme .calendar-weekdays span {
+        color: #999;
+      }
+
+      .dark-theme .calendar-days {
+        background: #2c2c2c;
+      }
+
+      .dark-theme .calendar-day {
+        color: #000; /* Добавляем черный цвет для цифр */
+        border-color: #444;
+      }
+
+      .dark-theme .calendar-day:hover {
+        background: #363636;
+      }
+
+      .dark-theme .calendar-day.current {
+        background: rgba(26, 188, 156, 0.2);
+        color: #1abc9c;
+      }
+
+      .dark-theme .calendar-day.working-day {
+        background: rgba(26, 188, 156, 0.15);
+      }
+
+      .dark-theme .calendar-day.off-day {
+        background: rgba(26, 188, 156, 0.1);
+      }
+
+      .dark-theme .calendar-day.holiday {
+        color: #e74c3c;
+      }
+
+      .dark-theme .calendar-day.other-month {
+        color: #666;
+      }
+
+      .dark-theme .calendar-nav button {
+        color: #fff;
+      }
+
+      .dark-theme .calendar-nav button:hover {
+        background: #363636;
+      }
+
+      .dark-theme .calendar-legend {
+        background: #2c2c2c;
+        border-top-color: #444;
+      }
+
+      .dark-theme .legend-item {
+        color: #999;
+      }
+
+      .dark-theme .legend-color {
+        border-color: #444;
+      }
+
+      .dark-theme .legend-color.working {
+        background: rgba(26, 188, 156, 0.15);
+      }
+
+      .dark-theme .legend-color.off {
+        background: rgba(26, 188, 156, 0.1);
+      }
+
+      .dark-theme .legend-color.holiday {
+        background: rgba(231, 76, 60, 0.1);
+      }
+
+      /* Стили для темной темы статистики */
+      .dark-theme .stats-grid {
+        background: #2c2c2c;
+        border-color: #444;
+      }
+
+      .dark-theme .stat-card {
+        background: #363636;
+        border-color: #444;
+      }
+
+      .dark-theme .stat-value {
+        color: #1abc9c;
+      }
+
+      .dark-theme .stat-label {
+        color: #fff;
+      }
+
+      .dark-theme .shifts-card {
+        background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
+      }
+
+      .dark-theme .shifts-card i,
+      .dark-theme .shifts-card .stat-value,
+      .dark-theme .shifts-card .stat-label {
+        color: white;
+      }
+
+      .progress-container {
+        width: 100%;
+        height: 6px;
+        background: #e9ecef;
+        border-radius: 3px;
+        margin-top: 15px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: #1abc9c;
+        border-radius: 3px;
+        transition: width 0.3s ease;
+      }
+
+      @media (max-width: 360px) {
+        .calculator-button {
+          padding: 8px;
+          font-size: 13px;
+          margin: 8px 0;
+        }
+      }
+
+      /* Стили для рекомендаций погоды */
+      .weather-recommendations {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+      }
+
+      .weather-recommendation-item {
+        display: flex;
+        align-items: flex-start;
+        padding: 12px;
+        margin-bottom: 10px;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      .weather-recommendation-item i {
+        margin-right: 10px;
+        font-size: 18px;
+        color: #1abc9c;
+        margin-top: 2px;
+      }
+
+      .weather-recommendation-item span {
+        flex: 1;
+      }
+
+      .dark-theme .weather-recommendations {
+        border-top-color: #444;
+      }
+
+      @media (max-width: 360px) {
+        .weather-recommendation-item {
+          font-size: 13px;
+        }
+        
+        .weather-recommendation-item i {
+          font-size: 16px;
+        }
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/progressbar.js@1.1.0/dist/progressbar.min.js"></script>
+    <style>
+      /* Стили для графика смен */
+      #shift-schedule-widget {
+        padding: 20px;
+      }
+      
+      .shift-progress-container {
+        width: 100%;
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
+      
+      .shift-item {
+        margin-bottom: 30px;
+      }
+      
+      .shift-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 15px;
+      }
+      
+      .progress-line {
+        width: 100%;
+        height: 8px;
+        margin: 10px 0;
+      }
+      
+      .shift-info {
+        text-align: center;
+        margin: 10px 0;
+        font-size: 14px;
+        color: #2c3e50;
+      }
+      
+      .dark-theme .shift-progress-container {
+        background: #2c2c2c;
+      }
+      
+      .dark-theme .shift-title,
+      .dark-theme .shift-info {
+        color: #fff;
+      }
+      
+      @media (max-width: 768px) {
+        .shift-progress-container {
+          margin: 10px;
+          padding: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Переключатель темы -->
+    <div class="theme-switch-wrapper">
+      <i class="ri-contrast-2-line"></i>
+      <label class="theme-switch">
+        <input type="checkbox" id="theme-toggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="widget-container">
+      <!-- Главная -->
+      <div id="home-widget" class="widget active">
+        <!-- Текущий статус -->
+        <div class="widget-header">
+          <i class="ri-home-line"></i>
+          <span>Главная</span>
+
+        </div>
+
+        <div class="current-status" id="current-status">
+          <div class="time-indicator">
+            <i class="ri-sun-line"></i>
+          </div>
+          <div class="current-date" id="current-date">-</div>
+          <div class="status-text" id="status-text">-</div>
+          <div class="status-description" id="status-description">-</div>
+          <div class="progress-container">
+            <div id="workdayProgress" class="progress-fill" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- Статистика -->
+        <div class="widget-section">
+          <div class="section-header">
+            <i class="ri-bar-chart-line"></i>
+            <span>Статистика за месяц</span>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <i class="ri-time-line"></i>
+              <span class="stat-value" id="working-hours">-</span>
+              <span class="stat-label">Рабочих часов</span>
+              <span class="stat-description">Общее количество рабочих часов в месяц (11 часов × кол-во смен)</span>
+            </div>
+            <div class="stat-card">
+              <i class="ri-calendar-event-line"></i>
+              <span class="stat-value" id="holidays-count">-</span>
+              <span class="stat-label">Праздников</span>
+              <span class="stat-description">Количество праздничных дней в текущем месяце</span>
+            </div>
+            <div class="stat-card shifts-card">
+              <i class="ri-calendar-check-line"></i>
+              <span class="stat-value" id="completed-shifts">-</span>
+              <span class="stat-label">Смен</span>
+              <span class="stat-description">Общее количество рабочих смен в месяце</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Активные смены -->
+        <div class="active-shifts">
+          <div class="active-shifts-title">
+            <i class="ri-time-line"></i>
+            <span>Активные смены</span>
+          </div>
+          <div id="home-active-shifts">
+            <!-- Здесь будут отображаться активные смены -->
+          </div>
+        </div>
+
+        <!-- Праздники -->
+        <div class="widget-section">
+          <div class="section-header">
+            <i class="ri-calendar-event-line"></i>
+            <span>Праздники</span>
+          </div>
+
+          <div class="holidays-list" id="holidays-list"></div>
+        </div>
+      </div>
+
+      <div id="calendar-widget" class="widget">
+        <div class="calendar">
+          <div class="calendar-header">
+            <span id="month"></span>
+            <span id="year"></span>
+          </div>
+          <ul id="weekdays">
+            <li>Пн</li>
+            <li>Вт</li>
+            <li>Ср</li>
+            <li>Чт</li>
+            <li>Пт</li>
+            <li>Сб</li>
+            <li>Вс</li>
+          </ul>
+          <div id="calendar-days"></div>
+        </div>
+      </div>
+
+      <div id="weather-widget" class="widget">
+        <div class="weather-widget">
+          <div id="weather-info"></div>
+        </div>
+      </div>
+
+      <!-- Калькулятор -->
+      <div id="calculator-widget" class="widget">
+        <div class="calculator-container">
+          <h2>Калькулятор зарплаты</h2>
+          
+          <div class="input-group">
+            <label for="hourlyRate">Почасовая ставка (₸)</label>
+            <input type="number" id="hourlyRate" placeholder="Введите ставку">
+          </div>
+          
+          <div class="input-group">
+            <label for="regularHours">Обычные часы</label>
+            <input type="number" id="regularHours" placeholder="Введите часы">
+          </div>
+          
+          <div class="input-group">
+            <label for="holidayHours">Праздничные часы</label>
+            <input type="number" id="holidayHours" placeholder="Введите часы">
+          </div>
+
+          <button onclick="calculateSalary()" class="calculator-button">Рассчитать</button>
+
+          <div class="result-container">
+            <div class="result-item">
+              <span class="result-label">Общая сумма:</span>
+              <span id="salaryResult" class="result-value">0.00 ₸</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Подоходный налог (10%):</span>
+              <span id="incomeTax" class="tax-value">0.00 ₸</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Пенсионные отчисления (10%):</span>
+              <span id="pensionTax" class="tax-value">0.00 ₸</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Профсоюз (1%):</span>
+              <span id="unionTax" class="tax-value">0.00 ₸</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Медицинская страховка (2%):</span>
+              <span id="medicalInsurance" class="tax-value">0.00 ₸</span>
+            </div>
+            <div class="result-item final-salary">
+              <span class="result-label">К выдаче:</span>
+              <span id="finalSalary" class="result-value">0.00 ₸</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="chat-widget" class="widget">
+        <div class="widget-header">
+          <h2>Чат смены</h2>
+        </div>
+        <div style="padding: 20px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+          <!-- WhatsApp кнопка -->
+          <a href="https://chat.whatsapp.com/DvmBnJAxOOn76H4ohIgwmp" 
+             target="_blank"
+             style="display: flex; 
+                    align-items: center;
+                    background-color: #25D366; 
+                    color: white; 
+                    padding: 16px 32px; 
+                    border-radius: 12px; 
+                    text-decoration: none; 
+                    font-size: 18px;
+                    font-weight: 500;
+                    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
+                    transition: all 0.3s ease;
+                    transform: translateY(0);">
+            <i class="ri-whatsapp-fill" style="font-size: 24px; margin-right: 10px;"></i>
+            WhatsApp
+          </a>
+
+          <!-- Telegram кнопка -->
+          <a href="https://t.me/+your-telegram-link" 
+             target="_blank"
+             style="display: flex; 
+                    align-items: center;
+                    background-color: #229ED9; 
+                    color: white; 
+                    padding: 16px 32px; 
+                    border-radius: 12px; 
+                    text-decoration: none; 
+                    font-size: 18px;
+                    font-weight: 500;
+                    box-shadow: 0 4px 12px rgba(34, 158, 217, 0.2);
+                    transition: all 0.3s ease;
+                    transform: translateY(0);">
+            <i class="ri-telegram-fill" style="font-size: 24px; margin-right: 10px;"></i>
+            Telegram
+          </a>
+        </div>
+
+        <style>
+          #chat-widget a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+          }
+          
+          #chat-widget a:active {
+            transform: translateY(0);
+          }
+        </style>
+      </div>
+
+      <div id="shift-schedule-widget" class="widget">
+        <div class="widget-header">
+          <i class="ri-time-line"></i>
+          <span>График смен</span>
+        </div>
+        <div class="shift-progress-container">
+          <div class="shift-item">
+            <div class="shift-title">График смены: 06:00 - 18:00</div>
+            <div class="progress-line" id="shift-progress-1"></div>
+            <div class="shift-info" id="shift-info-1">Загрузка...</div>
+          </div>
+          <div class="shift-item">
+            <div class="shift-title">График смены: 09:00 - 21:00</div>
+            <div class="progress-line" id="shift-progress-2"></div>
+            <div class="shift-info" id="shift-info-2">Загрузка...</div>
+          </div>
+          <div class="shift-item">
+            <div class="shift-title">График смены: 10:00 - 22:00</div>
+            <div class="progress-line" id="shift-progress-3"></div>
+            <div class="shift-info" id="shift-info-3">Загрузка...</div>
+          </div>
+          <div class="shift-item">
+            <div class="shift-title">График смены: 14:00 - 02:00</div>
+            <div class="progress-line" id="shift-progress-4"></div>
+            <div class="shift-info" id="shift-info-4">Загрузка...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav-tabs">
+      <div class="nav-tab" onclick="showWidget('home')">
+        <i class="ri-home-4-line"></i>
+        <span>Главная</span>
+      </div>
+      <div class="nav-tab" onclick="showWidget('calendar')">
+        <i class="ri-calendar-line"></i>
+        <span>Календарь</span>
+      </div>
+      <div class="nav-tab" onclick="showWidget('weather')">
+        <i class="ri-sun-line"></i>
+        <span>Погода</span>
+      </div>
+      <div class="nav-tab" onclick="showWidget('calculator')">
+        <i class="ri-calculator-line"></i>
+        <span>Калькулятор</span>
+      </div>
+      <div class="nav-tab" onclick="showWidget('chat')">
+        <i class="ri-whatsapp-line"></i>
+        <span>Чат смены</span>
+      </div>
+      <div class="nav-tab" onclick="showWidget('shift-schedule')">
+        <i class="ri-time-line"></i>
+        <span>График смен</span>
+      </div>
+    </nav>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+    <script>
+      function showWidget(widgetName) {
+        // Скрываем все виджеты
+        document.querySelectorAll('.widget').forEach(widget => {
+          widget.classList.remove('active');
+        });
+        
+        // Показываем выбранный виджет
+        document.getElementById(widgetName + '-widget').classList.add('active');
+        
+        // Обновляем активную вкладку
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+          tab.classList.remove('active');
+        });
+        
+        // Находим и активируем нужную вкладку
+        const tabs = document.querySelectorAll('.nav-tab');
+        tabs.forEach(tab => {
+          if (tab.getAttribute('onclick').includes(widgetName)) {
+            tab.classList.add('active');
+          }
+        });
+
+        // Инициализируем прогресс бар при открытии вкладки графика смен
+        if (widgetName === 'shift-schedule') {
+          initializeShiftProgress();
+        }
+      }
+
+      async function fetchWeather() {
+        try {
+          const geocodeResponse = await fetch('https://api.openweathermap.org/geo/1.0/direct?q=Astana,KZ&limit=1&appid=90e0d7e79559244cc33afebafbd85ab7');
+          const geocodeData = await geocodeResponse.json();
+          
+          if (geocodeData.length > 0) {
+            const { lat, lon } = geocodeData[0];
+            
+            const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=90e0d7e79559244cc33afebafbd85ab7&units=metric&lang=ru`);
+            const weatherData = await weatherResponse.json();
+
+            const weatherInfo = document.getElementById('weather-info');
+            
+            const recommendations = getWeatherRecommendations(
+              weatherData.main.temp,
+              weatherData.weather[0].description,
+              weatherData.wind.speed
+            );
+            
+            weatherInfo.innerHTML = `
+              <div class="weather-header">
+                <h3>Погода в Астане</h3>
+                <span>${new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}</span>
+              </div>
+              <div class="weather-main">
+                <div>
+                  <div class="weather-temp">${Math.round(weatherData.main.temp)}°C</div>
+                  <div class="weather-description">${weatherData.weather[0].description}</div>
+                </div>
+                <img class="weather-icon" src="https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png" alt="${weatherData.weather[0].description}">
+              </div>
+              <div class="weather-details">
+                <div class="weather-detail-item">
+                  <i class="ri-temp-hot-line"></i>
+                  <span>Ощущается как: ${Math.round(weatherData.main.feels_like)}°C</span>
+                </div>
+                <div class="weather-detail-item">
+                  <i class="ri-drop-line"></i>
+                  <span>Влажность: ${weatherData.main.humidity}%</span>
+                </div>
+                <div class="weather-detail-item">
+                  <i class="ri-windy-line"></i>
+                  <span>Ветер: ${Math.round(weatherData.wind.speed)} м/с</span>
+                </div>
+                <div class="weather-detail-item">
+                  <i class="ri-cloud-line"></i>
+                  <span>Облачность: ${weatherData.clouds.all}%</span>
+                </div>
+              </div>
+              <div class="weather-recommendations">
+                <div class="weather-recommendation-item">
+                  <i class="ri-t-shirt-line"></i>
+                  <span>${recommendations.clothing}</span>
+                </div>
+                <div class="weather-recommendation-item">
+                  <i class="ri-car-line"></i>
+                  <span>${recommendations.car}</span>
+                </div>
+              </div>
+            `;
+          }
+        } catch (error) {
+          console.error('Ошибка при получении погоды:', error);
+          document.getElementById('weather-info').innerHTML = '<p>Ошибка при загрузке погоды</p>';
+        }
+      }
+
+      function getWeatherRecommendations(temp, description, windSpeed) {
+        let clothing = '';
+        let car = '';
+        
+        // Рекомендации по одежде
+        if (temp <= -20) {
+          clothing = 'Наденьте теплую зимнюю куртку, шапку, шарф, теплые перчатки и зимнюю обувь. Желательно многослойная одежда.';
+          car = 'Прогрев двигателя 15-20 минут. Проверьте аккумулятор и незамерзайку.';
+        } else if (temp <= -10) {
+          clothing = 'Наденьте зимнюю куртку, шапку, перчатки и теплую обувь.';
+          car = 'Прогрев двигателя 10-15 минут. Держите бак заполненным минимум наполовину.';
+        } else if (temp <= 0) {
+          clothing = 'Наденьте демисезонную куртку, шапку и перчатки.';
+          car = 'Прогрев двигателя 5-10 минут.';
+        } else if (temp <= 10) {
+          clothing = 'Легкая куртка или пальто будет достаточно.';
+          car = 'Достаточно 2-3 минут прогрева.';
+        } else if (temp <= 20) {
+          clothing = 'Достаточно легкой кофты или ветровки.';
+          car = 'Прогрев не требуется.';
+        } else {
+          clothing = 'Легкая одежда, желательно из натуральных тканей.';
+          car = 'Прогрев не требуется. Проверьте систему охлаждения.';
+        }
+
+        // Дополнительные рекомендации по погоде
+        if (description.includes('дождь')) {
+          clothing += ' Возьмите зонт или дождевик.';
+          car += ' Включите противотуманные фары, соблюдайте дистанцию.';
+        } else if (description.includes('снег')) {
+          clothing += ' Наденьте водонепроницаемую обувь.';
+          car += ' Будьте осторожны, возможен гололед. Держите дистанцию.';
+        }
+
+        if (windSpeed > 15) {
+          clothing += ' Наденьте ветрозащитную одежду.';
+          car += ' Будьте осторожны при открывании дверей.';
+        }
+
+        return { clothing, car };
+      }
+
+      fetchWeather();
+      setInterval(fetchWeather, 1800000);
+
+      const today = new Date();
+      let currentMonth = today.getMonth();
+      let currentYear = today.getFullYear();
+      const daysContainer = document.getElementById("calendar-days");
+      const months = [
+        "Январь",
+        "Февраль",
+        "Март",
+        "Апрель",
+        "Май",
+        "Июнь",
+        "Июль",
+        "Август",
+        "Сентябрь",
+        "Октябрь",
+        "Ноябрь",
+        "Декабрь",
+      ];
+
+      const cycleStart = new Date(2024, 10, 22);
+      const cycleDays = 4;
+
+      const holidays = [
+        { date: '01-01', name: "Новый год" },
+        { date: '01-02', name: "Новый год" },
+        { date: '03-08', name: "Международный женский день" },
+        { date: '03-21', name: "Наурыз мейрамы" },
+        { date: '03-22', name: "Наурыз мейрамы" },
+        { date: '03-23', name: "Наурыз мейрамы" },
+        { date: '05-01', name: "Праздник единства народа Казахстана" },
+        { date: '05-07', name: "День защитника Отечества" },
+        { date: '05-09', name: "День Победы" },
+        { date: '06-28', name: "День журналистики" },
+        { date: '07-06', name: "День Столицы" },
+        { date: '08-30', name: "День Конституции" },
+        { date: '12-16', name: "День независимости" },
+      ];
+
+      function getHolidayName(date) {
+        const formattedDate = `${date.getMonth() + 1 < 10 ? '0' : ''}${date.getMonth() + 1}-${date.getDate() < 10 ? '0' : ''}${date.getDate()}`;
+        const holiday = holidays.find((h) => h.date === formattedDate);
+        return holiday ? holiday.name : null;
+      }
+
+      function isShiftDay(date) {
+        const diffDays = Math.floor((date - cycleStart) / (1000 * 60 * 60 * 24));
+        return (diffDays % cycleDays + cycleDays) % cycleDays < 2;
+      }
+
+      function showCalendar(month, year) {
+        const firstDay = new Date(year, month).getDay();
+        const totalDays = new Date(year, month + 1, 0).getDate();
+        daysContainer.innerHTML = "";
+
+        let shiftCount = 0;
+        const today = new Date();
+
+        for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
+          const emptyCell = document.createElement("div");
+          emptyCell.classList.add("calendar-day", "empty");
+          daysContainer.appendChild(emptyCell);
+        }
+
+        for (let day = 1; day <= totalDays; day++) {
+          const date = new Date(year, month, day);
+          const dayCell = document.createElement("div");
+          dayCell.classList.add("calendar-day");
+          dayCell.textContent = day;
+
+          const holidayName = getHolidayName(date);
+          if (holidayName) {
+            dayCell.setAttribute("data-holiday", holidayName);
+          }
+
+          if (isShiftDay(date)) {
+            dayCell.classList.add("shift");
+            shiftCount++;
+          }
+
+          if (holidayName) {
+            dayCell.classList.add("holiday");
+          }
+
+          // Проверяем, является ли день текущим
+          if (date.getDate() === today.getDate() && 
+              date.getMonth() === today.getMonth() && 
+              date.getFullYear() === today.getFullYear()) {
+            dayCell.classList.add("today");
+          }
+
+          daysContainer.appendChild(dayCell);
+        }
+
+        document.getElementById("month").textContent = months[month];
+        document.getElementById("year").textContent = year;
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        showCalendar(currentMonth, currentYear);
+        updateHomeStats();
+        updateCurrentDayStatus();
+        updateHomeActiveShifts();
+
+        showWidget('home');
+
+        setInterval(updateCurrentDayStatus, 60000);
+        setInterval(updateHomeActiveShifts, 60000);
+      });
+
+      function updateCurrentDayStatus() {
+        const now = new Date();
+        const status = getDayStatus(now);
+        
+        const currentDate = document.getElementById('current-date');
+        const statusText = document.getElementById('status-text');
+        const statusDescription = document.getElementById('status-description');
+        const progressBar = document.getElementById('workdayProgress');
+        
+        const statusContainer = document.getElementById('current-status');
+        const timeIndicator = statusContainer.querySelector('.time-indicator i');
+        
+        // Обновляем индикатор времени суток
+        const hour = now.getHours();
+        const isDaytime = hour >= 6 && hour < 20; // День с 6:00 до 20:00
+        
+        // Обновляем иконку и класс
+        timeIndicator.className = isDaytime ? 'ri-sun-line' : 'ri-moon-line';
+        statusContainer.classList.remove('daytime', 'nighttime');
+        statusContainer.classList.add(isDaytime ? 'daytime' : 'nighttime');
+        
+        const options = { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        };
+        currentDate.textContent = now.toLocaleDateString('ru-RU', options);
+        
+        statusContainer.classList.remove('status-working', 'status-off');
+
+        // Получаем следующий рабочий день и обновляем прогресс
+        const nextWorkDay = getNextWorkDay(now);
+        const daysUntilWork = Math.ceil((nextWorkDay - now) / (1000 * 60 * 60 * 24));
+        let progress = 0;
+        
+        // Логика прогресса:
+        // 2 дня до работы - 0%
+        // 1 день до работы - 50%
+        // Рабочий день - 100%
+        if (daysUntilWork === 1) {
+          progress = 50;
+        } else if (daysUntilWork === 0) {
+          progress = 100;
+        }
+        progressBar.style.width = `${progress}%`;
+
+        if (status.isShift) {
+          statusContainer.classList.add('status-working');
+          statusText.textContent = `${status.shiftDay}-й день рабочей смены`;
+          statusDescription.textContent = 'Рабочий день';
+          progressBar.style.width = '100%';
+        } else {
+          statusContainer.classList.add('status-off');
+          if (getHolidayName(now)) {
+            statusText.textContent = 'Праздничный день';
+            statusDescription.textContent = `${getHolidayName(now)}. Следующая смена начнется ${getNextShiftDate(now)}`;
+          } else if (status.offDay > 0) {
+            statusText.textContent = `${status.offDay}-й выходной день`;
+            statusDescription.textContent = `Следующая смена начнется ${getNextShiftDate(now)}`;
+          } else {
+            statusText.textContent = 'Выходной день';
+            statusDescription.textContent = `Следующая смена начнется ${getNextShiftDate(now)}`;
+          }
+        }
+      }
+
+      function getNextShiftDate(currentDate) {
+        const date = new Date(currentDate);
+        let daysToCheck = 10; // Проверяем следующие 10 дней
+        
+        // Начинаем с завтрашнего дня
+        date.setDate(date.getDate() + 1);
+        
+        while (daysToCheck > 0) {
+          if (isShiftDay(date)) {
+            const options = { day: 'numeric', month: 'long' };
+            console.log(`Следующая смена найдена: ${date.toLocaleDateString('ru-RU', options)}`);
+            return date.toLocaleDateString('ru-RU', options);
+          }
+          date.setDate(date.getDate() + 1);
+          daysToCheck--;
+        }
+        
+        console.log('Следующая смена не найдена в ближайшие 10 дней.');
+        return "скоро";
+      }
+
+      function updateMonth(delta) {
+        currentMonth = currentMonth + delta;
+        if (currentMonth > 11) {
+          currentMonth = 0;
+          currentYear++;
+        } else if (currentMonth < 0) {
+          currentMonth = 11;
+          currentYear--;
+        }
+        
+        showCalendar(currentMonth, currentYear);
+        updateHomeStats();
+        updateCurrentDayStatus();
+      }
+
+      const prevButton = document.createElement('span');
+      prevButton.innerHTML = '&#10094;';
+      prevButton.classList.add('calendar-nav');
+      prevButton.onclick = () => updateMonth(-1);
+
+      const nextButton = document.createElement('span');
+      nextButton.innerHTML = '&#10095;';
+      nextButton.classList.add('calendar-nav');
+      nextButton.onclick = () => updateMonth(1);
+
+      const calendarHeader = document.querySelector('.calendar-header');
+      calendarHeader.insertBefore(prevButton, calendarHeader.firstChild);
+      calendarHeader.appendChild(nextButton);
+
+      const holidayStyles = document.createElement('style');
+      holidayStyles.textContent = `
+        .holiday-item {
+          display: flex;
+          align-items: center;
+          padding: 12px;
+          background: #f8f9fa;
+          border-radius: 12px;
+          margin-bottom: 8px;
+          transition: all 0.2s ease;
+        }
+
+        .holiday-date {
+          background: #1abc9c;
+          color: white;
+          padding: 6px 12px;
+          border-radius: 8px;
+          font-weight: 500;
+          margin-right: 12px;
+          white-space: nowrap;
+        }
+
+        .holiday-name {
+          flex: 1;
+          color: #2c3e50;
+        }
+
+        .holiday-shift {
+          border-left: 3px solid #1abc9c;
+        }
+
+        .holiday-shift-icon {
+          margin-left: 8px;
+          color: #1abc9c;
         }
 
         @media (max-width: 768px) {
-            .button {
-                padding: 0.8rem 1.5rem;
-                font-size: 1rem;
+          .holiday-item {
+            padding: 10px;
+          }
+
+          .holiday-date {
+            padding: 4px 8px;
+            font-size: 13px;
+          }
+
+          .holiday-name {
+            font-size: 13px;
+          }
+
+          .holiday-shift-icon {
+            padding: 3px 6px;
+            font-size: 11px;
+          }
+        }
+      `;
+      document.head.appendChild(holidayStyles);
+
+      const navigationStyles = document.createElement('style');
+      navigationStyles.textContent = `
+        .calendar-nav {
+          cursor: pointer;
+          padding: 8px 16px;
+          background: rgba(26, 188, 156, 0.1);
+          border-radius: 12px;
+          color: #1abc9c;
+          transition: all 0.2s ease;
+        }
+
+        .calendar-nav:hover {
+          background: rgba(26, 188, 156, 0.2);
+        }
+
+        .widget {
+          display: none;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        .widget.active {
+          display: block;
+          opacity: 1;
+        }
+
+        #home-widget {
+          padding-bottom: 80px;
+        }
+
+        .bottom-nav {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: white;
+          padding: 10px 20px;
+          box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+          display: flex;
+          justify-content: space-around;
+          z-index: 1000;
+        }
+
+        .nav-tab {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 8px 16px;
+          color: #95a5a6;
+          text-decoration: none;
+          transition: all 0.2s ease;
+          border-radius: 12px;
+        }
+
+        .nav-tab i {
+          font-size: 24px;
+          margin-bottom: 4px;
+        }
+
+        .nav-tab span {
+          font-size: 12px;
+        }
+
+        .nav-tab.active {
+          color: #1abc9c;
+          background: rgba(26, 188, 156, 0.1);
+        }
+
+        .nav-tab:hover {
+          color: #1abc9c;
+        }
+
+        @media (max-width: 768px) {
+          .bottom-nav {
+            padding: 10px;
+          }
+
+          .nav-tab {
+            padding: 6px 12px;
+          }
+
+          .nav-tab i {
+            font-size: 20px;
+          }
+
+          .nav-tab span {
+            font-size: 11px;
+          }
+        }
+      `;
+      document.head.appendChild(navigationStyles);
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const defaultTab = document.querySelector('.nav-tab');
+        if (defaultTab) {
+          defaultTab.click();
+        }
+      });
+
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          
+          document.querySelectorAll('.widget').forEach(w => w.classList.remove('active'));
+          
+          const widgetName = tab.getAttribute('onclick').replace('showWidget(\'', '').replace('\')', '');
+          document.getElementById(`${widgetName}-widget`).classList.add('active');
+        });
+      });
+
+      function calculateSalary() {
+        const hourlyRate = parseFloat(document.getElementById('hourlyRate').value) || 0;
+        const regularHours = parseFloat(document.getElementById('regularHours').value) || 0;
+        const holidayHours = parseFloat(document.getElementById('holidayHours').value) || 0;
+        
+        const regularPay = regularHours * hourlyRate;
+        const holidayPay = holidayHours * hourlyRate * 1.5;
+        const totalPay = regularPay + holidayPay;
+        
+        const incomeTax = totalPay * 0.10;
+        const pensionTax = totalPay * 0.10;
+        const unionTax = totalPay * 0.01;
+        const medicalInsurance = totalPay * 0.02;
+        
+        const finalSalary = totalPay - incomeTax - pensionTax - unionTax - medicalInsurance;
+        
+        document.getElementById('salaryResult').textContent = `${totalPay.toFixed(2)} ₸`;
+        document.getElementById('incomeTax').textContent = `${incomeTax.toFixed(2)} ₸`;
+        document.getElementById('pensionTax').textContent = `${pensionTax.toFixed(2)} ₸`;
+        document.getElementById('unionTax').textContent = `${unionTax.toFixed(2)} ₸`;
+        document.getElementById('medicalInsurance').textContent = `${medicalInsurance.toFixed(2)} ₸`;
+        document.getElementById('finalSalary').textContent = `${finalSalary.toFixed(2)} ₸`;
+        
+        document.querySelectorAll('.result-value, .tax-value').forEach(el => {
+          el.classList.remove('fade-in');
+          void el.offsetWidth; 
+          el.classList.add('fade-in');
+        });
+      }
+
+      // Функционал темной темы
+      const themeToggle = document.getElementById('theme-toggle');
+      const body = document.body;
+
+      // Проверяем сохраненную тему
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        body.classList.add(savedTheme);
+        themeToggle.checked = savedTheme === 'dark-theme';
+      }
+
+      // Обработчик переключения темы
+      themeToggle.addEventListener('change', function() {
+        if (this.checked) {
+          body.classList.add('dark-theme');
+          localStorage.setItem('theme', 'dark-theme');
+        } else {
+          body.classList.remove('dark-theme');
+          localStorage.setItem('theme', '');
+        }
+      });
+
+      // Функция для автоматического переключения темы
+      function autoThemeSwitch() {
+        const hour = new Date().getHours();
+        const isDayTime = hour >= 6 && hour < 20; // День с 6:00 до 20:00
+        
+        const themeSwitch = document.getElementById('theme-toggle');
+        if (isDayTime && document.body.classList.contains('dark-theme')) {
+          document.body.classList.remove('dark-theme');
+          themeSwitch.checked = false;
+          localStorage.setItem('theme', 'light');
+        } else if (!isDayTime && !document.body.classList.contains('dark-theme')) {
+          document.body.classList.add('dark-theme');
+          themeSwitch.checked = true;
+          localStorage.setItem('theme', 'dark');
+        }
+      }
+
+      // Проверяем тему при загрузке
+      document.addEventListener('DOMContentLoaded', function() {
+        // Проверяем сохраненную тему
+        const savedTheme = localStorage.getItem('theme');
+        const themeSwitch = document.getElementById('theme-toggle');
+        
+        if (savedTheme) {
+          // Если есть сохраненная тема, используем её
+          if (savedTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            themeSwitch.checked = true;
+          }
+        } else {
+          // Если нет сохраненной темы, используем автоматическое определение
+          autoThemeSwitch();
+        }
+
+        // Запускаем проверку каждый час
+        setInterval(autoThemeSwitch, 3600000); // 3600000 мс = 1 час
+      });
+
+      // Обработчик переключателя темы
+      document.getElementById('themeSwitch').addEventListener('change', function() {
+        document.body.classList.toggle('dark-theme');
+        localStorage.setItem('theme', this.checked ? 'dark' : 'light');
+      });
+
+      function updateHomeStats() {
+        const now = new Date();
+        const year = currentYear || now.getFullYear();
+        const month = (currentMonth === undefined) ? now.getMonth() : currentMonth;
+        
+        const workingHours = getWorkingHours(year, month);
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        
+        let holidays = [];
+        let completedShifts = 0;
+        let totalShifts = 0;
+        const today = new Date();
+        
+        for (let day = 1; day <= daysInMonth; day++) {
+          const date = new Date(year, month, day);
+          const holiday = getHolidayName(date);
+          
+          if (holiday) {
+            holidays.push({
+              date: date,
+              name: holiday,
+              isShift: isShiftDay(date)
+            });
+          }
+          
+          if (isShiftDay(date)) {
+            totalShifts++;
+            if (date <= today) {
+              completedShifts++;
             }
+          }
         }
 
-        .result {
-            display: none;
-            font-size: 2rem;
-            color: #dc3545;
-            margin-top: 2rem;
+        document.getElementById('working-hours').textContent = workingHours;
+        document.getElementById('holidays-count').textContent = holidays.length;
+        document.getElementById('completed-shifts').textContent = totalShifts;
+
+        const holidaysList = document.getElementById('holidays-list');
+        if (holidays.length > 0) {
+          holidaysList.innerHTML = holidays
+            .map(h => {
+              const dateOptions = { day: 'numeric', month: 'long' };
+              const formattedDate = h.date.toLocaleDateString('ru-RU', dateOptions);
+              return `
+                <div class="holiday-item${h.isShift ? ' holiday-shift' : ''}">
+                  <div class="holiday-date">${formattedDate}</div>
+                  <div class="holiday-name">${h.name}</div>
+                  ${h.isShift ? '<div class="holiday-shift-icon">смена</div>' : ''}
+                </div>
+              `;
+            })
+            .join('');
+        } else {
+          holidaysList.innerHTML = '<div class="no-holidays">В этом месяце праздников нет</div>';
         }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="question">Сен далбаебсынба?</div>
-        <div class="buttons">
-            <button class="button yes">Да</button>
-            <button class="button no">Нет</button>
-        </div>
-        <div class="result">Ха ха Далбаеб</div>
-    </div>
-    <script>
-        const yesButton = document.querySelector('.button.yes');
-        const noButton = document.querySelector('.button.no');
-        const result = document.querySelector('.result');
+      }
 
-        yesButton.addEventListener('click', function() {
-            result.style.display = 'block';
+      function getWorkingHours(year, month) {
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        let workingHours = 0;
+        
+        for (let day = 1; day <= daysInMonth; day++) {
+          const date = new Date(year, month, day);
+          if (isShiftDay(date)) {
+            workingHours += 11;
+          }
+        }
+        
+        return workingHours;
+      }
+
+      function getDayStatus(date) {
+        const isShift = isShiftDay(date);
+        
+        let shiftDay = 0;
+        let offDay = 0;
+        
+        if (isShift) {
+          const prevDate = new Date(date);
+          prevDate.setDate(date.getDate() - 1);
+          if (isShiftDay(prevDate)) {
+            shiftDay = 2;
+          } else {
+            shiftDay = 1;
+          }
+        } else {
+          // Определяем номер выходного дня
+          const currentDate = new Date(date);
+          let dayCount = 0;
+          
+          // Проверяем предыдущие дни, пока не найдем рабочий день
+          while (!isShiftDay(currentDate) && dayCount < 4) {
+            dayCount++;
+            currentDate.setDate(currentDate.getDate() - 1);
+          }
+          
+          // Если это действительно выходной (а не праздник), устанавливаем номер дня
+          if (!getHolidayName(date)) {
+            offDay = dayCount;
+          }
+        }
+        
+        return {
+          isShift: isShift,
+          shiftDay: shiftDay,
+          offDay: offDay
+        };
+      }
+
+      function getNextWorkDay(date) {
+        const nextDay = new Date(date);
+        nextDay.setHours(0, 0, 0, 0);
+        
+        // Ищем следующий рабочий день
+        while (!isShiftDay(nextDay)) {
+          nextDay.setDate(nextDay.getDate() + 1);
+        }
+        
+        return nextDay;
+      }
+
+      // Функция для обновления прогресса смены
+      function updateShiftProgress() {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const currentTime = hours + minutes / 60;
+
+        // Массив с информацией о сменах
+        const shifts = [
+          { id: 1, start: 6, end: 18 },
+          { id: 2, start: 9, end: 21 },
+          { id: 3, start: 10, end: 22 },
+          { id: 4, start: 14, end: 26 } // 26 = 02:00 следующего дня
+        ];
+
+        const isWorkingDay = isShiftDay(now);
+
+        shifts.forEach(shift => {
+          let progress = 0;
+          let adjustedCurrentTime = currentTime;
+          const shiftDuration = shift.end - shift.start;
+
+          // Корректировка для смены, переходящей на следующий день
+          if (shift.end > 24) {
+            if (currentTime < (shift.end - 24)) {
+              adjustedCurrentTime += 24;
+            }
+          }
+
+          // Проверяем, идет ли сейчас смена
+          const isShiftTime = adjustedCurrentTime >= shift.start && adjustedCurrentTime < shift.end;
+          
+          // Рассчитываем прогресс только если это рабочий день
+          if (isWorkingDay) {
+            if (isShiftTime) {
+              progress = (adjustedCurrentTime - shift.start) / shiftDuration;
+            } else if (adjustedCurrentTime >= shift.end || (shift.end > 24 && adjustedCurrentTime + 24 >= shift.end)) {
+              progress = 1;
+            }
+          }
+
+          // Обновляем прогресс-бар
+          window[`shiftProgressBar${shift.id}`].animate(progress);
+
+          // Обновляем информацию о смене
+          const shiftInfo = document.getElementById(`shift-info-${shift.id}`);
+          if (shiftInfo) {
+            if (!isWorkingDay) {
+              shiftInfo.textContent = 'Сегодня выходной';
+            } else if (isShiftTime) {
+              const remainingHours = Math.floor(shift.end - adjustedCurrentTime);
+              const remainingMinutes = Math.floor(((shift.end - adjustedCurrentTime) % 1) * 60);
+              shiftInfo.textContent = `До конца смены: ${remainingHours}ч ${remainingMinutes}мин`;
+            } else if (adjustedCurrentTime < shift.start) {
+              const startHour = shift.start % 24;
+              shiftInfo.textContent = `Смена начнется в ${String(startHour).padStart(2, '0')}:00`;
+            } else {
+              shiftInfo.textContent = 'Смена закончилась';
+            }
+          }
+        });
+      }
+
+      // Обновляем прогресс каждую минуту
+      setInterval(updateShiftProgress, 60000);
+
+      // Функция для инициализации прогресс-бара
+      function initializeShiftProgress() {
+        const shifts = [
+          { id: 1, start: 6, end: 18 },
+          { id: 2, start: 9, end: 21 },
+          { id: 3, start: 10, end: 22 },
+          { id: 4, start: 14, end: 26 } // 26 = 02:00 следующего дня
+        ];
+
+        shifts.forEach(shift => {
+          const progressElement = document.getElementById(`shift-progress-${shift.id}`);
+          if (!window[`shiftProgressBar${shift.id}`] && progressElement) {
+            window[`shiftProgressBar${shift.id}`] = new ProgressBar.Line(progressElement, {
+              color: '#1abc9c',
+              strokeWidth: 4,
+              trailWidth: 1,
+              duration: 1400,
+              text: {
+                value: '0%',
+                style: {
+                  position: 'absolute',
+                  right: '0',
+                  top: '-25px',
+                  padding: 0,
+                  margin: 0,
+                  transform: null
+                }
+              },
+              step: function(state, line) {
+                const value = Math.round(line.value() * 100);
+                line.setText(value + '%');
+              }
+            });
+          }
+        });
+        // Сразу обновляем прогресс после инициализации
+        updateShiftProgress();
+      }
+
+      // Инициализируем прогресс-бар, если открыта вкладка графика смен
+      document.addEventListener('DOMContentLoaded', () => {
+        if (document.getElementById('shift-schedule-widget').classList.contains('active')) {
+          initializeShiftProgress();
+        }
+      });
+
+      // Обновляем прогресс при переключении на вкладку графика смен
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          if (tab.getAttribute('onclick').includes('shift-schedule')) {
+            setTimeout(initializeShiftProgress, 100);
+          }
+        });
+      });
+
+      // Функция для обновления активных смен на главной
+      function updateHomeActiveShifts() {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const currentTime = hours + minutes / 60;
+
+        const shifts = [
+          { id: 1, start: 6, end: 18 },
+          { id: 2, start: 9, end: 21 },
+          { id: 3, start: 10, end: 22 },
+          { id: 4, start: 14, end: 26 }
+        ];
+
+        const isWorkingDay = isShiftDay(now);
+        const activeShiftsContainer = document.getElementById('home-active-shifts');
+        activeShiftsContainer.innerHTML = '';
+
+        if (!isWorkingDay) {
+          activeShiftsContainer.innerHTML = '<div class="active-shift-item">Сегодня выходной</div>';
+          return;
+        }
+
+        let hasActiveShifts = false;
+
+        shifts.forEach(shift => {
+          let adjustedCurrentTime = currentTime;
+          if (shift.end > 24 && currentTime < (shift.end - 24)) {
+            adjustedCurrentTime += 24;
+          }
+
+          const isShiftTime = adjustedCurrentTime >= shift.start && adjustedCurrentTime < shift.end;
+          
+          if (isShiftTime) {
+            hasActiveShifts = true;
+            const progress = (adjustedCurrentTime - shift.start) / (shift.end - shift.start);
+            const remainingHours = Math.floor(shift.end - adjustedCurrentTime);
+            const remainingMinutes = Math.floor(((shift.end - adjustedCurrentTime) % 1) * 60);
+
+            const startHour = shift.start % 24;
+            const endHour = shift.end % 24 || 24;
+
+            const shiftEl = document.createElement('div');
+            shiftEl.className = 'active-shift-item';
+            shiftEl.innerHTML = `
+              <div class="active-shift-time">${String(startHour).padStart(2, '0')}:00 - ${String(endHour).padStart(2, '0')}:00</div>
+              <div class="active-shift-progress" id="home-shift-progress-${shift.id}"></div>
+              <div class="active-shift-info">До конца смены: ${remainingHours}ч ${remainingMinutes}мин</div>
+            `;
+            activeShiftsContainer.appendChild(shiftEl);
+
+            // Создаем прогресс бар для смены
+            new ProgressBar.Line(`#home-shift-progress-${shift.id}`, {
+              color: '#1abc9c',
+              strokeWidth: 1,
+              trailWidth: 0.2,
+              duration: 1400,
+              text: {
+                value: Math.round(progress * 100) + '%',
+                style: {
+                  position: 'absolute',
+                  right: '-30px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  padding: 0,
+                  margin: 0,
+                  fontSize: '9px',
+                  fontWeight: '400',
+                  color: 'var(--text-secondary)',
+                  minWidth: '25px'
+                }
+              }
+            }).animate(progress);
+          }
         });
 
-        noButton.addEventListener('mouseover', function() {
-            noButton.style.transform = `translate(${Math.random() * 200 - 100}px, ${Math.random() * 200 - 100}px)`;
-        });
+        if (!hasActiveShifts) {
+          activeShiftsContainer.innerHTML = '<div class="active-shift-item">Сейчас нет активных смен</div>';
+        }
+      }
 
-        noButton.addEventListener('touchstart', function() {
-            noButton.style.transform = `translate(${Math.random() * 200 - 100}px, ${Math.random() * 200 - 100}px)`;
-        });
+      // Обновляем активные смены при загрузке и каждую минуту
+      document.addEventListener('DOMContentLoaded', updateHomeActiveShifts);
+      setInterval(updateHomeActiveShifts, 60000);
     </script>
-</body>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const container = document.querySelector('.widget-container');
+        const hammer = new Hammer(container);
+        
+        hammer.get('swipe').set({
+          direction: Hammer.DIRECTION_HORIZONTAL
+        });
+
+        const widgetOrder = ['home', 'calendar', 'weather', 'calculator', 'chat', 'shift-schedule'];
+
+        hammer.on('swipeleft swiperight', function(ev) {
+          const currentWidget = document.querySelector('.widget.active');
+          if (!currentWidget) {
+            showWidget('home');
+            return;
+          }
+
+          const currentId = currentWidget.id.replace('-widget', '');
+          console.log('Текущий виджет:', currentId); // Логирование текущего виджета
+
+          let currentIndex = widgetOrder.indexOf(currentId);
+          
+          if (currentIndex === -1) {
+            console.warn('Виджет не найден в порядке:', currentId);
+            currentIndex = 0;
+          }
+
+          if (ev.type === 'swipeleft') {
+            currentIndex = (currentIndex + 1) % widgetOrder.length;
+          } else {
+            currentIndex = (currentIndex - 1 + widgetOrder.length) % widgetOrder.length;
+          }
+
+          const nextWidgetId = widgetOrder[currentIndex];
+          console.log('Следующий виджет:', nextWidgetId); // Логирование следующего виджета
+          
+          // Проверка существования виджета перед переключением
+          const nextWidget = document.getElementById(nextWidgetId + '-widget');
+          if (!nextWidget) {
+            console.error('Виджет не найден:', nextWidgetId);
+            showWidget('home');
+            return;
+          }
+
+          // Принудительное переключение виджета
+          try {
+            showWidget(nextWidgetId);
+            
+            // Обновляем навигацию
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+              tab.classList.remove('active');
+              if (tab.getAttribute('onclick').includes(nextWidgetId)) {
+                tab.classList.add('active');
+              }
+            });
+
+            // Инициализируем прогресс-бар для графика смен
+            if (nextWidgetId === 'shift-schedule') {
+              initializeShiftProgress();
+            }
+          } catch (error) {
+            console.error('Ошибка переключения виджета:', error);
+            showWidget('home');
+          }
+        });
+      });
+    </script>
+  </body>
 </html>
