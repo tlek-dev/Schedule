@@ -97,20 +97,41 @@
 
       <div id="calendar-widget" class="widget">
         <div class="calendar">
-          <div class="calendar-header">
-            <span id="month"></span>
-            <span id="year"></span>
+          <div id="month-view">
+            <div class="calendar-header">
+              <div class="calendar-title">
+                <span id="month" onclick="showMonthPicker()">Month</span>
+                <span id="year" onclick="showYearPicker()">Year</span>
+              </div>
+            </div>
+            <div id="month-picker" class="picker" style="display: none;">
+              <div class="picker-content"></div>
+            </div>
+            <div id="year-picker" class="picker" style="display: none;">
+              <div class="picker-content"></div>
+            </div>
+            <div id="weekdays">
+              <div>Пн</div>
+              <div>Вт</div>
+              <div>Ср</div>
+              <div>Чт</div>
+              <div>Пт</div>
+              <div>Сб</div>
+              <div>Вс</div>
+            </div>
+            <div id="calendar-days"></div>
           </div>
-          <ul id="weekdays">
-            <li>Пн</li>
-            <li>Вт</li>
-            <li>Ср</li>
-            <li>Чт</li>
-            <li>Пт</li>
-            <li>Сб</li>
-            <li>Вс</li>
-          </ul>
-          <div id="calendar-days"></div>
+          <div id="year-view" class="year-view" style="display: none;">
+            <div class="year-header">
+              <span class="calendar-nav" onclick="updateYear(-1)">&#10094;</span>
+              <span id="year-title">2024</span>
+              <span class="calendar-nav" onclick="updateYear(1)">&#10095;</span>
+            </div>
+            <div class="months-grid"></div>
+          </div>
+          <div class="calendar-view-toggle">
+            <button onclick="toggleCalendarView()">Показать год</button>
+          </div>
         </div>
       </div>
 

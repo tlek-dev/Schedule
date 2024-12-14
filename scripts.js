@@ -1,4 +1,3 @@
-
 function showWidget(widgetName) {
   // Скрываем все виджеты
   document.querySelectorAll('.widget').forEach(widget => {
@@ -236,16 +235,155 @@ function showCalendar(month, year) {
   document.getElementById("year").textContent = year;
 }
 
+let isYearView = false;
+
+function toggleCalendarView() {
+  isYearView = !isYearView;
+  const yearView = document.getElementById('year-view');
+  const monthView = document.getElementById('month-view');
+  const toggleButton = document.querySelector('.calendar-view-toggle button');
+  
+  if (isYearView) {
+    yearView.style.display = 'block';
+    monthView.style.display = 'none';
+    toggleButton.textContent = 'Показать месяц';
+    showYearView(currentYear);
+  } else {
+    yearView.style.display = 'none';
+    monthView.style.display = 'block';
+    toggleButton.textContent = 'Показать год';
+    showCalendar(currentMonth, currentYear);
+  }
+}
+
+function showYearView(year) {
+  const monthsGrid = document.querySelector('.months-grid');
+  const yearTitle = document.getElementById('year-title');
+  yearTitle.textContent = year;
+  monthsGrid.innerHTML = '';
+
+  for (let month = 0; month < 12; month++) {
+    const monthMini = document.createElement('div');
+    monthMini.className = 'month-mini';
+    
+    // Добавляем заголовок месяца
+    const monthHeader = document.createElement('div');
+    monthHeader.className = 'month-mini-header';
+    monthHeader.textContent = months[month];
+    monthMini.appendChild(monthHeader);
+
+    // Создаем сетку дней
+    const monthGrid = document.createElement('div');
+    monthGrid.className = 'month-mini-grid';
+
+    // Добавляем дни недели
+    ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].forEach(day => {
+      const dayHeader = document.createElement('div');
+      dayHeader.className = 'month-mini-weekday';
+      dayHeader.textContent = day[0];
+      dayHeader.style.color = '#666';
+      monthGrid.appendChild(dayHeader);
+    });
+
+    // Получаем первый день месяца и количество дней
+    const firstDay = new Date(year, month, 1).getDay() || 7;
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // Добавляем пустые ячейки в начале
+    for (let i = 1; i < firstDay; i++) {
+      const emptyDay = document.createElement('div');
+      emptyDay.className = 'month-mini-day empty';
+      monthGrid.appendChild(emptyDay);
+    }
+
+    // Добавляем дни месяца
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dayDiv = document.createElement('div');
+      dayDiv.className = 'month-mini-day';
+      dayDiv.textContent = day;
+
+      const date = new Date(year, month, day);
+      
+      if (isShiftDay(date)) {
+        dayDiv.classList.add('shift');
+      }
+
+      const holidayName = getHolidayName(date);
+      if (holidayName) {
+        dayDiv.classList.add('holiday');
+        dayDiv.title = holidayName;
+      }
+
+      if (date.getDate() === today.getDate() && 
+          date.getMonth() === today.getMonth() && 
+          date.getFullYear() === today.getFullYear()) {
+        dayDiv.classList.add('today');
+      }
+
+      // Добавляем обработчик клика для переключения на месячный вид
+      dayDiv.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentMonth = month;
+        toggleCalendarView();
+      });
+
+      monthGrid.appendChild(dayDiv);
+    }
+
+    monthMini.appendChild(monthGrid);
+    monthsGrid.appendChild(monthMini);
+  }
+}
+
+function updateYear(delta) {
+  currentYear += delta;
+  if (isYearView) {
+    showYearView(currentYear);
+  } else {
+    showCalendar(currentMonth, currentYear);
+  }
+}
+
+// Модифицируем функцию updateMonth только для основного календаря
+function updateMonth(delta) {
+  if (!document.getElementById('calendar-widget').classList.contains('active')) {
+    return; // Не обновляем, если не находимся в календаре
+  }
+  
+  currentMonth += delta;
+  if (currentMonth > 11) {
+    currentMonth = 0;
+    currentYear++;
+  } else if (currentMonth < 0) {
+    currentMonth = 11;
+    currentYear--;
+  }
+  
+  if (isYearView) {
+    showYearView(currentYear);
+  } else {
+    showCalendar(currentMonth, currentYear);
+  }
+}
+
+// Обновляем инициализацию при загрузке страницы
 document.addEventListener("DOMContentLoaded", () => {
-  showCalendar(currentMonth, currentYear);
+  if (isYearView) {
+    showYearView(currentYear);
+  } else {
+    showCalendar(currentMonth, currentYear);
+  }
   updateHomeStats();
   updateCurrentDayStatus();
-  updateHomeActiveShifts();
-
   showWidget('home');
-
+  
+  // Инициализируем прогресс-бары для смен
+  initializeShiftProgress();
+  
+  // Обновляем каждую минуту
   setInterval(updateCurrentDayStatus, 60000);
   setInterval(updateHomeActiveShifts, 60000);
+  setInterval(updateShiftProgress, 60000);
 });
 
 function updateCurrentDayStatus() {
@@ -803,6 +941,10 @@ function updateShiftProgress() {
       } else if (isShiftTime) {
         const remainingHours = Math.floor(shift.end - adjustedCurrentTime);
         const remainingMinutes = Math.floor(((shift.end - adjustedCurrentTime) % 1) * 60);
+
+        const startHour = shift.start % 24;
+        const endHour = shift.end % 24 || 24;
+
         shiftInfo.textContent = `До конца смены: ${remainingHours}ч ${remainingMinutes}мин`;
       } else if (adjustedCurrentTime < shift.start) {
         const startHour = shift.start % 24;
@@ -872,7 +1014,69 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
   });
 });
 
-// Функция для обновления активных смен на главной
+function showMonthPicker() {
+  const picker = document.getElementById('month-picker');
+  const content = picker.querySelector('.picker-content');
+  const yearPicker = document.getElementById('year-picker');
+  
+  yearPicker.style.display = 'none';
+  
+  // Генерируем месяцы
+  content.innerHTML = months.map((month, index) => `
+    <div class="picker-item ${index === currentMonth ? 'active' : ''}" 
+         onclick="selectMonth(${index})">${month}</div>
+  `).join('');
+  
+  picker.style.display = picker.style.display === 'none' ? 'block' : 'none';
+}
+
+function showYearPicker() {
+  const picker = document.getElementById('year-picker');
+  const content = picker.querySelector('.picker-content');
+  const monthPicker = document.getElementById('month-picker');
+  
+  monthPicker.style.display = 'none';
+  
+  // Генерируем годы (текущий год ± 5 лет)
+  const years = [];
+  for (let i = currentYear - 5; i <= currentYear + 5; i++) {
+    years.push(`
+      <div class="picker-item ${i === currentYear ? 'active' : ''}" 
+           onclick="selectYear(${i})">${i}</div>
+    `);
+  }
+  
+  content.innerHTML = years.join('');
+  picker.style.display = picker.style.display === 'none' ? 'block' : 'none';
+}
+
+function selectMonth(month) {
+  currentMonth = month;
+  document.getElementById('month-picker').style.display = 'none';
+  showCalendar(currentMonth, currentYear);
+}
+
+function selectYear(year) {
+  currentYear = year;
+  document.getElementById('year-picker').style.display = 'none';
+  showCalendar(currentMonth, currentYear);
+}
+
+// Закрываем пикеры при клике вне их области
+document.addEventListener('click', function(event) {
+  const monthPicker = document.getElementById('month-picker');
+  const yearPicker = document.getElementById('year-picker');
+  const monthText = document.getElementById('month');
+  const yearText = document.getElementById('year');
+  
+  if (!monthPicker.contains(event.target) && event.target !== monthText) {
+    monthPicker.style.display = 'none';
+  }
+  if (!yearPicker.contains(event.target) && event.target !== yearText) {
+    yearPicker.style.display = 'none';
+  }
+});
+
 function updateHomeActiveShifts() {
   const now = new Date();
   const hours = now.getHours();
