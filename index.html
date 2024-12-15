@@ -97,11 +97,14 @@
 
       <div id="calendar-widget" class="widget">
         <div class="calendar">
+          <div class="calendar-view-toggle">
+            <button onclick="toggleCalendarView()">Показать год</button>
+          </div>
           <div id="month-view">
             <div class="calendar-header">
               <div class="calendar-title">
-                <span id="month" onclick="showMonthPicker()">Month</span>
                 <span id="year" onclick="showYearPicker()">Year</span>
+                <span id="month" onclick="showMonthPicker()">Month</span>
               </div>
             </div>
             <div id="month-picker" class="picker" style="display: none;">
@@ -128,9 +131,6 @@
               <span class="calendar-nav" onclick="updateYear(1)">&#10095;</span>
             </div>
             <div class="months-grid"></div>
-          </div>
-          <div class="calendar-view-toggle">
-            <button onclick="toggleCalendarView()">Показать год</button>
           </div>
         </div>
       </div>
