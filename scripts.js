@@ -184,6 +184,9 @@ function getHolidayName(date) {
 
 function isShiftDay(date) {
   const diffDays = Math.floor((date - cycleStart) / (1000 * 60 * 60 * 24));
+  console.log('Разница в днях:', diffDays);
+  console.log('Остаток от деления:', (diffDays % cycleDays + cycleDays) % cycleDays);
+  console.log('Рабочий день:', (diffDays % cycleDays + cycleDays) % cycleDays < 2);
   return (diffDays % cycleDays + cycleDays) % cycleDays < 2;
 }
 
@@ -288,7 +291,7 @@ function showYearView(year) {
     // Получаем первый день месяца и количество дней
     const firstDay = new Date(year, month, 1).getDay() || 7;
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-
+    
     // Добавляем пустые ячейки в начале
     for (let i = 1; i < firstDay; i++) {
       const emptyDay = document.createElement('div');
@@ -298,20 +301,19 @@ function showYearView(year) {
 
     // Добавляем дни месяца
     for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(year, month, day);
       const dayDiv = document.createElement('div');
       dayDiv.className = 'month-mini-day';
       dayDiv.textContent = day;
-
-      const date = new Date(year, month, day);
-      
-      if (isShiftDay(date)) {
-        dayDiv.classList.add('shift');
-      }
 
       const holidayName = getHolidayName(date);
       if (holidayName) {
         dayDiv.classList.add('holiday');
         dayDiv.title = holidayName;
+      }
+
+      if (isShiftDay(date)) {
+        dayDiv.classList.add('shift');
       }
 
       if (date.getDate() === today.getDate() && 
@@ -1092,10 +1094,22 @@ function updateHomeActiveShifts() {
 
   const isWorkingDay = isShiftDay(now);
   const activeShiftsContainer = document.getElementById('home-active-shifts');
-  activeShiftsContainer.innerHTML = '';
+
+  if (!activeShiftsContainer) {
+    console.error('Контейнер для активных смен не найден!');
+    return;
+  }
+
+  // Очищаем контейнер
+  while (activeShiftsContainer.firstChild) {
+    activeShiftsContainer.removeChild(activeShiftsContainer.firstChild);
+  }
 
   if (!isWorkingDay) {
-    activeShiftsContainer.innerHTML = '<div class="active-shift-item">Сегодня выходной</div>';
+    const dayOffEl = document.createElement('div');
+    dayOffEl.className = 'active-shift-item';
+    dayOffEl.textContent = 'Сегодня выходной';
+    activeShiftsContainer.appendChild(dayOffEl);
     return;
   }
 
@@ -1120,14 +1134,28 @@ function updateHomeActiveShifts() {
 
       const shiftEl = document.createElement('div');
       shiftEl.className = 'active-shift-item';
-      shiftEl.innerHTML = `
-        <div class="active-shift-time">${String(startHour).padStart(2, '0')}:00 - ${String(endHour).padStart(2, '0')}:00</div>
-        <div class="active-shift-progress" id="home-shift-progress-${shift.id}"></div>
-        <div class="active-shift-info">До конца смены: ${remainingHours}ч ${remainingMinutes}мин</div>
-      `;
+
+      // Создаем элементы для времени смены
+      const timeEl = document.createElement('div');
+      timeEl.className = 'active-shift-time';
+      timeEl.textContent = `${String(startHour).padStart(2, '0')}:00 - ${String(endHour).padStart(2, '0')}:00`;
+      shiftEl.appendChild(timeEl);
+
+      // Создаем контейнер для прогресс-бара
+      const progressEl = document.createElement('div');
+      progressEl.className = 'active-shift-progress';
+      progressEl.id = `home-shift-progress-${shift.id}`;
+      shiftEl.appendChild(progressEl);
+
+      // Создаем элемент для информации о времени
+      const infoEl = document.createElement('div');
+      infoEl.className = 'active-shift-info';
+      infoEl.textContent = `До конца смены: ${remainingHours}ч ${remainingMinutes}мин`;
+      shiftEl.appendChild(infoEl);
+
       activeShiftsContainer.appendChild(shiftEl);
 
-      // Создаем прогресс бар для смены
+      // Создаем прогресс бар
       new ProgressBar.Line(`#home-shift-progress-${shift.id}`, {
         color: '#1abc9c',
         strokeWidth: 1,
@@ -1153,12 +1181,19 @@ function updateHomeActiveShifts() {
   });
 
   if (!hasActiveShifts) {
-    activeShiftsContainer.innerHTML = '<div class="active-shift-item">Сейчас нет активных смен</div>';
+    const noShiftsEl = document.createElement('div');
+    noShiftsEl.className = 'active-shift-item';
+    noShiftsEl.textContent = 'Сейчас нет активных смен';
+    activeShiftsContainer.appendChild(noShiftsEl);
   }
 }
 
-// Обновляем активные смены при загрузке и каждую минуту
-document.addEventListener('DOMContentLoaded', updateHomeActiveShifts);
+// Обновляем при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+  updateHomeActiveShifts();
+});
+
+// Обновляем каждую минуту
 setInterval(updateHomeActiveShifts, 60000);
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -1226,4 +1261,20 @@ document.addEventListener('DOMContentLoaded', function() {
       showWidget('home');
     }
   });
+});
+
+// Инициализация всех обновлений при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('Страница загружена');
+  
+  // Обновляем активные смены
+  console.log('Обновляем активные смены');
+  updateHomeActiveShifts();
+  
+  // Запускаем периодическое обновление
+  console.log('Запускаем периодическое обновление');
+  setInterval(updateHomeActiveShifts, 60000);
+  
+  // Обновляем статистику
+  updateHomeStats();
 });
