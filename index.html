@@ -143,50 +143,90 @@
 
       <!-- Калькулятор -->
       <div id="calculator-widget" class="widget">
-        <div class="calculator-container">
-          <h2>Калькулятор зарплаты</h2>
+        <div class="calculator-container vaadin-calculator">
+          <h2 class="vaadin-title"><i class="ri-calculator-line"></i> Калькулятор зарплаты</h2>
           
-          <div class="input-group">
-            <label for="hourlyRate">Почасовая ставка (₸)</label>
-            <input type="number" id="hourlyRate" placeholder="Введите ставку">
-          </div>
-          
-          <div class="input-group">
-            <label for="regularHours">Обычные часы</label>
-            <input type="number" id="regularHours" placeholder="Введите часы">
-          </div>
-          
-          <div class="input-group">
-            <label for="holidayHours">Праздничные часы</label>
-            <input type="number" id="holidayHours" placeholder="Введите часы">
-          </div>
+          <div class="vaadin-form">
+            <div class="date-selector">
+              <div class="select-group">
+                <label for="monthSelect"><i class="ri-calendar-line"></i> Месяц</label>
+                <div class="select-wrapper">
+                  <select id="monthSelect" class="vaadin-select">
+                    <option value="0">Январь</option>
+                    <option value="1">Февраль</option>
+                    <option value="2">Март</option>
+                    <option value="3">Апрель</option>
+                    <option value="4">Май</option>
+                    <option value="5">Июнь</option>
+                    <option value="6">Июль</option>
+                    <option value="7">Август</option>
+                    <option value="8">Сентябрь</option>
+                    <option value="9">Октябрь</option>
+                    <option value="10">Ноябрь</option>
+                    <option value="11">Декабрь</option>
+                  </select>
+                  <i class="ri-arrow-down-s-line select-icon"></i>
+                </div>
+              </div>
+              
+              <div class="select-group">
+                <label for="yearSelect"><i class="ri-calendar-2-line"></i> Год</label>
+                <div class="select-wrapper">
+                  <select id="yearSelect" class="vaadin-select">
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                  </select>
+                  <i class="ri-arrow-down-s-line select-icon"></i>
+                </div>
+              </div>
+            </div>
 
-          <button onclick="calculateSalary()" class="calculator-button">Рассчитать</button>
+            <div class="input-group">
+              <label for="hourlyRate"><i class="ri-money-dollar-circle-line"></i> Почасовая ставка (₸)</label>
+              <input type="number" id="hourlyRate" class="vaadin-input" placeholder="Введите ставку">
+            </div>
 
-          <div class="result-container">
-            <div class="result-item">
-              <span class="result-label">Общая сумма:</span>
-              <span id="salaryResult" class="result-value">0.00 ₸</span>
+            <div class="hours-info vaadin-card">
+              <div class="hours-item">
+                <span class="hours-label"><i class="ri-time-line"></i> Обычные часы:</span>
+                <span id="regularHoursDisplay" class="hours-value">0</span>
+              </div>
+              <div class="hours-item">
+                <span class="hours-label"><i class="ri-calendar-event-line"></i> Праздничные часы:</span>
+                <span id="holidayHoursDisplay" class="hours-value">0</span>
+              </div>
             </div>
-            <div class="result-item">
-              <span class="result-label">Подоходный налог (10%):</span>
-              <span id="incomeTax" class="tax-value">0.00 ₸</span>
-            </div>
-            <div class="result-item">
-              <span class="result-label">Пенсионные отчисления (10%):</span>
-              <span id="pensionTax" class="tax-value">0.00 ₸</span>
-            </div>
-            <div class="result-item">
-              <span class="result-label">Профсоюз (1%):</span>
-              <span id="unionTax" class="tax-value">0.00 ₸</span>
-            </div>
-            <div class="result-item">
-              <span class="result-label">Медицинская страховка (2%):</span>
-              <span id="medicalInsurance" class="tax-value">0.00 ₸</span>
-            </div>
-            <div class="result-item final-salary">
-              <span class="result-label">К выдаче:</span>
-              <span id="finalSalary" class="result-value">0.00 ₸</span>
+
+            <button onclick="calculateSalary()" class="vaadin-button">
+              <i class="ri-calculator-fill"></i> Рассчитать
+            </button>
+
+            <div class="result-container vaadin-card">
+              <div class="result-item">
+                <span class="result-label"><i class="ri-money-dollar-box-line"></i> Общая сумма:</span>
+                <span id="salaryResult" class="result-value">0.00 ₸</span>
+              </div>
+              <div class="result-item">
+                <span class="result-label"><i class="ri-percent-line"></i> Подоходный налог (10%):</span>
+                <span id="incomeTax" class="tax-value">0.00 ₸</span>
+              </div>
+              <div class="result-item">
+                <span class="result-label"><i class="ri-bank-line"></i> Пенсионные отчисления (10%):</span>
+                <span id="pensionTax" class="tax-value">0.00 ₸</span>
+              </div>
+              <div class="result-item">
+                <span class="result-label"><i class="ri-group-line"></i> Профсоюз (1%):</span>
+                <span id="unionTax" class="tax-value">0.00 ₸</span>
+              </div>
+              <div class="result-item">
+                <span class="result-label"><i class="ri-heart-pulse-line"></i> Медицинская страховка (2%):</span>
+                <span id="medicalInsurance" class="tax-value">0.00 ₸</span>
+              </div>
+              <div class="result-item final-salary">
+                <span class="result-label"><i class="ri-wallet-3-line"></i> К выдаче:</span>
+                <span id="finalSalary" class="result-value">0.00 ₸</span>
+              </div>
             </div>
           </div>
         </div>

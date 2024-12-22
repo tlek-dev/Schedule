@@ -674,13 +674,77 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
   });
 });
 
+function getMonthHours(selectedDate = new Date()) {
+  const year = selectedDate.getFullYear();
+  const month = selectedDate.getMonth();
+  
+  let regularHours = 0;
+  let holidayHours = 0;
+  
+  // Получаем последний день месяца
+  const lastDay = new Date(year, month + 1, 0).getDate();
+  
+  // Проходим по всем дням месяца
+  for (let day = 1; day <= lastDay; day++) {
+    const date = new Date(year, month, day);
+    
+    // Проверяем, является ли день рабочим
+    if (isShiftDay(date)) {
+      // Проверяем, является ли день праздничным
+      const isHoliday = getHolidayName(date) !== null;
+      
+      if (isHoliday) {
+        holidayHours += 11; // Праздничные часы
+      } else {
+        regularHours += 11; // Обычные часы
+      }
+    }
+  }
+  
+  return { regularHours, holidayHours };
+}
+
+function updateHours() {
+  const selectedDate = getSelectedDate();
+  const hours = getMonthHours(selectedDate);
+  
+  document.getElementById('regularHoursDisplay').textContent = hours.regularHours;
+  document.getElementById('holidayHoursDisplay').textContent = hours.holidayHours;
+}
+
+function getSelectedDate() {
+  const month = parseInt(document.getElementById('monthSelect').value);
+  const year = parseInt(document.getElementById('yearSelect').value);
+  return new Date(year, month, 1);
+}
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+  const now = new Date();
+  
+  // Устанавливаем текущий месяц и год
+  document.getElementById('monthSelect').value = now.getMonth();
+  document.getElementById('yearSelect').value = now.getFullYear();
+  
+  // Обновляем часы
+  updateHours();
+  
+  // Добавляем обработчики событий
+  document.getElementById('monthSelect').addEventListener('change', updateHours);
+  document.getElementById('yearSelect').addEventListener('change', updateHours);
+});
+
 function calculateSalary() {
   const hourlyRate = parseFloat(document.getElementById('hourlyRate').value) || 0;
-  const regularHours = parseFloat(document.getElementById('regularHours').value) || 0;
-  const holidayHours = parseFloat(document.getElementById('holidayHours').value) || 0;
+  const selectedDate = getSelectedDate();
+  const hours = getMonthHours(selectedDate);
   
-  const regularPay = regularHours * hourlyRate;
-  const holidayPay = holidayHours * hourlyRate * 1.5;
+  // Обновляем отображение часов
+  document.getElementById('regularHoursDisplay').textContent = hours.regularHours;
+  document.getElementById('holidayHoursDisplay').textContent = hours.holidayHours;
+  
+  const regularPay = hours.regularHours * hourlyRate;
+  const holidayPay = hours.holidayHours * hourlyRate * 1.5;
   const totalPay = regularPay + holidayPay;
   
   const incomeTax = totalPay * 0.10;
@@ -704,70 +768,11 @@ function calculateSalary() {
   });
 }
 
-// Функционал темной темы
-const themeToggle = document.getElementById('theme-toggle');
-const body = document.body;
-
-// Проверяем сохраненную тему
-const savedTheme = localStorage.getItem('theme');
-if (savedTheme) {
-  body.classList.add(savedTheme);
-  themeToggle.checked = savedTheme === 'dark-theme';
-}
-
-// Обработчик переключения темы
-themeToggle.addEventListener('change', function() {
-  if (this.checked) {
-    body.classList.add('dark-theme');
-    localStorage.setItem('theme', 'dark-theme');
-  } else {
-    body.classList.remove('dark-theme');
-    localStorage.setItem('theme', '');
-  }
-});
-
-// Функция для автоматического переключения темы
-function autoThemeSwitch() {
-  const hour = new Date().getHours();
-  const isDayTime = hour >= 6 && hour < 20; // День с 6:00 до 20:00
-  
-  const themeSwitch = document.getElementById('theme-toggle');
-  if (isDayTime && document.body.classList.contains('dark-theme')) {
-    document.body.classList.remove('dark-theme');
-    themeSwitch.checked = false;
-    localStorage.setItem('theme', 'light');
-  } else if (!isDayTime && !document.body.classList.contains('dark-theme')) {
-    document.body.classList.add('dark-theme');
-    themeSwitch.checked = true;
-    localStorage.setItem('theme', 'dark');
-  }
-}
-
-// Проверяем тему при загрузке
-document.addEventListener('DOMContentLoaded', function() {
-  // Проверяем сохраненную тему
-  const savedTheme = localStorage.getItem('theme');
-  const themeSwitch = document.getElementById('theme-toggle');
-  
-  if (savedTheme) {
-    // Если есть сохраненная тема, используем её
-    if (savedTheme === 'dark') {
-      document.body.classList.add('dark-theme');
-      themeSwitch.checked = true;
-    }
-  } else {
-    // Если нет сохраненной темы, используем автоматическое определение
-    autoThemeSwitch();
-  }
-
-  // Запускаем проверку каждый час
-  setInterval(autoThemeSwitch, 3600000); // 3600000 мс = 1 час
-});
-
-// Обработчик переключателя темы
-document.getElementById('themeSwitch').addEventListener('change', function() {
-  document.body.classList.toggle('dark-theme');
-  localStorage.setItem('theme', this.checked ? 'dark' : 'light');
+// Обновляем часы при открытии калькулятора
+document.addEventListener('DOMContentLoaded', () => {
+  const { regularHours, holidayHours } = getMonthHours();
+  document.getElementById('regularHoursDisplay').textContent = regularHours;
+  document.getElementById('holidayHoursDisplay').textContent = holidayHours;
 });
 
 function updateHomeStats() {
@@ -1277,4 +1282,36 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Обновляем статистику
   updateHomeStats();
+});
+
+// Функция для переключения темной темы
+function toggleDarkTheme() {
+  document.body.classList.toggle('dark-theme');
+  const isDarkTheme = document.body.classList.contains('dark-theme');
+  localStorage.setItem('darkTheme', isDarkTheme);
+}
+
+// Проверяем сохраненную тему при загрузке
+document.addEventListener('DOMContentLoaded', () => {
+  const isDarkTheme = localStorage.getItem('darkTheme') === 'true';
+  if (isDarkTheme) {
+    document.body.classList.add('dark-theme');
+  }
+});
+
+// Добавляем обработчик для переключателя темы
+document.addEventListener('DOMContentLoaded', () => {
+  const themeToggle = document.getElementById('theme-toggle');
+  
+  // Устанавливаем начальное состояние переключателя
+  const isDarkTheme = localStorage.getItem('darkTheme') === 'true';
+  themeToggle.checked = isDarkTheme;
+  if (isDarkTheme) {
+    document.body.classList.add('dark-theme');
+  }
+
+  // Добавляем обработчик события change
+  themeToggle.addEventListener('change', () => {
+    toggleDarkTheme();
+  });
 });

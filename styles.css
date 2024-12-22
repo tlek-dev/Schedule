@@ -229,55 +229,126 @@ body {
 
 /* Активные смены */
 .active-shifts {
-  margin-top: 15px; /* 75% от 20px */
-  padding: 9px; /* 75% от 12px */
-  background: var(--widget-bg);
-  border-radius: 11px; /* 75% от 15px */
-  box-shadow: var(--widget-shadow);
+  margin: 11px;
+  background: white;
+  border-radius: 11px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  overflow: hidden;
 }
 
-.active-shifts-title {
-  font-size: 11px; /* 75% от 14px */
-  font-weight: 600;
-  color: var(--text-color);
-  margin-bottom: 9px; /* 75% от 12px */
+.active-shifts .section-header {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
   display: flex;
   align-items: center;
-  gap: 5px; /* 75% от 6px */
+  gap: 8px;
 }
 
-.active-shifts-title i {
+.active-shifts .section-header i {
   color: #1abc9c;
-  font-size: 9px; /* 75% от 12px */
+  font-size: 16px;
 }
 
 .active-shift-item {
-  padding: 5px 6px; /* 75% от 6px 8px */
-  border-radius: 6px; /* 75% от 8px */
-  background: var(--card-bg);
-  margin-bottom: 6px; /* 75% от 8px */
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
   position: relative;
-  min-height: 34px; /* 75% от 45px */
+}
+
+.active-shift-item:last-child {
+  border-bottom: none;
 }
 
 .active-shift-time {
   font-weight: 500;
-  color: #1abc9c;
-  font-size: 8px; /* 75% от 10px */
-  line-height: 1;
+  color: #2c3e50;
+  margin-bottom: 8px;
+  font-size: 14px;
 }
 
 .active-shift-progress {
-  height: 1px;
-  margin: 3px 0; /* 75% от 4px */
-  width: calc(100% - 26px); /* 75% от 35px */
+  height: 4px;
+  background: #f0f0f0;
+  border-radius: 2px;
+  margin: 8px 0;
+  position: relative;
 }
 
 .active-shift-info {
-  font-size: 8px; /* 75% от 10px */
-  color: var(--text-secondary);
-  margin-top: 3px; /* 75% от 4px */
-  line-height: 1;
+  color: #7f8c8d;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+/* Темная тема для активных смен */
+.dark-theme .active-shifts {
+  background: #1b1c1d;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.dark-theme .active-shifts .section-header {
+  border-bottom-color: #2d2d2d;
+}
+
+.dark-theme .active-shift-item {
+  border-bottom-color: #2d2d2d;
+}
+
+.dark-theme .active-shift-time {
+  color: #ffffff;
+}
+
+.dark-theme .active-shift-progress {
+  background: #2d2d2d;
+}
+
+.dark-theme .active-shift-info {
+  color: #999;
+}
+
+/* Медиа-запросы для адаптивности */
+@media (max-width: 480px) {
+  .active-shifts {
+    margin: 8px;
+  }
+
+  .active-shifts .section-header {
+    padding: 10px 12px;
+  }
+
+  .active-shift-item {
+    padding: 10px 12px;
+  }
+
+  .active-shift-time {
+    font-size: 13px;
+  }
+
+  .active-shift-info {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 360px) {
+  .active-shifts {
+    margin: 6px;
+  }
+
+  .active-shifts .section-header {
+    padding: 8px 10px;
+  }
+
+  .active-shift-item {
+    padding: 8px 10px;
+  }
+
+  .active-shift-time {
+    font-size: 12px;
+  }
+
+  .active-shift-info {
+    font-size: 10px;
+  }
 }
 
 /* Календарь */
@@ -418,40 +489,6 @@ body {
 
 .dark-theme .month-mini-day:hover {
   background: rgba(26, 188, 156, 0.2);
-}
-
-@media (max-width: 768px) {
-  .months-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-  }
-
-  .month-mini {
-    padding: 10px;
-  }
-
-  .month-mini-grid div {
-    width: 20px;
-    height: 20px;
-    font-size: 10px;
-  }
-}
-
-@media (max-width: 480px) {
-  .months-grid {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-
-  .month-mini {
-    padding: 15px;
-  }
-
-  .month-mini-grid div {
-    width: 30px;
-    height: 30px;
-    font-size: 12px;
-  }
 }
 
 .calendar-header {
@@ -1041,6 +1078,37 @@ body {
   border-top: 1px solid var(--border-color);
 }
 
+.hours-info {
+  background: var(--card-bg);
+  border-radius: 8px;
+  padding: 15px;
+  margin: 15px 0;
+  box-shadow: var(--card-shadow);
+}
+
+.hours-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.hours-item:last-child {
+  border-bottom: none;
+}
+
+.hours-label {
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+#regularHoursDisplay,
+#holidayHoursDisplay {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
 @media (max-width: 360px) {
   .calculator-container {
     padding: 12px;
@@ -1526,193 +1594,377 @@ body.dark-theme {
   color: #fff;
 }
 
-@media (max-width: 768px) {
-  .theme-switch-wrapper {
-    top: 10px;
-    right: 10px;
-    padding: 8px 12px;
-  }
-}
-
-/* Темная тема для календаря */
-.dark-theme .calendar {
-  background: #2c2c2c;
-  border-color: #444;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-}
-
-.dark-theme .calendar-header {
-  background: #363636;
-  color: #fff;
-  border-bottom-color: #444;
-}
-
-.dark-theme .calendar-weekdays {
-  background: #2c2c2c;
-  border-bottom-color: #444;
-}
-
-.dark-theme .calendar-weekdays span {
-  color: #999;
-}
-
-.dark-theme .calendar-days {
-  background: #2c2c2c;
-}
-
-.dark-theme .calendar-day {
-  color: #000; /* Добавляем черный цвет для цифр */
-  border-color: #444;
-}
-
-.dark-theme .calendar-day:hover {
-  background: #363636;
-}
-
-.dark-theme .calendar-day.current {
-  background: rgba(26, 188, 156, 0.2);
-  color: #1abc9c;
-}
-
-.dark-theme .calendar-day.working-day {
-  background: rgba(26, 188, 156, 0.15);
-}
-
-.dark-theme .calendar-day.off-day {
-  background: rgba(26, 188, 156, 0.1);
-}
-
-.dark-theme .calendar-day.holiday {
-  color: #e74c3c;
-}
-
-.dark-theme .calendar-day.other-month {
-  color: #666;
-}
-
-.dark-theme .calendar-nav button {
-  color: #fff;
-}
-
-.dark-theme .calendar-nav button:hover {
-  background: #363636;
-}
-
-.dark-theme .calendar-legend {
-  background: #2c2c2c;
-  border-top-color: #444;
-}
-
-.dark-theme .legend-item {
-  color: #999;
-}
-
-.dark-theme .legend-color {
-  border-color: #444;
-}
-
-.dark-theme .legend-color.working {
-  background: rgba(26, 188, 156, 0.15);
-}
-
-.dark-theme .legend-color.off {
-  background: rgba(26, 188, 156, 0.1);
-}
-
-.dark-theme .legend-color.holiday {
-  background: rgba(231, 76, 60, 0.1);
-}
-
-/* Стили для темной темы статистики */
-.dark-theme .stats-grid {
-  background: #2c2c2c;
-  border-color: #444;
-}
-
-.dark-theme .stat-card {
-  background: #363636;
-  border-color: #444;
-}
-
-.dark-theme .stat-value {
-  color: #1abc9c;
-}
-
-.dark-theme .stat-label {
-  color: #fff;
-}
-
-.dark-theme .shifts-card {
-  background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
-}
-
-.dark-theme .shifts-card i,
-.dark-theme .shifts-card .stat-value,
-.dark-theme .shifts-card .stat-label {
-  color: white;
-}
-
-.progress-container {
-  width: 100%;
-  height: 6px;
-  background: #e9ecef;
-  border-radius: 3px;
-  margin-top: 15px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: #1abc9c;
-  border-radius: 3px;
-  transition: width 0.3s ease;
-}
-
-@media (max-width: 360px) {
-  .calculator-button {
-    padding: 8px;
-    font-size: 13px;
-    margin: 8px 0;
-  }
-}
-
-/* Стили для рекомендаций погоды */
-.weather-recommendations {
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 1px solid #eee;
-}
-
-.weather-recommendation-item {
-  display: flex;
-  align-items: flex-start;
+/* Vaadin Calculator Styles */
+.vaadin-calculator {
+  --vaadin-primary: #1abc9c;  /* Основной зеленый цвет Vaadin */
+  --vaadin-primary-dark: #16a085;  /* Темно-зеленый для hover */
+  --vaadin-primary-darker: #148f77;  /* Еще темнее для active */
+  --vaadin-dark: #1b1c1d;
+  --vaadin-gray: #6e6e6e;
+  --vaadin-border: #e0e0e0;
+  --font-size-base: 11px;
+  --icon-size-base: 15px;  /* Увеличили размер иконок */
+  background: #ffffff;
+  border-radius: 4px;
   padding: 12px;
-  margin-bottom: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  font-size: var(--font-size-base);
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.vaadin-title {
+  color: var(--vaadin-dark);
   font-size: 14px;
-  line-height: 1.4;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 
-.weather-recommendation-item i {
-  margin-right: 10px;
+.vaadin-title i {
+  color: var(--vaadin-primary);
+  font-size: 16px;  /* Увеличили размер иконки заголовка */
+}
+
+label i {
+  color: var(--vaadin-primary);
+  font-size: var(--icon-size-base);
+}
+
+.hours-label i,
+.result-label i {
+  color: var(--vaadin-primary);
+  font-size: var(--icon-size-base);
+}
+
+.hours-value {
+  color: var(--vaadin-primary);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+}
+
+.vaadin-button {
+  background-color: var(--vaadin-primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 3px;
+  padding: 6px 12px;
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+}
+
+.vaadin-button i {
+  font-size: var(--icon-size-base);
+}
+
+.vaadin-button:hover {
+  background-color: var(--vaadin-primary-dark);
+}
+
+.vaadin-button:active {
+  background-color: var(--vaadin-primary-darker);
+}
+
+.final-salary .result-value {
+  color: var(--vaadin-primary);
+  font-weight: 600;
+}
+
+/* Dark theme adjustments */
+.dark-theme .vaadin-calculator {
+  background: #1b1c1d;
+  color: #ffffff;
+}
+
+.dark-theme .vaadin-title {
+  color: #ffffff;
+}
+
+.dark-theme label {
+  color: #ffffff;
+}
+
+.dark-theme .vaadin-title i,
+.dark-theme label i,
+.dark-theme .hours-label i,
+.dark-theme .result-label i {
+  color: var(--vaadin-primary);
+}
+
+.dark-theme .select-icon {
+  color: #ffffff;
+}
+
+.dark-theme .vaadin-select,
+.dark-theme .vaadin-input {
+  background-color: #2d2d2d;
+  color: #ffffff;
+  border-color: #3d3d3d;
+}
+
+.dark-theme .vaadin-card {
+  background: #2d2d2d;
+  border-color: #3d3d3d;
+}
+
+.dark-theme .hours-info.vaadin-card {
+  background-color: #2d2d2d;
+}
+
+.dark-theme .hours-label,
+.dark-theme .result-label {
+  color: #ffffff;
+}
+
+.dark-theme .result-value,
+.dark-theme .tax-value {
+  color: #ffffff;
+}
+
+.dark-theme .hours-value,
+.dark-theme .final-salary .result-value {
+  color: var(--vaadin-primary);
+}
+
+.dark-theme .result-item {
+  border-color: #3d3d3d;
+}
+
+/* iOS Calculator Styles */
+.ios-calculator {
+  background-color: #f2f2f7;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.ios-calculator h2 {
+  color: #1c1c1e;
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.ios-display {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.ios-select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e5e5ea;
+  border-radius: 10px;
+  font-size: 16px;
+  color: #1c1c1e;
+  background-color: #ffffff;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007AFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  transition: all 0.3s ease;
+}
+
+.ios-select:focus {
+  border-color: #007aff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.ios-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e5e5ea;
+  border-radius: 10px;
+  font-size: 16px;
+  color: #1c1c1e;
+  background-color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.ios-input:focus {
+  border-color: #007aff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.ios-button {
+  width: 100%;
+  padding: 14px;
+  background-color: #007aff;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ios-button:hover {
+  background-color: #0066d6;
+}
+
+.ios-button:active {
+  background-color: #0055b3;
+  transform: scale(0.98);
+}
+
+.ios-results {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e5ea;
+}
+
+.result-item:last-child {
+  border-bottom: none;
+}
+
+.result-label {
+  color: #3a3a3c;
+  font-size: 15px;
+}
+
+.result-value, .tax-value {
+  color: #1c1c1e;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.final-salary {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 2px solid #e5e5ea;
+}
+
+.final-salary .result-value {
+  color: #007aff;
   font-size: 18px;
-  color: #1abc9c;
-  margin-top: 2px;
 }
 
-.weather-recommendation-item span {
-  flex: 1;
+.hours-info {
+  margin: 16px 0;
+  padding: 16px;
+  background-color: #f8f8fa;
+  border-radius: 10px;
 }
 
-.dark-theme .weather-recommendations {
-  border-top-color: #444;
+.hours-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.hours-item:last-child {
+  margin-bottom: 0;
+}
+
+.hours-label {
+  color: #3a3a3c;
+  font-size: 15px;
+}
+
+.hours-value {
+  color: #007aff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Dark theme support */
+.dark-theme .ios-calculator {
+  background-color: #1c1c1e;
+}
+
+.dark-theme .ios-display,
+.dark-theme .ios-results {
+  background-color: #2c2c2e;
+}
+
+.dark-theme .ios-select,
+.dark-theme .ios-input {
+  background-color: #2c2c2e;
+  border-color: #3a3a3c;
+  color: #ffffff;
+}
+
+.dark-theme .result-label,
+.dark-theme .hours-label {
+  color: #98989f;
+}
+
+.dark-theme .result-value,
+.dark-theme .tax-value,
+.dark-theme .hours-value {
+  color: #ffffff;
+}
+
+.dark-theme .hours-info {
+  background-color: #2c2c2e;
+}
+
+.dark-theme .final-salary .result-value {
+  color: #0a84ff;
+}
+
+.dark-theme .result-item {
+  border-bottom-color: #3a3a3c;
+}
+
+.dark-theme .final-salary {
+  border-top-color: #3a3a3c;
 }
 
 @media (max-width: 360px) {
-  .weather-recommendation-item {
-    font-size: 13px;
+  .ios-calculator {
+    padding: 16px;
   }
   
-  .weather-recommendation-item i {
+  .ios-select,
+  .ios-input {
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+  .ios-button {
+    padding: 12px;
+    font-size: 15px;
+  }
+  
+  .result-label,
+  .result-value,
+  .tax-value,
+  .hours-label,
+  .hours-value {
+    font-size: 14px;
+  }
+  
+  .final-salary .result-value {
     font-size: 16px;
   }
 }
@@ -1831,4 +2083,283 @@ body.dark-theme {
 .dark-theme .calendar-title span:hover,
 .dark-theme .picker-item:hover {
   background-color: rgba(26, 188, 156, 0.2);
+}
+
+.date-selector {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.select-group {
+  flex: 1;
+}
+
+.select-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: var(--text-color);
+}
+
+.select-group select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 13px;
+  background: var(--input-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.select-group select:hover {
+  border-color: var(--primary-color);
+}
+
+.select-group select:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--primary-color-light);
+}
+
+@media (max-width: 360px) {
+  .date-selector {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .select-group select {
+    font-size: 12px;
+    padding: 7px 10px;
+  }
+}
+
+/* iOS Calculator Styles */
+.ios-calculator {
+  background-color: #f2f2f7;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.ios-calculator h2 {
+  color: #1c1c1e;
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.ios-display {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.ios-select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e5e5ea;
+  border-radius: 10px;
+  font-size: 16px;
+  color: #1c1c1e;
+  background-color: #ffffff;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007AFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  transition: all 0.3s ease;
+}
+
+.ios-select:focus {
+  border-color: #007aff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.ios-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e5e5ea;
+  border-radius: 10px;
+  font-size: 16px;
+  color: #1c1c1e;
+  background-color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.ios-input:focus {
+  border-color: #007aff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.ios-button {
+  width: 100%;
+  padding: 14px;
+  background-color: #007aff;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ios-button:hover {
+  background-color: #0066d6;
+}
+
+.ios-button:active {
+  background-color: #0055b3;
+  transform: scale(0.98);
+}
+
+.ios-results {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e5ea;
+}
+
+.result-item:last-child {
+  border-bottom: none;
+}
+
+.result-label {
+  color: #3a3a3c;
+  font-size: 15px;
+}
+
+.result-value, .tax-value {
+  color: #1c1c1e;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.final-salary {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 2px solid #e5e5ea;
+}
+
+.final-salary .result-value {
+  color: #007aff;
+  font-size: 18px;
+}
+
+.hours-info {
+  margin: 16px 0;
+  padding: 16px;
+  background-color: #f8f8fa;
+  border-radius: 10px;
+}
+
+.hours-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.hours-item:last-child {
+  margin-bottom: 0;
+}
+
+.hours-label {
+  color: #3a3a3c;
+  font-size: 15px;
+}
+
+.hours-value {
+  color: #007aff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Dark theme support */
+.dark-theme .ios-calculator {
+  background-color: #1c1c1e;
+}
+
+.dark-theme .ios-display,
+.dark-theme .ios-results {
+  background-color: #2c2c2e;
+}
+
+.dark-theme .ios-select,
+.dark-theme .ios-input {
+  background-color: #2c2c2e;
+  border-color: #3a3a3c;
+  color: #ffffff;
+}
+
+.dark-theme .result-label,
+.dark-theme .hours-label {
+  color: #98989f;
+}
+
+.dark-theme .result-value,
+.dark-theme .tax-value,
+.dark-theme .hours-value {
+  color: #ffffff;
+}
+
+.dark-theme .hours-info {
+  background-color: #2c2c2e;
+}
+
+.dark-theme .final-salary .result-value {
+  color: #0a84ff;
+}
+
+.dark-theme .result-item {
+  border-bottom-color: #3a3a3c;
+}
+
+.dark-theme .final-salary {
+  border-top-color: #3a3a3c;
+}
+
+@media (max-width: 360px) {
+  .ios-calculator {
+    padding: 16px;
+  }
+  
+  .ios-select,
+  .ios-input {
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+  .ios-button {
+    padding: 12px;
+    font-size: 15px;
+  }
+  
+  .result-label,
+  .result-value,
+  .tax-value,
+  .hours-label,
+  .hours-value {
+    font-size: 14px;
+  }
+  
+  .final-salary .result-value {
+    font-size: 16px;
+  }
 }
