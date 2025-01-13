@@ -1012,6 +1012,26 @@ body {
   margin: 10px;
   margin-top: 50px;
   box-shadow: var(--widget-shadow);
+  height: calc(100vh - 120px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 15px;
+  position: relative;
+  z-index: 1;
+}
+
+.calculator-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.calculator-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+.calculator-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
 }
 
 .calculator-container h2 {
@@ -1114,6 +1134,7 @@ body {
     padding: 12px;
     margin: 5px;
     margin-top: 50px;
+    height: calc(100vh - 150px);
   }
 
   .input-group label,
@@ -2362,4 +2383,66 @@ label i {
   .final-salary .result-value {
     font-size: 16px;
   }
+}
+
+/* Стили для годового календаря */
+.yearly-calendar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  padding: 15px;
+}
+
+.month-calendar {
+  background: white;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Адаптация для мобильных устройств */
+@media (max-width: 768px) {
+  .yearly-calendar {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 10px;
+    overflow-y: auto;
+    max-height: calc(100vh - 150px);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .month-calendar {
+    padding: 8px;
+  }
+
+  .month-calendar .calendar-day {
+    padding: 4px;
+    font-size: 11px;
+  }
+
+  .month-calendar #weekdays {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+
+  .month-calendar .calendar-header span {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .yearly-calendar {
+    grid-template-columns: 1fr;
+    padding: 8px;
+  }
+
+  .month-calendar {
+    margin-bottom: 10px;
+  }
+}
+
+/* Стили для темной темы годового календаря */
+.dark-theme .month-calendar {
+  background: #2c2c2c;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
