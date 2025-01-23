@@ -1033,7 +1033,15 @@ function showMonthPicker() {
          onclick="selectMonth(${index})">${month}</div>
   `).join('');
   
-  picker.style.display = picker.style.display === 'none' ? 'block' : 'none';
+  picker.style.display = 'block';
+
+  // Добавляем затемнение фона на мобильных
+  if (window.innerWidth <= 768) {
+    const backdrop = document.querySelector('.picker-backdrop') || document.createElement('div');
+    backdrop.className = 'picker-backdrop';
+    document.body.appendChild(backdrop);
+    setTimeout(() => backdrop.classList.add('show'), 0);
+  }
 }
 
 function showYearPicker() {
@@ -1053,33 +1061,65 @@ function showYearPicker() {
   }
   
   content.innerHTML = years.join('');
-  picker.style.display = picker.style.display === 'none' ? 'block' : 'none';
+  picker.style.display = 'block';
+
+  // Добавляем затемнение фона на мобильных
+  if (window.innerWidth <= 768) {
+    const backdrop = document.querySelector('.picker-backdrop') || document.createElement('div');
+    backdrop.className = 'picker-backdrop';
+    document.body.appendChild(backdrop);
+    setTimeout(() => backdrop.classList.add('show'), 0);
+  }
 }
 
 function selectMonth(month) {
   currentMonth = month;
   document.getElementById('month-picker').style.display = 'none';
+  document.getElementById('month').textContent = months[month];
   showCalendar(currentMonth, currentYear);
+  
+  // Убираем затемнение фона
+  const backdrop = document.querySelector('.picker-backdrop');
+  if (backdrop) {
+    backdrop.classList.remove('show');
+    setTimeout(() => backdrop.remove(), 200);
+  }
 }
 
 function selectYear(year) {
   currentYear = year;
   document.getElementById('year-picker').style.display = 'none';
+  document.getElementById('year').textContent = year;
   showCalendar(currentMonth, currentYear);
+  
+  // Убираем затемнение фона
+  const backdrop = document.querySelector('.picker-backdrop');
+  if (backdrop) {
+    backdrop.classList.remove('show');
+    setTimeout(() => backdrop.remove(), 200);
+  }
 }
 
 // Закрываем пикеры при клике вне их области
 document.addEventListener('click', function(event) {
   const monthPicker = document.getElementById('month-picker');
   const yearPicker = document.getElementById('year-picker');
-  const monthText = document.getElementById('month');
-  const yearText = document.getElementById('year');
+  const monthTrigger = document.getElementById('month');
+  const yearTrigger = document.getElementById('year');
   
-  if (!monthPicker.contains(event.target) && event.target !== monthText) {
+  if (!monthPicker.contains(event.target) && event.target !== monthTrigger) {
     monthPicker.style.display = 'none';
   }
-  if (!yearPicker.contains(event.target) && event.target !== yearText) {
+  
+  if (!yearPicker.contains(event.target) && event.target !== yearTrigger) {
     yearPicker.style.display = 'none';
+  }
+
+  // Убираем затемнение фона
+  const backdrop = document.querySelector('.picker-backdrop');
+  if (backdrop) {
+    backdrop.classList.remove('show');
+    setTimeout(() => backdrop.remove(), 200);
   }
 });
 
