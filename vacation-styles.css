@@ -1,0 +1,226 @@
+/* Стили для отпусков в стиле Documentolog */
+.vacation-months {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    padding: 1.5rem;
+    background: #1e293b;
+}
+
+@media (max-width: 1400px) {
+    .vacation-months {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 1024px) {
+    .vacation-months {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .vacation-months {
+        grid-template-columns: 1fr;
+    }
+}
+
+.month-card {
+    background: #334155;
+    border: 1px solid #475569;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.month-card:hover {
+    background: #475569;
+    border-color: #64748b;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.month-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: transparent;
+    transition: background-color 0.2s ease;
+}
+
+.month-card.has-vacations::before {
+    background: #0ea5e9;
+}
+
+.month-card.current-month::before {
+    background: #22c55e;
+}
+
+.month-header {
+    background: inherit;
+    padding: 1rem;
+    border-bottom: 1px solid #475569;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #f1f5f9;
+}
+
+.month-card:hover .month-header {
+    color: #1e293b;
+}
+
+.month-name {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+    color: inherit;
+    font-size: 0.875rem;
+}
+
+.month-name i {
+    color: #94a3b8;
+    font-size: 1rem;
+}
+
+.month-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.vacation-count {
+    background: rgba(255, 255, 255, 0.1);
+    color: inherit;
+    padding: 0.25rem 0.625rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.month-card:hover .vacation-count {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.toggle-icon {
+    color: #94a3b8;
+    transition: transform 0.2s ease;
+}
+
+.month-content {
+    background: inherit;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+}
+
+.month-card.expanded .month-content {
+    max-height: 500px;
+    animation: slideDown 0.3s ease-out;
+}
+
+.vacation-item {
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid #475569;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.vacation-item:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.vacation-item:last-child {
+    border-bottom: none;
+}
+
+.vacation-employee {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #f1f5f9;
+    font-size: 0.875rem;
+    font-weight: 500;
+    position: relative;
+}
+
+.vacation-employee::before {
+    content: '';
+    position: absolute;
+    left: -1rem;
+    top: 50%;
+    width: 4px;
+    height: 4px;
+    background: #64748b;
+    border-radius: 50%;
+    transform: translateY(-50%);
+}
+
+.vacation-employee i {
+    color: #94a3b8;
+    font-size: 0.875rem;
+}
+
+.vacation-dates {
+    color: #94a3b8;
+    font-size: 0.75rem;
+    padding-left: 1.5rem;
+}
+
+/* Месяц с отпусками */
+.month-card.has-vacations {
+    background: #1e3a8a;
+    border-color: #2563eb;
+}
+
+.month-card.has-vacations:hover {
+    background: #1e40af;
+    border-color: #3b82f6;
+}
+
+.month-card.has-vacations .month-header {
+    color: #60a5fa;
+}
+
+.month-card.has-vacations .vacation-count {
+    background: rgba(96, 165, 250, 0.2);
+}
+
+/* Текущий месяц */
+.month-card.current-month {
+    background: #064e3b;
+    border-color: #059669;
+}
+
+.month-card.current-month:hover {
+    background: #065f46;
+    border-color: #10b981;
+}
+
+.month-card.current-month .month-header {
+    color: #34d399;
+}
+
+.month-card.current-month .vacation-count {
+    background: rgba(52, 211, 153, 0.2);
+}
+
+/* Анимации */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

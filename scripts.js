@@ -211,24 +211,22 @@ function showCalendar(month, year) {
     dayCell.textContent = day;
 
     const holidayName = getHolidayName(date);
+    const isShift = isShiftDay(date);
+
+    // Добавляем соответствующие классы
     if (holidayName) {
-      dayCell.setAttribute("data-holiday", holidayName);
+        dayCell.classList.add('holiday');
+        dayCell.title = holidayName;
+    }
+    if (isShift) {
+        dayCell.classList.add('shift');
+        shiftCount++;
     }
 
-    if (isShiftDay(date)) {
-      dayCell.classList.add("shift");
-      shiftCount++;
-    }
-
-    if (holidayName) {
-      dayCell.classList.add("holiday");
-    }
-
-    // Проверяем, является ли день текущим
     if (date.getDate() === today.getDate() && 
         date.getMonth() === today.getMonth() && 
         date.getFullYear() === today.getFullYear()) {
-      dayCell.classList.add("today");
+        dayCell.classList.add('today');
     }
 
     daysContainer.appendChild(dayCell);
@@ -260,81 +258,82 @@ function toggleCalendarView() {
 }
 
 function showYearView(year) {
-  const monthsGrid = document.querySelector('.months-grid');
-  const yearTitle = document.getElementById('year-title');
-  yearTitle.textContent = year;
-  monthsGrid.innerHTML = '';
+    const monthsGrid = document.querySelector('.months-grid');
+    const yearTitle = document.getElementById('year-title');
+    yearTitle.textContent = year;
+    monthsGrid.innerHTML = '';
 
-  for (let month = 0; month < 12; month++) {
-    const monthMini = document.createElement('div');
-    monthMini.className = 'month-mini';
-    
-    // Добавляем заголовок месяца
-    const monthHeader = document.createElement('div');
-    monthHeader.className = 'month-mini-header';
-    monthHeader.textContent = months[month];
-    monthMini.appendChild(monthHeader);
+    for (let month = 0; month < 12; month++) {
+        const monthContainer = document.createElement('div');
+        monthContainer.className = 'year-calendar-month';
+        
+        const monthHeader = document.createElement('div');
+        monthHeader.className = 'year-calendar-month-header';
+        monthHeader.textContent = months[month];
+        monthContainer.appendChild(monthHeader);
 
-    // Создаем сетку дней
-    const monthGrid = document.createElement('div');
-    monthGrid.className = 'month-mini-grid';
+        const weekdaysContainer = document.createElement('div');
+        weekdaysContainer.className = 'year-calendar-weekdays';
+        ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].forEach(day => {
+            const dayElem = document.createElement('div');
+            dayElem.textContent = day;
+            weekdaysContainer.appendChild(dayElem);
+        });
+        monthContainer.appendChild(weekdaysContainer);
 
-    // Добавляем дни недели
-    ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].forEach(day => {
-      const dayHeader = document.createElement('div');
-      dayHeader.className = 'month-mini-weekday';
-      dayHeader.textContent = day[0];
-      dayHeader.style.color = '#666';
-      monthGrid.appendChild(dayHeader);
-    });
+        const daysContainer = document.createElement('div');
+        daysContainer.className = 'year-calendar-days';
+        
+        // Получаем первый день месяца и количество дней
+        const firstDay = new Date(year, month, 1).getDay() || 7;
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    // Получаем первый день месяца и количество дней
-    const firstDay = new Date(year, month, 1).getDay() || 7;
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    
-    // Добавляем пустые ячейки в начале
-    for (let i = 1; i < firstDay; i++) {
-      const emptyDay = document.createElement('div');
-      emptyDay.className = 'month-mini-day empty';
-      monthGrid.appendChild(emptyDay);
+        // Добавляем пустые ячейки в начале
+        for (let i = 1; i < firstDay; i++) {
+            const emptyDay = document.createElement('div');
+            emptyDay.className = 'year-calendar-day empty';
+            daysContainer.appendChild(emptyDay);
+        }
+
+        // Добавляем дни месяца
+        for (let day = 1; day <= daysInMonth; day++) {
+            const date = new Date(year, month, day);
+            const dayDiv = document.createElement('div');
+            dayDiv.className = 'year-calendar-day';
+            dayDiv.textContent = day;
+
+            // Проверяем праздник и смену
+            const holidayName = getHolidayName(date);
+            const isShift = isShiftDay(date);
+
+            // Добавляем соответствующие классы
+            if (holidayName) {
+                dayDiv.classList.add('holiday');
+                dayDiv.title = holidayName;
+            }
+            if (isShift) {
+                dayDiv.classList.add('shift');
+            }
+
+            if (date.getDate() === today.getDate() && 
+                date.getMonth() === today.getMonth() && 
+                date.getFullYear() === today.getFullYear()) {
+                dayDiv.classList.add('today');
+            }
+
+            // Добавляем обработчик клика для переключения на месячный вид
+            dayDiv.addEventListener('click', (e) => {
+                e.stopPropagation();
+                currentMonth = month;
+                toggleCalendarView();
+            });
+
+            daysContainer.appendChild(dayDiv);
+        }
+
+        monthContainer.appendChild(daysContainer);
+        monthsGrid.appendChild(monthContainer);
     }
-
-    // Добавляем дни месяца
-    for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(year, month, day);
-      const dayDiv = document.createElement('div');
-      dayDiv.className = 'month-mini-day';
-      dayDiv.textContent = day;
-
-      const holidayName = getHolidayName(date);
-      if (holidayName) {
-        dayDiv.classList.add('holiday');
-        dayDiv.title = holidayName;
-      }
-
-      if (isShiftDay(date)) {
-        dayDiv.classList.add('shift');
-      }
-
-      if (date.getDate() === today.getDate() && 
-          date.getMonth() === today.getMonth() && 
-          date.getFullYear() === today.getFullYear()) {
-        dayDiv.classList.add('today');
-      }
-
-      // Добавляем обработчик клика для переключения на месячный вид
-      dayDiv.addEventListener('click', (e) => {
-        e.stopPropagation();
-        currentMonth = month;
-        toggleCalendarView();
-      });
-
-      monthGrid.appendChild(dayDiv);
-    }
-
-    monthMini.appendChild(monthGrid);
-    monthsGrid.appendChild(monthMini);
-  }
 }
 
 function updateYear(delta) {
@@ -1293,8 +1292,12 @@ function toggleDarkTheme() {
 
 // Проверяем сохраненную тему при загрузке
 document.addEventListener('DOMContentLoaded', () => {
-  const isDarkTheme = localStorage.getItem('darkTheme') === 'true';
-  if (isDarkTheme) {
+  // Если тема еще не выбрана, устанавливаем темную по умолчанию
+  const isDarkTheme = localStorage.getItem('darkTheme');
+  if (isDarkTheme === null) {
+    localStorage.setItem('darkTheme', 'true');
+    document.body.classList.add('dark-theme');
+  } else if (isDarkTheme === 'true') {
     document.body.classList.add('dark-theme');
   }
 });
@@ -1304,10 +1307,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const themeToggle = document.getElementById('theme-toggle');
   
   // Устанавливаем начальное состояние переключателя
-  const isDarkTheme = localStorage.getItem('darkTheme') === 'true';
-  themeToggle.checked = isDarkTheme;
-  if (isDarkTheme) {
-    document.body.classList.add('dark-theme');
+  const isDarkTheme = localStorage.getItem('darkTheme');
+  if (isDarkTheme === 'true') {
+    themeToggle.checked = true;
   }
 
   // Добавляем обработчик события change
@@ -1315,3 +1317,54 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleDarkTheme();
   });
 });
+
+function calculateVacationProgress(startDate, endDate) {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const today = new Date();
+
+    // Если отпуск еще не начался
+    if (today < start) {
+        return 0;
+    }
+    
+    // Если отпуск уже закончился
+    if (today > end) {
+        return 100;
+    }
+
+    // Вычисляем прогресс
+    const totalDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+    const daysGone = Math.ceil((today - start) / (1000 * 60 * 60 * 24));
+    const progress = (daysGone / totalDays) * 100;
+
+    return Math.min(Math.max(progress, 0), 100);
+}
+
+function getVacationStatus(vacation) {
+    const today = new Date();
+    const start = new Date(vacation.startDate);
+    const end = new Date(vacation.endDate);
+
+    if (today > end) {
+        return 'completed';
+    } else if (today >= start && today <= end) {
+        return 'active';
+    } else {
+        return 'upcoming';
+    }
+}
+
+function getVacationStatusText(vacation) {
+    const status = getVacationStatus(vacation);
+    switch (status) {
+        case 'completed':
+            return 'Отпуск завершен';
+        case 'active':
+            return 'В отпуске';
+        case 'upcoming':
+            return 'Ожидается';
+        default:
+            return '';
+    }
+}

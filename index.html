@@ -10,344 +10,436 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Remix Icons -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Alpine.js -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        // Конфигурация Tailwind
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="vacation-styles.css">
+    <link rel="stylesheet" href="calendar-styles.css">
+    <link rel="stylesheet" href="calculator-styles.css">
+    <link rel="stylesheet" href="current-vacations.css">
+    <link rel="stylesheet" href="welcome-modal.css">
+    <link rel="stylesheet" href="schedule-styles.css">
+    <link rel="stylesheet" href="shift-schedule-styles.css">
+    <link rel="stylesheet" href="weather-styles.css">
     <script src="https://cdn.jsdelivr.net/npm/progressbar.js@1.1.0/dist/progressbar.min.js"></script>
-
-  </head>
-  <body>
+</head>
+<body>
     <!-- Переключатель темы -->
     <div class="theme-switch-wrapper">
-      <i class="ri-contrast-2-line"></i>
-      <label class="theme-switch">
-        <input type="checkbox" id="theme-toggle">
-        <span class="slider"></span>
-      </label>
+        <i class="ri-contrast-2-line"></i>
+        <label class="theme-switch">
+            <input type="checkbox" id="theme-toggle">
+            <span class="slider"></span>
+        </label>
     </div>
     <div class="widget-container">
-      <!-- Главная -->
-      <div id="home-widget" class="widget active">
-        <!-- Текущий статус -->
-        <div class="widget-header">
-          <i class="ri-home-line"></i>
-          <span>Главная</span>
-
-        </div>
-        <div class="current-status" id="current-status">
-          <div class="time-indicator">
-            <i class="ri-sun-line"></i>
-          </div>
-          <div class="current-date" id="current-date">-</div>
-          <div class="status-text" id="status-text">-</div>
-          <div class="status-description" id="status-description">-</div>
-          <div class="progress-container">
-            <div id="workdayProgress" class="progress-fill" style="width: 0%"></div>
-          </div>
-        </div>
-
-        <!-- Статистика -->
-        <div class="widget-section">
-          <div class="section-header">
-            <i class="ri-bar-chart-line"></i>
-            <span>Статистика за месяц</span>
-          </div>
-
-          <div class="stats-grid">
-            <div class="stat-card">
-              <i class="ri-time-line"></i>
-              <span class="stat-value" id="working-hours">-</span>
-              <span class="stat-label">Рабочих часов</span>
-              <span class="stat-description">Общее количество рабочих часов в месяц (11 часов × кол-во смен)</span>
+        <!-- Главная -->
+        <div id="home-widget" class="widget active">
+            <!-- Текущий статус -->
+            <div class="widget-header">
+                <i class="ri-home-line"></i>
+                <span>Главная</span>
             </div>
-            <div class="stat-card">
-              <i class="ri-calendar-event-line"></i>
-              <span class="stat-value" id="holidays-count">-</span>
-              <span class="stat-label">Праздников</span>
-              <span class="stat-description">Количество праздничных дней в текущем месяце</span>
-            </div>
-            <div class="stat-card shifts-card">
-              <i class="ri-calendar-check-line"></i>
-              <span class="stat-value" id="completed-shifts">-</span>
-              <span class="stat-label">Смен</span>
-              <span class="stat-description">Общее количество рабочих смен в месяце</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Активные смены -->
-        <div class="active-shifts">
-          <div class="active-shifts-title">
-            <i class="ri-time-line"></i>
-            <span>Активные смены</span>
-          </div>
-          <div id="home-active-shifts">
-            <!-- Здесь будут отображаться активные смены -->
-          </div>
-        </div>
-
-        <!-- Праздники -->
-        <div class="widget-section">
-          <div class="section-header">
-            <i class="ri-calendar-event-line"></i>
-            <span>Праздники</span>
-          </div>
-
-          <div class="holidays-list" id="holidays-list"></div>
-        </div>
-      </div>
-
-      <div id="calendar-widget" class="widget">
-        <div class="calendar">
-          <div class="calendar-view-toggle">
-            <button onclick="toggleCalendarView()">Показать год</button>
-          </div>
-          <div id="month-view">
-            <div class="calendar-header">
-              <div class="calendar-title">
-                <span id="year" onclick="showYearPicker()">Year</span>
-                <span id="month" onclick="showMonthPicker()">Month</span>
-              </div>
-            </div>
-            <div id="month-picker" class="picker" style="display: none;">
-              <div class="picker-content"></div>
-            </div>
-            <div id="year-picker" class="picker" style="display: none;">
-              <div class="picker-content"></div>
-            </div>
-            <div id="weekdays">
-              <div>Пн</div>
-              <div>Вт</div>
-              <div>Ср</div>
-              <div>Чт</div>
-              <div>Пт</div>
-              <div>Сб</div>
-              <div>Вс</div>
-            </div>
-            <div id="calendar-days"></div>
-          </div>
-          <div id="year-view" class="year-view" style="display: none;">
-            <div class="year-header">
-              <span class="calendar-nav" onclick="updateYear(-1)">&#10094;</span>
-              <span id="year-title">2024</span>
-              <span class="calendar-nav" onclick="updateYear(1)">&#10095;</span>
-            </div>
-            <div class="months-grid"></div>
-          </div>
-        </div>
-      </div>
-
-      <div id="weather-widget" class="widget">
-        <div class="weather-widget">
-          <div id="weather-info"></div>
-        </div>
-      </div>
-
-      <!-- Калькулятор -->
-      <div id="calculator-widget" class="widget">
-        <div class="calculator-container vaadin-calculator">
-          <h2 class="vaadin-title"><i class="ri-calculator-line"></i> Калькулятор зарплаты</h2>
-          
-          <div class="vaadin-form">
-            <div class="date-selector">
-              <div class="select-group">
-                <label for="monthSelect"><i class="ri-calendar-line"></i> Месяц</label>
-                <div class="select-wrapper">
-                  <select id="monthSelect" class="vaadin-select">
-                    <option value="0">Январь</option>
-                    <option value="1">Февраль</option>
-                    <option value="2">Март</option>
-                    <option value="3">Апрель</option>
-                    <option value="4">Май</option>
-                    <option value="5">Июнь</option>
-                    <option value="6">Июль</option>
-                    <option value="7">Август</option>
-                    <option value="8">Сентябрь</option>
-                    <option value="9">Октябрь</option>
-                    <option value="10">Ноябрь</option>
-                    <option value="11">Декабрь</option>
-                  </select>
-                  <i class="ri-arrow-down-s-line select-icon"></i>
+            <div class="current-status" id="current-status">
+                <div class="time-indicator">
+                    <i class="ri-sun-line"></i>
                 </div>
-              </div>
-              
-              <div class="select-group">
-                <label for="yearSelect"><i class="ri-calendar-2-line"></i> Год</label>
-                <div class="select-wrapper">
-                  <select id="yearSelect" class="vaadin-select">
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
-                    <option value="2025">2025</option>
-                  </select>
-                  <i class="ri-arrow-down-s-line select-icon"></i>
+                <div class="current-date" id="current-date">-</div>
+                <div class="status-text" id="status-text">-</div>
+                <div class="status-description" id="status-description">-</div>
+                <div class="progress-container">
+                    <div id="workdayProgress" class="progress-fill" style="width: 0%"></div>
                 </div>
-              </div>
             </div>
 
-            <div class="input-group">
-              <label for="hourlyRate"><i class="ri-money-dollar-circle-line"></i> Почасовая ставка (₸)</label>
-              <input type="number" id="hourlyRate" class="vaadin-input" placeholder="Введите ставку">
+            <!-- Статистика -->
+            <div class="widget-section">
+                <div class="section-header">
+                    <i class="ri-bar-chart-line"></i>
+                    <span>Статистика за месяц</span>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="ri-time-line"></i>
+                        <span class="stat-value" id="working-hours">-</span>
+                        <span class="stat-label">Рабочих часов</span>
+                        <span class="stat-description">Общее количество рабочих часов в месяц (11 часов × кол-во смен)</span>
+                    </div>
+                    <div class="stat-card">
+                        <i class="ri-calendar-event-line"></i>
+                        <span class="stat-value" id="holidays-count">-</span>
+                        <span class="stat-label">Праздников</span>
+                        <span class="stat-description">Количество праздничных дней в текущем месяце</span>
+                    </div>
+                    <div class="stat-card shifts-card">
+                        <i class="ri-calendar-check-line"></i>
+                        <span class="stat-value" id="completed-shifts">-</span>
+                        <span class="stat-label">Смен</span>
+                        <span class="stat-description">Общее количество рабочих смен в месяце</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="hours-info vaadin-card">
-              <div class="hours-item">
-                <span class="hours-label"><i class="ri-time-line"></i> Обычные часы:</span>
-                <span id="regularHoursDisplay" class="hours-value">0</span>
-              </div>
-              <div class="hours-item">
-                <span class="hours-label"><i class="ri-calendar-event-line"></i> Праздничные часы:</span>
-                <span id="holidayHoursDisplay" class="hours-value">0</span>
-              </div>
+            <!-- Активные смены -->
+            <div class="active-shifts">
+                <div class="active-shifts-title">
+                    <i class="ri-time-line"></i>
+                    <span>Активные смены</span>
+                </div>
+                <div id="home-active-shifts">
+                    <!-- Здесь будут отображаться активные смены -->
+                </div>
             </div>
 
-            <button onclick="calculateSalary()" class="vaadin-button">
-              <i class="ri-calculator-fill"></i> Рассчитать
-            </button>
+            <!-- Праздники -->
+            <div class="widget-section">
+                <div class="section-header">
+                    <i class="ri-calendar-event-line"></i>
+                    <span>Праздники</span>
+                </div>
 
-            <div class="result-container vaadin-card">
-              <div class="result-item">
-                <span class="result-label"><i class="ri-money-dollar-box-line"></i> Общая сумма:</span>
-                <span id="salaryResult" class="result-value">0.00 ₸</span>
-              </div>
-              <div class="result-item">
-                <span class="result-label"><i class="ri-percent-line"></i> Подоходный налог (10%):</span>
-                <span id="incomeTax" class="tax-value">0.00 ₸</span>
-              </div>
-              <div class="result-item">
-                <span class="result-label"><i class="ri-bank-line"></i> Пенсионные отчисления (10%):</span>
-                <span id="pensionTax" class="tax-value">0.00 ₸</span>
-              </div>
-              <div class="result-item">
-                <span class="result-label"><i class="ri-group-line"></i> Профсоюз (1%):</span>
-                <span id="unionTax" class="tax-value">0.00 ₸</span>
-              </div>
-              <div class="result-item">
-                <span class="result-label"><i class="ri-heart-pulse-line"></i> Медицинская страховка (2%):</span>
-                <span id="medicalInsurance" class="tax-value">0.00 ₸</span>
-              </div>
-              <div class="result-item final-salary">
-                <span class="result-label"><i class="ri-wallet-3-line"></i> К выдаче:</span>
-                <span id="finalSalary" class="result-value">0.00 ₸</span>
-              </div>
+                <div class="holidays-list" id="holidays-list"></div>
             </div>
-          </div>
-        </div>
-      </div>
 
-      <div id="chat-widget" class="widget">
-        <div class="widget-header">
-          <h2>Чат смены</h2>
-        </div>
-        <div style="padding: 20px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-          <!-- WhatsApp кнопка -->
-          <a href="https://chat.whatsapp.com/DvmBnJAxOOn76H4ohIgwmp" 
-             target="_blank"
-             style="display: flex; 
-                    align-items: center;
-                    background-color: #25D366; 
-                    color: white; 
-                    padding: 16px 32px; 
-                    border-radius: 12px; 
-                    text-decoration: none; 
-                    font-size: 18px;
-                    font-weight: 500;
-                    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
-                    transition: all 0.3s ease;
-                    transform: translateY(0);">
-            <i class="ri-whatsapp-fill" style="font-size: 24px; margin-right: 10px;"></i>
-            WhatsApp
-          </a>
-
-          <!-- Telegram кнопка -->
-          <a href="https://t.me/+your-telegram-link" 
-             target="_blank"
-             style="display: flex; 
-                    align-items: center;
-                    background-color: #229ED9; 
-                    color: white; 
-                    padding: 16px 32px; 
-                    border-radius: 12px; 
-                    text-decoration: none; 
-                    font-size: 18px;
-                    font-weight: 500;
-                    box-shadow: 0 4px 12px rgba(34, 158, 217, 0.2);
-                    transition: all 0.3s ease;
-                    transform: translateY(0);">
-            <i class="ri-telegram-fill" style="font-size: 24px; margin-right: 10px;"></i>
-            Telegram
-          </a>
+            <!-- <div class="widget-section" x-data="currentMonthVacations">
+                <div class="section-header">
+                    <i class="ri-calendar-event-line"></i>
+                    <span>Отпуска в этом месяце</span>
+                </div> -->
+                <template x-if="hasVacations">
+                    <div class="current-vacations">
+                        <div class="vacation-list">
+                            <template x-for="vacation in currentVacations" :key="vacation.employee + vacation.startDate">
+                                <div class="vacation-item" :class="getVacationStatus(vacation)">
+                                    <div class="vacation-name">
+                                        <i class="ri-user-line"></i>
+                                        <span x-text="vacation.employee"></span>
+                                    </div>
+                                    <div class="vacation-progress-wrapper">
+                                        <div class="vacation-progress">
+                                            <div class="vacation-progress-bar" :style="'width: ' + calculateVacationProgress(vacation.startDate, vacation.endDate) + '%'"></div>
+                                        </div>
+                                        <div class="vacation-status" x-text="getVacationStatusText(vacation)"></div>
+                                    </div>
+                                    <div class="vacation-dates">
+                                        <i class="ri-calendar-line"></i>
+                                        <span x-text="formatDateRange(vacation.startDate, vacation.endDate)"></span>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+                <template x-if="!hasVacations">
+                    <div class="no-vacations-message">
+                        <i class="ri-calendar-todo-line"></i>
+                        <p>В этом месяце нет отпусков</p>
+                    </div>
+                </template>
+            </div>
         </div>
 
-        <style>
-          #chat-widget a:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-          }
-          
-          #chat-widget a:active {
-            transform: translateY(0);
-          }
-        </style>
-      </div>
+        <div id="calendar-widget" class="widget">
+            <div class="calendar">
+                <div class="calendar-view-toggle">
+                    <button onclick="toggleCalendarView()">Показать год</button>
+                </div>
+                <div id="month-view">
+                    <div class="calendar-header">
+                        <div class="calendar-title">
+                            <span id="year" onclick="showYearPicker()">Year</span>
+                            <span id="month" onclick="showMonthPicker()">Month</span>
+                        </div>
+                    </div>
+                    <div id="month-picker" class="picker" style="display: none;">
+                        <div class="picker-content"></div>
+                    </div>
+                    <div id="year-picker" class="picker" style="display: none;">
+                        <div class="picker-content"></div>
+                    </div>
+                    <div id="weekdays">
+                        <div>Пн</div>
+                        <div>Вт</div>
+                        <div>Ср</div>
+                        <div>Чт</div>
+                        <div>Пт</div>
+                        <div>Сб</div>
+                        <div>Вс</div>
+                    </div>
+                    <div id="calendar-days"></div>
+                </div>
+                <div id="year-view" class="year-view" style="display: none;">
+                    <div class="year-header">
+                        <span class="calendar-nav" onclick="updateYear(-1)">&#10094;</span>
+                        <span id="year-title">2024</span>
+                        <span class="calendar-nav" onclick="updateYear(1)">&#10095;</span>
+                    </div>
+                    <div class="months-grid"></div>
+                </div>
+            </div>
+        </div>
 
-      <div id="shift-schedule-widget" class="widget">
-        <div class="widget-header">
-          <i class="ri-time-line"></i>
-          <span>График смен</span>
+        <div id="weather-widget" class="widget">
+            <div class="weather-widget">
+                <div id="weather-info"></div>
+            </div>
         </div>
-        <div class="shift-progress-container">
-          <div class="shift-item">
-            <div class="shift-title">График смены: 06:00 - 18:00</div>
-            <div class="progress-line" id="shift-progress-1"></div>
-            <div class="shift-info" id="shift-info-1">Загрузка...</div>
-          </div>
-          <div class="shift-item">
-            <div class="shift-title">График смены: 09:00 - 21:00</div>
-            <div class="progress-line" id="shift-progress-2"></div>
-            <div class="shift-info" id="shift-info-2">Загрузка...</div>
-          </div>
-          <div class="shift-item">
-            <div class="shift-title">График смены: 10:00 - 22:00</div>
-            <div class="progress-line" id="shift-progress-3"></div>
-            <div class="shift-info" id="shift-info-3">Загрузка...</div>
-          </div>
-          <div class="shift-item">
-            <div class="shift-title">График смены: 14:00 - 02:00</div>
-            <div class="progress-line" id="shift-progress-4"></div>
-            <div class="shift-info" id="shift-info-4">Загрузка...</div>
-          </div>
+
+        <!-- Калькулятор -->
+        <div id="calculator-widget" class="widget">
+            <div class="calculator-container vaadin-calculator">
+                <h2 class="vaadin-title"><i class="ri-calculator-line"></i> Калькулятор зарплаты</h2>
+                
+                <div class="vaadin-form">
+                    <div class="date-selector">
+                        <div class="select-group">
+                            <label for="monthSelect"><i class="ri-calendar-line"></i> Месяц</label>
+                            <div class="select-wrapper">
+                                <select id="monthSelect" class="vaadin-select">
+                                    <option value="0">Январь</option>
+                                    <option value="1">Февраль</option>
+                                    <option value="2">Март</option>
+                                    <option value="3">Апрель</option>
+                                    <option value="4">Май</option>
+                                    <option value="5">Июнь</option>
+                                    <option value="6">Июль</option>
+                                    <option value="7">Август</option>
+                                    <option value="8">Сентябрь</option>
+                                    <option value="9">Октябрь</option>
+                                    <option value="10">Ноябрь</option>
+                                    <option value="11">Декабрь</option>
+                                </select>
+                                <i class="ri-arrow-down-s-line select-icon"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="select-group">
+                            <label for="yearSelect"><i class="ri-calendar-2-line"></i> Год</label>
+                            <div class="select-wrapper">
+                                <select id="yearSelect" class="vaadin-select">
+                                    <option value="2023">2023</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2025">2025</option>
+                                </select>
+                                <i class="ri-arrow-down-s-line select-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="hourlyRate"><i class="ri-money-dollar-circle-line"></i> Почасовая ставка (₸)</label>
+                        <input type="number" id="hourlyRate" class="vaadin-input" placeholder="Введите ставку">
+                    </div>
+
+                    <div class="hours-info vaadin-card">
+                        <div class="hours-item">
+                            <span class="hours-label"><i class="ri-time-line"></i> Обычные часы:</span>
+                            <span id="regularHoursDisplay" class="hours-value">0</span>
+                        </div>
+                        <div class="hours-item">
+                            <span class="hours-label"><i class="ri-calendar-event-line"></i> Праздничные часы:</span>
+                            <span id="holidayHoursDisplay" class="hours-value">0</span>
+                        </div>
+                    </div>
+
+                    <button onclick="calculateSalary()" class="vaadin-button">
+                        <i class="ri-calculator-fill"></i> Рассчитать
+                    </button>
+
+                    <div class="result-container vaadin-card">
+                        <div class="result-item">
+                            <span class="result-label"><i class="ri-money-dollar-box-line"></i> Общая сумма:</span>
+                            <span id="salaryResult" class="result-value">0.00 ₸</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label"><i class="ri-percent-line"></i> Подоходный налог (10%):</span>
+                            <span id="incomeTax" class="tax-value">0.00 ₸</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label"><i class="ri-bank-line"></i> Пенсионные отчисления (10%):</span>
+                            <span id="pensionTax" class="tax-value">0.00 ₸</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label"><i class="ri-group-line"></i> Профсоюз (1%):</span>
+                            <span id="unionTax" class="tax-value">0.00 ₸</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label"><i class="ri-heart-pulse-line"></i> Медицинская страховка (2%):</span>
+                            <span id="medicalInsurance" class="tax-value">0.00 ₸</span>
+                        </div>
+                        <div class="result-item final-salary">
+                            <span class="result-label"><i class="ri-wallet-3-line"></i> К выдаче:</span>
+                            <span id="finalSalary" class="result-value">0.00 ₸</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+
+        <div id="chat-widget" class="widget">
+            <div class="widget-header">
+                <h2>Чат смены</h2>
+            </div>
+            <div style="padding: 20px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                <!-- WhatsApp кнопка -->
+                <a href="https://chat.whatsapp.com/DvmBnJAxOOn76H4ohIgwmp" 
+                   target="_blank"
+                   style="display: flex; 
+                          align-items: center;
+                          background-color: #25D366; 
+                          color: white; 
+                          padding: 16px 32px; 
+                          border-radius: 12px; 
+                          text-decoration: none; 
+                          font-size: 18px;
+                          font-weight: 500;
+                          box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
+                          transition: all 0.3s ease;
+                          transform: translateY(0);">
+                    <i class="ri-whatsapp-fill" style="font-size: 24px; margin-right: 10px;"></i>
+                    WhatsApp
+                </a>
+
+                <!-- Telegram кнопка -->
+                <a href="https://t.me/+your-telegram-link" 
+                   target="_blank"
+                   style="display: flex; 
+                          align-items: center;
+                          background-color: #229ED9; 
+                          color: white; 
+                          padding: 16px 32px; 
+                          border-radius: 12px; 
+                          text-decoration: none; 
+                          font-size: 18px;
+                          font-weight: 500;
+                          box-shadow: 0 4px 12px rgba(34, 158, 217, 0.2);
+                          transition: all 0.3s ease;
+                          transform: translateY(0);">
+                    <i class="ri-telegram-fill" style="font-size: 24px; margin-right: 10px;"></i>
+                    Telegram
+                </a>
+            </div>
+
+            <style>
+                #chat-widget a:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+                }
+                
+                #chat-widget a:active {
+                    transform: translateY(0);
+                }
+            </style>
+        </div>
+
+        <div id="vacation-widget" class="widget" x-data="{ selectedYear: new Date().getFullYear() }">
+            <div class="widget-header flex items-center justify-between p-6 bg-gradient-to-r from-blue-500 to-indigo-600">
+                <div class="flex items-center gap-4">
+                    <i class="ri-sun-line text-white text-3xl"></i>
+                    <span class="text-white text-2xl font-bold">Отпуск</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button @click="selectedYear--" class="text-white hover:bg-white/20 p-2 rounded-lg transition">
+                        <i class="ri-arrow-left-line text-xl"></i>
+                    </button>
+                    <span class="text-white text-xl font-semibold" x-text="selectedYear"></span>
+                    <button @click="selectedYear++" class="text-white hover:bg-white/20 p-2 rounded-lg transition">
+                        <i class="ri-arrow-right-line text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="widget-content bg-gray-50 dark:bg-gray-800">
+                <div class="vacation-months grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
+                    <!-- Месяцы будут добавляться здесь через JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <div id="shift-schedule-widget" class="widget">
+            <div class="widget-header">
+                <i class="ri-time-line"></i>
+                <span>График смен</span>
+            </div>
+            <div class="shift-progress-container">
+                <div class="shift-item">
+                    <div class="shift-title">График смены: 06:00 - 18:00</div>
+                    <div class="progress-line" id="shift-progress-1"></div>
+                    <div class="shift-info" id="shift-info-1">Загрузка...</div>
+                </div>
+                <div class="shift-item">
+                    <div class="shift-title">График смены: 09:00 - 21:00</div>
+                    <div class="progress-line" id="shift-progress-2"></div>
+                    <div class="shift-info" id="shift-info-2">Загрузка...</div>
+                </div>
+                <div class="shift-item">
+                    <div class="shift-title">График смены: 10:00 - 22:00</div>
+                    <div class="progress-line" id="shift-progress-3"></div>
+                    <div class="shift-info" id="shift-info-3">Загрузка...</div>
+                </div>
+                <div class="shift-item">
+                    <div class="shift-title">График смены: 14:00 - 02:00</div>
+                    <div class="progress-line" id="shift-progress-4"></div>
+                    <div class="shift-info" id="shift-info-4">Загрузка...</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <nav class="nav-tabs">
-      <div class="nav-tab" onclick="showWidget('home')">
-        <i class="ri-home-4-line"></i>
-        <span>Главная</span>
-      </div>
-      <div class="nav-tab" onclick="showWidget('calendar')">
-        <i class="ri-calendar-line"></i>
-        <span>Календарь</span>
-      </div>
-      <div class="nav-tab" onclick="showWidget('weather')">
-        <i class="ri-sun-line"></i>
-        <span>Погода</span>
-      </div>
-      <div class="nav-tab" onclick="showWidget('calculator')">
-        <i class="ri-calculator-line"></i>
-        <span>Калькулятор</span>
-      </div>
-      <div class="nav-tab" onclick="showWidget('chat')">
-        <i class="ri-whatsapp-line"></i>
-        <span>Чат смены</span>
-      </div>
-      <div class="nav-tab" onclick="showWidget('shift-schedule')">
-        <i class="ri-time-line"></i>
-        <span>График смен</span>
-      </div>
+        <div class="nav-tab" onclick="showWidget('home')">
+            <i class="ri-home-4-line"></i>
+            <span>Главная</span>
+        </div>
+        <div class="nav-tab" onclick="showWidget('calendar')">
+            <i class="ri-calendar-line"></i>
+            <span>Календарь</span>
+        </div>
+        <!-- <div class="nav-tab" onclick="showWidget('weather')">
+            <i class="ri-sun-line"></i>
+            <span>Погода</span>
+        </div>
+        <div class="nav-tab" onclick="showWidget('calculator')">
+            <i class="ri-calculator-line"></i>
+            <span>Калькулятор</span>
+        </div>
+        <div class="nav-tab" onclick="showWidget('chat')">
+            <i class="ri-message-3-line"></i>
+            <span>Чат</span>
+        </div> -->
+        <!-- <div class="nav-tab" onclick="showWidget('shift-schedule')">
+            <i class="ri-time-line"></i>
+            <span>График смен</span>
+        </div>-->
+        <!-- <div class="nav-tab" onclick="showWidget('vacation')">
+            <i class="ri-sun-line"></i>
+            <span>Отпуск</span>
+        </div>-->
     </nav>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="scripts.js"></script>
+    <script src="welcome-modal.js"></script>
     <script src="schedule.js"></script>
-  </body>
+    <script src="vacation.js"></script>
+    <script src="current-vacations.js"></script>
+</body>
 </html>

@@ -1,0 +1,143 @@
+/* Стили для графика смен */
+.schedule-grid {
+    display: grid;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.schedule-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    transition: all 0.2s ease;
+}
+
+.schedule-item:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+}
+
+.schedule-date {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.schedule-date i {
+    color: #64748b;
+    font-size: 1.25rem;
+}
+
+.schedule-info {
+    font-size: 1rem;
+    color: #475569;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.schedule-time {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    color: #64748b;
+}
+
+.schedule-time i {
+    font-size: 1.125rem;
+}
+
+.schedule-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    margin-top: 0.5rem;
+}
+
+.schedule-status.working {
+    background: rgba(52, 211, 153, 0.1);
+    color: #059669;
+}
+
+.schedule-status.off {
+    background: rgba(99, 102, 241, 0.1);
+    color: #4f46e5;
+}
+
+/* Темная тема */
+.dark-theme .schedule-item {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+.dark-theme .schedule-item:hover {
+    background: #334155;
+    border-color: #475569;
+}
+
+.dark-theme .schedule-date {
+    color: #f1f5f9;
+}
+
+.dark-theme .schedule-date i {
+    color: #94a3b8;
+}
+
+.dark-theme .schedule-info {
+    color: #e2e8f0;
+}
+
+.dark-theme .schedule-time {
+    color: #94a3b8;
+}
+
+.dark-theme .schedule-status.working {
+    background: rgba(52, 211, 153, 0.2);
+    color: #34d399;
+}
+
+.dark-theme .schedule-status.off {
+    background: rgba(99, 102, 241, 0.2);
+    color: #818cf8;
+}
+
+/* Заголовок виджета */
+#shift-schedule-widget .widget-header {
+    padding: 1.25rem;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 1rem;
+}
+
+#shift-schedule-widget .widget-header i {
+    font-size: 1.5rem;
+    color: #64748b;
+    margin-right: 0.75rem;
+}
+
+#shift-schedule-widget .widget-header span {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.dark-theme #shift-schedule-widget .widget-header {
+    border-color: #334155;
+}
+
+.dark-theme #shift-schedule-widget .widget-header i {
+    color: #94a3b8;
+}
+
+.dark-theme #shift-schedule-widget .widget-header span {
+    color: #f1f5f9;
+}

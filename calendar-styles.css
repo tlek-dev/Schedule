@@ -1,0 +1,237 @@
+/* Стили для годового календаря */
+.year-calendar-container {
+    padding: 1.5rem;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    background: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding-bottom: 120px; /* Увеличиваем отступ снизу */
+    max-height: calc(100vh - 60px); /* Высота viewport минус высота верхнего заголовка */
+}
+
+.months-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    max-width: 100%;
+}
+
+.year-calendar-month {
+    background: #f8fafc;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    width: 100%;
+    margin-bottom: 70px; /* Дополнительный отступ для годового календаря */
+    padding-bottom: 20px;
+}
+
+.year-calendar-month-header {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #1e293b;
+    text-align: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.year-calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.25rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    color: #64748b;
+    text-align: center;
+}
+
+.year-calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.25rem;
+}
+
+.year-calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.year-calendar-day:hover {
+    background-color: rgba(26, 188, 156, 0.1);
+}
+
+.year-calendar-day.today {
+    background-color: #1abc9c;
+    color: white !important;
+    font-weight: 500;
+}
+
+.year-calendar-day.shift {
+    background-color: #a8e6cf;
+    color: #2d3436;
+}
+
+.year-calendar-day.holiday {
+    background-color: #ff9aa2;
+    color: #2d3436;
+}
+
+.year-calendar-day.holiday.shift {
+    background: linear-gradient(135deg, 
+        #ff9aa2 0%, 
+        #ff9aa2 50%, 
+        #a8e6cf 50%, 
+        #a8e6cf 100%
+    );
+    color: #2d3436;
+}
+
+.year-calendar-day.selected {
+    background-color: rgba(26, 188, 156, 0.2);
+    color: #1abc9c;
+    font-weight: 500;
+}
+
+.year-calendar-day.empty {
+    pointer-events: none;
+}
+
+/* Выходные дни */
+.year-calendar-days > div:nth-child(7n+6),
+.year-calendar-days > div:nth-child(7n) {
+    color: #e74c3c;
+}
+
+.year-calendar-weekdays > div:nth-child(6),
+.year-calendar-weekdays > div:nth-child(7) {
+    color: #e74c3c;
+}
+
+/* Темная тема */
+.dark-theme .year-calendar-container {
+    background: #1a1a1a;
+}
+
+.dark-theme .year-calendar-month {
+    background: #2c2c2c;
+    border-color: #3d3d3d;
+}
+
+.dark-theme .year-calendar-month-header {
+    color: #f1f5f9;
+    border-bottom-color: #3d3d3d;
+}
+
+.dark-theme .year-calendar-weekdays {
+    color: #94a3b8;
+}
+
+.dark-theme .year-calendar-day {
+    color: #e2e8f0;
+}
+
+.dark-theme .year-calendar-day.shift {
+    background-color: rgba(168, 230, 207, 0.2);
+    color: #a8e6cf;
+}
+
+.dark-theme .year-calendar-day.holiday {
+    background-color: rgba(255, 154, 162, 0.2);
+    color: #ff9aa2;
+}
+
+.dark-theme .year-calendar-day.holiday.shift {
+    background: linear-gradient(135deg, 
+        rgba(255, 154, 162, 0.2) 0%, 
+        rgba(255, 154, 162, 0.2) 50%, 
+        rgba(168, 230, 207, 0.2) 50%, 
+        rgba(168, 230, 207, 0.2) 100%
+    );
+    color: #ffffff;
+}
+
+.dark-theme .year-calendar-days > div:nth-child(7n+6),
+.dark-theme .year-calendar-days > div:nth-child(7n) {
+    color: #ff9aa2;
+}
+
+.dark-theme .year-calendar-weekdays > div:nth-child(6),
+.dark-theme .year-calendar-weekdays > div:nth-child(7) {
+    color: #ff9aa2;
+}
+
+.dark-theme .year-calendar-day:hover {
+    background-color: rgba(26, 188, 156, 0.2);
+}
+
+.dark-theme .year-calendar-day.today {
+    background-color: #1abc9c;
+    color: white;
+}
+
+.dark-theme .year-calendar-day.selected {
+    background-color: rgba(26, 188, 156, 0.3);
+    color: #1abc9c;
+}
+
+/* Скроллбар */
+.year-calendar-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.year-calendar-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.year-calendar-container::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 4px;
+}
+
+.dark-theme .year-calendar-container::-webkit-scrollbar-thumb {
+    background-color: #475569;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .year-calendar-container {
+        padding: 1rem;
+        padding-bottom: 140px; /* Увеличиваем отступ для мобильных */
+        max-height: calc(100vh - 50px); /* Корректируем для мобильных */
+    }
+    
+    .months-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .year-calendar-month {
+        padding: 0.75rem;
+        margin-bottom: 120px; /* Увеличиваем отступ */
+    }
+    
+    .year-calendar-month-header {
+        font-size: 1.125rem;
+        margin-bottom: 0.75rem;
+    }
+}
+
+/* Фиксированный навбар */
+.bottom-navbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--card-background);
+    z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
