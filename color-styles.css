@@ -2,6 +2,7 @@
     padding: 20px;
     background: var(--widget-bg);
     border-radius: 12px;
+    margin-bottom: 80px; /* Отступ для navbar */
 }
 
 .converter-container {
@@ -10,27 +11,29 @@
     gap: 24px;
     max-width: 600px;
     margin: 0 auto;
+    transform: scale(0.85); /* Уменьшаем масштаб контента */
+    transform-origin: top center;
 }
 
 .color-preview {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
-    padding: 24px;
+    gap: 20px;
+    padding: 30px;
     background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .color-display {
-    width: 200px;
-    height: 200px;
-    border-radius: 12px;
+    width: 180px;
+    height: 180px;
+    border-radius: 16px;
     border: 3px solid #e5e7eb;
     background: #FFFFFF;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transition: all 0.3s ease;
 }
 
 .color-values {
@@ -44,14 +47,20 @@
 .color-value-item {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 12px 16px;
-    background: #f3f4f6;
-    border-radius: 8px;
-    font-size: 16px;
+    gap: 10px;
+    padding: 14px 18px;
+    background: #f8fafc;
+    border-radius: 10px;
+    font-size: 15px;
     font-weight: 500;
     color: #374151;
     border: 2px solid #e5e7eb;
+    transition: all 0.2s ease;
+}
+
+.color-value-item:hover {
+    border-color: #d1d5db;
+    transform: translateY(-1px);
 }
 
 .color-value-item i {
@@ -63,25 +72,26 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     gap: 20px;
-    padding: 24px;
+    padding: 30px;
     background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .input-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 
 .input-group label {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     font-size: 14px;
     font-weight: 500;
     color: #6b7280;
+    padding-left: 4px;
 }
 
 .input-group label i {
@@ -90,17 +100,18 @@
 
 .input-group input {
     width: 100%;
-    padding: 12px;
+    padding: 12px 16px;
     border: 2px solid #e5e7eb;
-    border-radius: 8px;
-    font-size: 16px;
-    background: #f9fafb;
+    border-radius: 10px;
+    font-size: 15px;
+    background: #f8fafc;
     color: #1f2937;
     transition: all 0.2s ease;
 }
 
 .input-group input:hover {
     border-color: #d1d5db;
+    background: #f1f5f9;
 }
 
 .input-group input:focus {
@@ -117,17 +128,17 @@
 }
 
 .color-history {
-    padding: 24px;
+    padding: 30px;
     background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .history-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
 }
 
 .history-header h3 {
@@ -148,10 +159,10 @@
 .clear-history-btn {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 12px;
+    gap: 8px;
+    padding: 10px 16px;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     background: #ef4444;
     color: white;
     font-size: 14px;
@@ -182,7 +193,7 @@
 .history-item {
     width: 100%;
     aspect-ratio: 1;
-    border-radius: 8px;
+    border-radius: 10px;
     border: 2px solid #e5e7eb;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -198,7 +209,6 @@
 .dark .color-inputs,
 .dark .color-history {
     background: #1f2937;
-    border-color: #374151;
 }
 
 .dark .color-display {
@@ -209,6 +219,10 @@
     background: #111827;
     border-color: #374151;
     color: #e5e7eb;
+}
+
+.dark .color-value-item:hover {
+    border-color: #4b5563;
 }
 
 .dark .color-value-item i {
@@ -223,6 +237,7 @@
 
 .dark .input-group input:hover {
     border-color: #4b5563;
+    background: #1f2937;
 }
 
 .dark .input-group input:focus {
@@ -231,14 +246,6 @@
 }
 
 .dark .input-group label {
-    color: #9ca3af;
-}
-
-.dark .color-history h3 {
-    color: #e5e7eb;
-}
-
-.dark .color-history h3 i {
     color: #9ca3af;
 }
 
@@ -264,6 +271,10 @@
 
 /* Responsive design */
 @media (max-width: 768px) {
+    .converter-container {
+        transform: scale(0.9);
+    }
+
     .color-inputs {
         grid-template-columns: 1fr 1fr;
     }
@@ -275,12 +286,16 @@
 }
 
 @media (max-width: 480px) {
+    .converter-container {
+        transform: scale(0.95);
+    }
+
     .color-inputs {
         grid-template-columns: 1fr;
     }
 
     .color-preview {
-        padding: 16px;
+        padding: 20px;
     }
 
     .color-display {
