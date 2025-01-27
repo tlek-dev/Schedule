@@ -41,8 +41,16 @@
     <link rel="stylesheet" href="weather-styles.css">
     <link rel="stylesheet" href="countries-styles.css">
     <link rel="stylesheet" href="nasa-styles.css">
+    <link rel="stylesheet" href="color-styles.css">
     <link rel="stylesheet" href="crypto-styles.css">
     <script src="https://cdn.jsdelivr.net/npm/progressbar.js@1.1.0/dist/progressbar.min.js"></script>
+    <style>
+        :root {
+            zoom: 0.75;
+            -moz-transform: scale(0.75);
+            -moz-transform-origin: 0 0;
+        }
+    </style>
 </head>
 <body>
     <!-- Переключатель темы -->
@@ -448,8 +456,20 @@
             <div class="nasa-container">
                 <div id="nasaContent" class="nasa-content">
                     <div class="nasa-loading">
-                        <div class="loading-spinner"></div>
-                        <p>Загрузка изображения дня...</p>
+                        <div class="space-animation">
+                            <div class="space-scene">
+                                <i class="ri-rocket-2-line rocket-icon"></i>
+                                <i class="ri-meteor-line meteor-icon"></i>
+                                <i class="ri-planet-line planet-icon"></i>
+                                <i class="ri-star-line star-icon star1"></i>
+                                <i class="ri-star-line star-icon star2"></i>
+                                <i class="ri-star-line star-icon star3"></i>
+                            </div>
+                        </div>
+                        <div class="loading-text">
+                            <span class="loading-title">Исследуем космос</span>
+                            <span class="loading-subtitle">Загружаем удивительные снимки NASA...</span>
+                        </div>
                     </div>
                 </div>
                 <div id="nasaModal" class="nasa-modal">
@@ -474,6 +494,60 @@
                                 <p id="modalCopyright" class="nasa-copyright"></p>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Colors Widget -->
+        <div id="colors-widget" class="widget">
+            <div class="widget-header">
+                <i class="ri-palette-fill"></i>
+                <span>Конвертер цветов</span>
+            </div>
+            <div class="color-converter">
+                <div class="converter-container">
+                    <div class="color-preview">
+                        <div id="colorDisplay" class="color-display"></div>
+                        <div class="color-values">
+                            <div class="color-value-item">
+                                <i class="ri-drop-fill"></i>
+                                <span id="rgbValue">RGB: 255, 255, 255</span>
+                            </div>
+                            <div class="color-value-item">
+                                <i class="ri-code-s-slash-fill"></i>
+                                <span id="hexValue">HEX: #FFFFFF</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="color-inputs">
+                        <div class="input-group">
+                            <label><i class="ri-contrast-2-fill"></i> R (0-255)</label>
+                            <input type="number" id="redInput" min="0" max="255" value="255">
+                        </div>
+                        <div class="input-group">
+                            <label><i class="ri-contrast-2-fill"></i> G (0-255)</label>
+                            <input type="number" id="greenInput" min="0" max="255" value="255">
+                        </div>
+                        <div class="input-group">
+                            <label><i class="ri-contrast-2-fill"></i> B (0-255)</label>
+                            <input type="number" id="blueInput" min="0" max="255" value="255">
+                        </div>
+                        <div class="input-group">
+                            <label><i class="ri-code-fill"></i> HEX</label>
+                            <div class="hex-input-container">
+                                <input type="text" id="hexInput" value="#FFFFFF" maxlength="7" placeholder="#000000">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="color-history">
+                        <div class="history-header">
+                            <h3><i class="ri-time-fill"></i> История</h3>
+                            <button id="clearHistory" class="clear-history-btn">
+                                <i class="ri-delete-bin-7-fill"></i>
+                                Очистить
+                            </button>
+                        </div>
+                        <div id="colorHistory" class="history-grid"></div>
                     </div>
                 </div>
             </div>
@@ -506,21 +580,17 @@
             <i class="ri-calendar-line"></i>
             <span>Календарь</span>
         </div>
-        <!-- <div class="nav-tab" onclick="showWidget('calculator')">
-            <i class="ri-calculator-line"></i>
-            <span>Калькулятор</span>
+        <div class="nav-tab" onclick="showWidget('weather')">
+            <i class="ri-cloud-line"></i>
+            <span>Погода</span>
         </div>
-        <div class="nav-tab" onclick="showWidget('chat')">
-            <i class="ri-message-3-line"></i>
-            <span>Чат</span>
-        </div> -->
-        <!-- <div class="nav-tab" onclick="showWidget('shift-schedule')">
-            <i class="ri-time-line"></i>
-            <span>График смен</span>
-        </div> -->
         <div class="nav-tab" onclick="showWidget('nasa')">
             <i class="ri-space-ship-line"></i>
             <span>Космос</span>
+        </div>
+        <div class="nav-tab" onclick="showWidget('colors')">
+            <i class="ri-palette-line"></i>
+            <span>Цвета</span>
         </div>
     </nav>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
@@ -533,5 +603,6 @@
     <script src="countries.js"></script>
     <script src="nasa.js"></script>
     <script src="crypto.js"></script>
+    <script src="colors.js"></script>
 </body>
 </html>

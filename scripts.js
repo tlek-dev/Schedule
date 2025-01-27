@@ -1,31 +1,51 @@
 function showWidget(widgetName) {
-  // Скрываем все виджеты
-  document.querySelectorAll('.widget').forEach(widget => {
-    widget.classList.remove('active');
-  });
-  
-  // Показываем выбранный виджет
-  const targetWidget = document.getElementById(widgetName + '-widget');
-  if (targetWidget) {
-    targetWidget.classList.add('active');
-  }
-  
-  // Обновляем активную вкладку
-  document.querySelectorAll('.nav-tab').forEach(tab => {
-    tab.classList.remove('active');
-  });
-  
-  // Находим и активируем нужную вкладку
-  const tabs = document.querySelectorAll('.nav-tab');
-  tabs.forEach(tab => {
-    if (tab.getAttribute('onclick').includes(widgetName)) {
-      tab.classList.add('active');
+  try {
+    // Скрываем все виджеты
+    document.querySelectorAll('.widget').forEach(widget => {
+      widget.classList.remove('active');
+    });
+    
+    // Показываем выбранный виджет
+    const targetWidget = document.getElementById(widgetName + '-widget');
+    if (targetWidget) {
+      targetWidget.classList.add('active');
+      
+      // Специальная обработка для определенных виджетов
+      if (widgetName === 'shift-schedule') {
+        initializeShiftProgress();
+      } else if (widgetName === 'colors') {
+        // Инициализация цветового конвертера
+        const colorDisplay = document.getElementById('colorDisplay');
+        if (colorDisplay) {
+          const defaultColor = '#FFFFFF';
+          colorDisplay.style.backgroundColor = defaultColor;
+          document.getElementById('hexInput').value = defaultColor;
+          const [r, g, b] = [255, 255, 255];
+          document.getElementById('redInput').value = r;
+          document.getElementById('greenInput').value = g;
+          document.getElementById('blueInput').value = b;
+        }
+      }
+    } else {
+      console.warn(`Widget with id "${widgetName}-widget" not found`);
+      return;
     }
-  });
-
-  // Инициализируем прогресс бар при открытии вкладки графика смен
-  if (widgetName === 'shift-schedule') {
-    initializeShiftProgress();
+    
+    // Обновляем активную вкладку
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.classList.remove('active');
+    });
+    
+    // Находим и активируем нужную вкладку
+    const tabs = document.querySelectorAll('.nav-tab');
+    tabs.forEach(tab => {
+      const onclickAttr = tab.getAttribute('onclick');
+      if (onclickAttr && onclickAttr.includes(widgetName)) {
+        tab.classList.add('active');
+      }
+    });
+  } catch (error) {
+    console.error('Error in showWidget:', error);
   }
 }
 

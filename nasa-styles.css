@@ -66,6 +66,175 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    min-height: 400px;
+    width: 100%;
+    padding: 2rem;
+    background: linear-gradient(to bottom, rgba(13, 12, 34, 0.02), rgba(13, 12, 34, 0.05));
+    border-radius: 1rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.space-animation {
+    width: 300px;
+    height: 300px;
+    position: relative;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.space-scene {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rocket-icon {
+    font-size: 3.5rem;
+    color: #3b82f6;
+    position: absolute;
+    animation: rocketFly 2s ease-in-out infinite;
+    z-index: 2;
+    left: 50%;
+    top: 50%;
+    transform-origin: center;
+}
+
+.meteor-icon {
+    font-size: 2.5rem;
+    color: #ef4444;
+    position: absolute;
+    animation: meteorFall 3s linear infinite;
+    z-index: 1;
+    left: 50%;
+    top: 50%;
+}
+
+.planet-icon {
+    font-size: 4.5rem;
+    color: #8b5cf6;
+    position: absolute;
+    animation: planetRotate 8s linear infinite;
+    opacity: 0.7;
+    left: 50%;
+    top: 50%;
+    margin-left: -2.25rem;
+    margin-top: -2.25rem;
+}
+
+.star-icon {
+    font-size: 1.25rem;
+    color: #fbbf24;
+    position: absolute;
+    animation: twinkle 1.5s ease-in-out infinite;
+}
+
+.star1 { top: 25%; left: 25%; }
+.star2 { top: 35%; right: 30%; }
+.star3 { bottom: 35%; left: 35%; }
+
+@keyframes rocketFly {
+    0% {
+        transform: translate(-50%, -50%) translate(-20px, 20px) rotate(-45deg);
+    }
+    50% {
+        transform: translate(-50%, -50%) translate(0, 0) rotate(-45deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) translate(-20px, 20px) rotate(-45deg);
+    }
+}
+
+@keyframes meteorFall {
+    0% {
+        transform: translate(-50%, -50%) translate(150px, -150px) rotate(-45deg);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) translate(-150px, 150px) rotate(-45deg);
+        opacity: 0;
+    }
+}
+
+@keyframes planetRotate {
+    0% {
+        transform: rotate(0deg) translateX(80px) rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg) translateX(80px) rotate(-360deg);
+    }
+}
+
+@keyframes twinkle {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+.loading-text {
+    text-align: center;
+    color: var(--text-primary);
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.loading-title {
+    display: block;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 200%;
+    animation: gradient 3s ease infinite;
+    text-align: center;
+    min-width: max-content;
+}
+
+.loading-subtitle {
+    display: block;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    opacity: 0.8;
+    text-align: center;
+    min-width: max-content;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.nasa-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     min-height: 300px;
     color: var(--text-secondary, #4b5563);
 }
@@ -84,6 +253,65 @@
     to {
         transform: rotate(360deg);
     }
+}
+
+.error-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    min-height: 300px;
+    background: linear-gradient(to bottom, rgba(239, 68, 68, 0.05), rgba(239, 68, 68, 0.1));
+    border-radius: 1rem;
+}
+
+.error-icon {
+    font-size: 3rem;
+    color: #ef4444;
+    margin-bottom: 1rem;
+}
+
+.error-message p {
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+}
+
+.retry-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.retry-button:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+}
+
+.retry-button i {
+    font-size: 1.25rem;
+}
+
+.countdown {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #3b82f6;
+    margin-top: 1rem;
+    background: rgba(59, 130, 246, 0.1);
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    min-width: 100px;
+    text-align: center;
 }
 
 /* Modal styles */
