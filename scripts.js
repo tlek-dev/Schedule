@@ -5,7 +5,10 @@ function showWidget(widgetName) {
   });
   
   // Показываем выбранный виджет
-  document.getElementById(widgetName + '-widget').classList.add('active');
+  const targetWidget = document.getElementById(widgetName + '-widget');
+  if (targetWidget) {
+    targetWidget.classList.add('active');
+  }
   
   // Обновляем активную вкладку
   document.querySelectorAll('.nav-tab').forEach(tab => {

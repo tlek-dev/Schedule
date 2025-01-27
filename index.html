@@ -39,6 +39,9 @@
     <link rel="stylesheet" href="schedule-styles.css">
     <link rel="stylesheet" href="shift-schedule-styles.css">
     <link rel="stylesheet" href="weather-styles.css">
+    <link rel="stylesheet" href="countries-styles.css">
+    <link rel="stylesheet" href="nasa-styles.css">
+    <link rel="stylesheet" href="crypto-styles.css">
     <script src="https://cdn.jsdelivr.net/npm/progressbar.js@1.1.0/dist/progressbar.min.js"></script>
 </head>
 <body>
@@ -402,6 +405,96 @@
                 </div>
             </div>
         </div>
+
+        <div id="countries-widget" class="widget">
+            <div class="widget-header">
+                <i class="ri-earth-line"></i>
+                <span>Страны мира</span>
+            </div>
+            <div class="countries-container">
+                <div class="search-container">
+                    <input type="text" id="countrySearch" placeholder="Поиск страны..." class="w-full p-2 rounded border">
+                </div>
+                <div id="countriesList" class="countries-grid">
+                    <!-- Countries will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Crypto Widget -->
+        <div id="crypto-widget" class="widget">
+            <div class="widget-header">
+                <i class="ri-coin-line"></i>
+                <span>Криптовалюты</span>
+            </div>
+            <div class="crypto-container">
+                <div id="cryptoContent" class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">Загрузка данных...</div>
+                </div>
+                <div class="crypto-data-container">
+                    <div id="cryptoGrid" class="crypto-grid"></div>
+                    <div id="bitcoinInfo" class="bitcoin-info"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NASA APOD Widget -->
+        <div id="nasa-widget" class="widget">
+            <div class="widget-header">
+                <i class="ri-space-ship-line"></i>
+                <span>Космос Сегодня</span>
+            </div>
+            <div class="nasa-container">
+                <div id="nasaContent" class="nasa-content">
+                    <div class="nasa-loading">
+                        <div class="loading-spinner"></div>
+                        <p>Загрузка изображения дня...</p>
+                    </div>
+                </div>
+                <div id="nasaModal" class="nasa-modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 id="modalTitle"></h2>
+                            <div class="translation-buttons">
+                                <button onclick="translateContent('ru')" class="translate-btn">
+                                    <img src="https://flagcdn.com/w20/ru.png" alt="RU"> Русский
+                                </button>
+                                <button onclick="translateContent('kk')" class="translate-btn">
+                                    <img src="https://flagcdn.com/w20/kz.png" alt="KZ"> Қазақша
+                                </button>
+                            </div>
+                            <button class="modal-close" onclick="closeNasaModal()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="modalImage" src="" alt="">
+                            <p id="modalDescription" class="nasa-description"></p>
+                            <div class="nasa-info">
+                                <p id="modalDate" class="nasa-date"></p>
+                                <p id="modalCopyright" class="nasa-copyright"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Country Modal -->
+        <div id="countryModal" class="country-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="country-name" id="modalCountryName"></h2>
+                    <button class="modal-close" onclick="closeCountryModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <img id="modalFlag" class="modal-flag" src="" alt="">
+                    <div class="modal-info">
+                        <!-- Country details will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <nav class="nav-tabs">
@@ -413,11 +506,7 @@
             <i class="ri-calendar-line"></i>
             <span>Календарь</span>
         </div>
-        <!-- <div class="nav-tab" onclick="showWidget('weather')">
-            <i class="ri-sun-line"></i>
-            <span>Погода</span>
-        </div>
-        <div class="nav-tab" onclick="showWidget('calculator')">
+        <!-- <div class="nav-tab" onclick="showWidget('calculator')">
             <i class="ri-calculator-line"></i>
             <span>Калькулятор</span>
         </div>
@@ -428,11 +517,11 @@
         <!-- <div class="nav-tab" onclick="showWidget('shift-schedule')">
             <i class="ri-time-line"></i>
             <span>График смен</span>
-        </div>-->
-        <!-- <div class="nav-tab" onclick="showWidget('vacation')">
-            <i class="ri-sun-line"></i>
-            <span>Отпуск</span>
-        </div>-->
+        </div> -->
+        <div class="nav-tab" onclick="showWidget('nasa')">
+            <i class="ri-space-ship-line"></i>
+            <span>Космос</span>
+        </div>
     </nav>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -441,5 +530,8 @@
     <script src="schedule.js"></script>
     <script src="vacation.js"></script>
     <script src="current-vacations.js"></script>
+    <script src="countries.js"></script>
+    <script src="nasa.js"></script>
+    <script src="crypto.js"></script>
 </body>
 </html>
