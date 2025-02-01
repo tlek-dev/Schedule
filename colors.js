@@ -1,115 +1,124 @@
-document.getElementById('clearHistory').addEventListener('click', () => {
-    const historyGrid = document.getElementById('colorHistory');
-    historyGrid.innerHTML = ''; // Очищаем сетку истории
-    localStorage.removeItem('colorHistory'); // Очищаем историю из localStorage
-});
-
 document.addEventListener('DOMContentLoaded', () => {
-    // DOM элементы
-    const colorDisplay = document.getElementById('colorDisplay');
-    const rgbValue = document.getElementById('rgbValue');
-    const hexValue = document.getElementById('hexValue');
-    const redInput = document.getElementById('redInput');
-    const greenInput = document.getElementById('greenInput');
-    const blueInput = document.getElementById('blueInput');
-    const hexInput = document.getElementById('hexInput');
-    const colorHistory = document.getElementById('colorHistory');
-
-    // История цветов
-    let colorHistoryArray = JSON.parse(localStorage.getItem('colorHistory') || '[]');
-    
-    // Обновление отображения цвета
-    function updateColorDisplay(r, g, b) {
-        const color = `rgb(${r}, ${g}, ${b})`;
-        const hex = rgbToHex(r, g, b);
-        
-        colorDisplay.style.backgroundColor = color;
-        rgbValue.textContent = `RGB: ${r}, ${g}, ${b}`;
-        hexValue.textContent = `HEX: ${hex}`;
-        hexInput.value = hex;
-        
-        // Сохранение в историю
-        addToHistory(hex);
-    }
-
-    // Конвертация RGB в HEX
-    function rgbToHex(r, g, b) {
-        return '#' + [r, g, b].map(x => {
-            const hex = x.toString(16);
-            return hex.length === 1 ? '0' + hex : hex;
-        }).join('').toUpperCase();
-    }
-
-    // Конвертация HEX в RGB
-    function hexToRgb(hex) {
-        hex = hex.replace('#', '');
-        const r = parseInt(hex.substring(0, 2), 16);
-        const g = parseInt(hex.substring(2, 4), 16);
-        const b = parseInt(hex.substring(4, 6), 16);
-        return [r, g, b];
-    }
-
-    // Добавление цвета в историю
-    function addToHistory(hex) {
-        if (!colorHistoryArray.includes(hex)) {
-            colorHistoryArray.unshift(hex);
-            if (colorHistoryArray.length > 20) {
-                colorHistoryArray.pop();
+    // Инициализация colorPicker
+    const colorPicker = new iro.ColorPicker("#colorPicker", {
+        width: 280,
+        color: "#ff0000",
+        borderWidth: 2,
+        borderColor: "#fff",
+        padding: 15,
+        layout: [
+            {
+                component: iro.ui.Wheel,
+                options: {
+                    wheelLightness: true,
+                    wheelAngle: 0,
+                    wheelDirection: 'anticlockwise'
+                }
             }
-            localStorage.setItem('colorHistory', JSON.stringify(colorHistoryArray));
-            updateHistoryDisplay();
+        ]
+    });
+
+    // Получаем элементы для отображения информации о цвете
+    const rgbCode = document.getElementById('rgbCode');
+    const hexCode = document.getElementById('hexCode');
+    const hslCode = document.getElementById('hslCode');
+    const preview = document.querySelector('.color-preview');
+
+    // Создаем элемент для отображения RGB при наведении
+    const hoverDisplay = document.createElement('div');
+    hoverDisplay.className = 'color-hover-display';
+    document.querySelector('.color-picker-wrapper').appendChild(hoverDisplay);
+
+    // Функция обновления отображения цвета
+    function updateColorDisplay(color) {
+        // Проверяем, что все элементы существуют
+        if (!rgbCode || !hexCode || !hslCode || !preview) {
+            console.error('Не найдены необходимые элементы для отображения цвета');
+            return;
         }
+
+        // Обновляем значения кодов
+        rgbCode.textContent = `${Math.round(color.rgb.r)}, ${Math.round(color.rgb.g)}, ${Math.round(color.rgb.b)}`;
+        hexCode.textContent = color.hexString.toUpperCase();
+        hslCode.textContent = `${Math.round(color.hsl.h)}°, ${Math.round(color.hsl.s * 100)}%, ${Math.round(color.hsl.l * 100)}%`;
+        
+        // Обновляем цвет превью
+        preview.style.backgroundColor = color.hexString;
     }
 
-    // Обновление отображения истории
-    function updateHistoryDisplay() {
-        colorHistory.innerHTML = '';
-        colorHistoryArray.forEach(hex => {
-            const historyItem = document.createElement('div');
-            historyItem.className = 'history-item';
-            historyItem.style.backgroundColor = hex;
-            historyItem.setAttribute('data-color', hex);
-            historyItem.title = hex;
+    // Обработчик изменения цвета
+    colorPicker.on(['color:init', 'color:change'], function(color) {
+        updateColorDisplay(color);
+    });
+
+    // Обработчик наведения на цветовой круг
+    const wheelElement = document.querySelector('.IroWheel');
+    if (wheelElement) {
+        wheelElement.addEventListener('mousemove', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
             
-            historyItem.addEventListener('click', () => {
-                const [r, g, b] = hexToRgb(hex);
-                redInput.value = r;
-                greenInput.value = g;
-                blueInput.value = b;
-                updateColorDisplay(r, g, b);
-            });
+            const radius = rect.width / 2;
+            const centerX = radius;
+            const centerY = radius;
             
-            colorHistory.appendChild(historyItem);
+            const dx = x - centerX;
+            const dy = y - centerY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance <= radius) {
+                const angle = Math.atan2(dy, dx);
+                const hue = ((angle * 180 / Math.PI) + 360) % 360;
+                const saturation = (distance / radius) * 100;
+                
+                // Получаем цвет из точки наведения
+                const color = colorPicker.color;
+                const hsv = { h: hue, s: saturation, v: color.value };
+                
+                // Отображаем RGB значения
+                hoverDisplay.style.display = 'block';
+                hoverDisplay.style.left = (e.pageX + 10) + 'px';
+                hoverDisplay.style.top = (e.pageY + 10) + 'px';
+                
+                // Создаем временный цвет для отображения
+                const tempColor = new iro.Color({h: hsv.h, s: hsv.s, v: hsv.v});
+                hoverDisplay.textContent = `${Math.round(tempColor.rgb.r)}, ${Math.round(tempColor.rgb.g)}, ${Math.round(tempColor.rgb.b)}`;
+            } else {
+                hoverDisplay.style.display = 'none';
+            }
+        });
+
+        // Скрываем display при уходе с круга
+        wheelElement.addEventListener('mouseleave', function() {
+            hoverDisplay.style.display = 'none';
         });
     }
 
-    // Обработчики событий для RGB инпутов
-    [redInput, greenInput, blueInput].forEach(input => {
-        input.addEventListener('input', () => {
-            let r = Math.min(255, Math.max(0, parseInt(redInput.value) || 0));
-            let g = Math.min(255, Math.max(0, parseInt(greenInput.value) || 0));
-            let b = Math.min(255, Math.max(0, parseInt(blueInput.value) || 0));
-            
-            redInput.value = r;
-            greenInput.value = g;
-            blueInput.value = b;
-            
-            updateColorDisplay(r, g, b);
+    // Поддержка тёмной темы
+    function updateColorPickerTheme() {
+        const isDark = document.documentElement.classList.contains('dark');
+        colorPicker.setOptions({
+            borderColor: isDark ? '#374151' : '#fff',
+        });
+    }
+
+    // Отслеживаем изменение темы
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.attributeName === 'class') {
+                updateColorPickerTheme();
+            }
         });
     });
 
-    // Обработчик события для HEX инпута
-    hexInput.addEventListener('input', (e) => {
-        let hex = e.target.value;
-        if (hex.length === 7 && /^#[0-9A-Fa-f]{6}$/.test(hex)) {
-            const [r, g, b] = hexToRgb(hex);
-            redInput.value = r;
-            greenInput.value = g;
-            blueInput.value = b;
-            updateColorDisplay(r, g, b);
-        }
+    observer.observe(document.documentElement, {
+        attributes: true
     });
 
-    // Инициализация истории
-    updateHistoryDisplay();
+    // Начальная настройка темы
+    updateColorPickerTheme();
+
+    // Инициализация с начальным цветом
+    updateColorDisplay(colorPicker.color);
 });

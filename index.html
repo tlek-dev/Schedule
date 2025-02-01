@@ -6,10 +6,12 @@
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
     <title>График работы</title>
+    
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Remix Icons -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- AOS Animation Library -->
@@ -43,12 +45,22 @@
     <link rel="stylesheet" href="nasa-styles.css">
     <link rel="stylesheet" href="color-styles.css">
     <link rel="stylesheet" href="crypto-styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/progressbar.js@1.1.0/dist/progressbar.min.js"></script>
     <style>
         :root {
             zoom: 0.75;
             -moz-transform: scale(0.75);
             -moz-transform-origin: 0 0;
+        }
+        
+        .color-hover-display {
+            position: absolute;
+            background-color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            display: none;
+            z-index: 1;
         }
     </style>
 </head>
@@ -502,52 +514,36 @@
         <div id="colors-widget" class="widget">
             <div class="widget-header">
                 <i class="ri-palette-2-fill"></i>
-                <span>Конвертер цветов</span>
+                <span>Выбор цвета</span>
             </div>
-            <div class="color-converter">
-                <div class="converter-container">
-                    <div class="color-preview">
-                        <div id="colorDisplay" class="color-display"></div>
-                        <div class="color-values">
-                            <div class="color-value-item">
+            <div class="color-picker-container">
+                <div class="color-picker-wrapper">
+                    <div id="colorPicker" class="color-wheel"></div>
+                    <div class="color-codes">
+                        <div class="color-code-item">
+                            <span class="color-code-label">
                                 <i class="ri-brush-3-fill"></i>
-                                <span id="rgbValue">RGB: 255, 255, 255</span>
-                            </div>
-                            <div class="color-value-item">
-                                <i class="ri-code-box-fill"></i>
-                                <span id="hexValue">HEX: #FFFFFF</span>
-                            </div>
+                                RGB
+                            </span>
+                            <span id="rgbCode" class="color-code-value">255, 0, 0</span>
                         </div>
-                    </div>
-                    <div class="color-inputs">
-                        <div class="input-group">
-                            <label><i class="ri-red-packet-fill"></i> R (0-255)</label>
-                            <input type="number" id="redInput" min="0" max="255" value="255">
+                        <div class="color-code-item">
+                            <span class="color-code-label">
+                                <i class="ri-hashtag"></i>
+                                HEX
+                            </span>
+                            <span id="hexCode" class="color-code-value">#FF0000</span>
                         </div>
-                        <div class="input-group">
-                            <label><i class="ri-leaf-fill"></i> G (0-255)</label>
-                            <input type="number" id="greenInput" min="0" max="255" value="255">
+                        <div class="color-code-item">
+                            <span class="color-code-label">
+                                <i class="ri-contrast-2-line"></i>
+                                HSL
+                            </span>
+                            <span id="hslCode" class="color-code-value">0°, 100%, 50%</span>
                         </div>
-                        <div class="input-group">
-                            <label><i class="ri-water-flash-fill"></i> B (0-255)</label>
-                            <input type="number" id="blueInput" min="0" max="255" value="255">
+                        <div class="color-preview-container">
+                            <div class="color-preview" style="background-color: #FF0000;"></div>
                         </div>
-                        <div class="input-group">
-                            <label><i class="ri-code-box-fill"></i> HEX</label>
-                            <div class="hex-input-container">
-                                <input type="text" id="hexInput" value="#FFFFFF" maxlength="7" placeholder="#000000">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="color-history">
-                        <div class="history-header">
-                            <h3><i class="ri-history-fill"></i> История</h3>
-                            <button id="clearHistory" class="clear-history-btn">
-                                <i class="ri-delete-bin-7-fill"></i>
-                                Очистить
-                            </button>
-                        </div>
-                        <div id="colorHistory" class="history-grid"></div>
                     </div>
                 </div>
             </div>
@@ -580,9 +576,17 @@
             <i class="ri-calendar-line"></i>
             <span>Календарь</span>
         </div>
-        <!-- <div class="nav-tab" onclick="showWidget('weather')">
-            <i class="ri-cloud-line"></i>
-            <span>Погода</span>
+        <!-- <div class="nav-tab" onclick="showWidget('calculator')">
+            <i class="ri-calculator-line"></i>
+            <span>Калькулятор</span>
+        </div>
+        <div class="nav-tab" onclick="showWidget('chat')">
+            <i class="ri-message-3-line"></i>
+            <span>Чат</span>
+        </div>
+        <div class="nav-tab" onclick="showWidget('shift-schedule')">
+            <i class="ri-time-line"></i>
+            <span>График смен</span>
         </div>
         <div class="nav-tab" onclick="showWidget('nasa')">
             <i class="ri-space-ship-line"></i>
@@ -603,6 +607,7 @@
     <script src="countries.js"></script>
     <script src="nasa.js"></script>
     <script src="crypto.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
     <script src="colors.js"></script>
 </body>
 </html>
