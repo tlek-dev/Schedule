@@ -45,6 +45,7 @@
     <link rel="stylesheet" href="nasa-styles.css">
     <link rel="stylesheet" href="color-styles.css">
     <link rel="stylesheet" href="crypto-styles.css">
+    <link rel="stylesheet" href="dip-calculator-styles.css">
     <style>
         :root {
             zoom: 0.75;
@@ -549,6 +550,46 @@
             </div>
         </div>
 
+        <!-- DMX DIP Calculator Widget -->
+        <div id="dip-widget" class="widget">
+            <div class="widget-header">
+                <i class="ri-switch-line"></i>
+                <span>DMX DIP Calculator</span>
+            </div>
+            <div class="dip-calculator-container">
+                <div class="dip-input-section">
+                    <div class="dmx-address-input">
+                        <label for="dmxAddress">DMX Address (1-512):</label>
+                        <input type="number" id="dmxAddress" min="1" max="512" value="1">
+                    </div>
+                    <button id="calculateDip" class="calculate-btn">Calculate</button>
+                </div>
+                <div class="dip-switches">
+                    <div class="switch-container">
+                        <div class="switch-labels">
+                            <span>1</span>
+                            <span>2</span>
+                            <span>3</span>
+                            <span>4</span>
+                            <span>5</span>
+                            <span>6</span>
+                            <span>7</span>
+                            <span>8</span>
+                            <span>9</span>
+                            <span>10</span>
+                        </div>
+                        <div class="switches" id="dipSwitches">
+                            <!-- Switches will be added by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                <div class="binary-display">
+                    <span>Binary: </span>
+                    <span id="binaryValue">000000000</span>
+                </div>
+            </div>
+        </div>
+
         <!-- Country Modal -->
         <div id="countryModal" class="country-modal">
             <div class="modal-content">
@@ -596,9 +637,14 @@
             <i class="ri-palette-line"></i>
             <span>Цвета</span>
         </div>
+        <div class="nav-tab" onclick="showWidget('dip')">
+            <i class="ri-switch-line"></i>
+            <span>Dip</span>
+        </div>
     </nav>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="dip-calculator.js"></script>
     <script src="scripts.js"></script>
     <script src="welcome-modal.js"></script>
     <script src="schedule.js"></script>
