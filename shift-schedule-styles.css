@@ -108,3 +108,132 @@
 .dark-theme #shift-schedule-widget .widget-header span {
     color: #f1f5f9;
 }
+
+/* Стили для виджета активных смен */
+.active-shifts {
+    padding: 10px;
+    background: #ffffff;
+    border-radius: 8px;
+    margin: 8px 0;
+}
+
+.active-shift-item {
+    background: #f8fafc;
+    border-radius: 6px;
+    padding: 8px;
+    margin-bottom: 6px;
+    border: 1px solid #e2e8f0;
+}
+
+.active-shift-item:last-child {
+    margin-bottom: 0;
+}
+
+.active-shift-item.current-shift {
+    border: 1px solid #1abc9c;
+    background: rgba(26, 188, 156, 0.1);
+}
+
+.active-shift-item.completed-shift .shift-progress::-webkit-progress-value {
+    background: #64748b;
+}
+
+.active-shift-item.completed-shift .shift-progress::-moz-progress-bar {
+    background: #64748b;
+}
+
+.active-shift-time {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 6px;
+}
+
+.progress-container {
+    position: relative;
+    margin: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.shift-progress {
+    flex-grow: 1;
+    height: 6px;
+    border-radius: 3px;
+    border: none;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.shift-progress::-webkit-progress-bar {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+}
+
+.shift-progress::-webkit-progress-value {
+    background: #1abc9c;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.shift-progress::-moz-progress-bar {
+    background: #1abc9c;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.progress-percent {
+    font-size: 11px;
+    color: #64748b;
+    min-width: 35px;
+    text-align: right;
+}
+
+.active-shift-info {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+/* Для темной темы */
+[data-theme="dark"] .shift-progress {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .shift-progress::-webkit-progress-bar {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .active-shift-item.current-shift {
+    border: 1px solid #1abc9c;
+    background: rgba(26, 188, 156, 0.15);
+}
+
+[data-theme="dark"] .active-shifts {
+    background: #1e293b;
+}
+
+[data-theme="dark"] .active-shift-item {
+    background: #0f172a;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .active-shift-time {
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] .progress-percent {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .active-shift-info {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .active-shift-item.completed-shift .shift-progress::-webkit-progress-value {
+    background: #94a3b8;
+}
+
+[data-theme="dark"] .active-shift-item.completed-shift .shift-progress::-moz-progress-bar {
+    background: #94a3b8;
+}

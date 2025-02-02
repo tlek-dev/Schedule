@@ -975,9 +975,6 @@ function updateShiftProgress() {
         const endHour = shift.end % 24 || 24;
 
         shiftInfo.textContent = `До конца смены: ${remainingHours}ч ${remainingMinutes}мин`;
-      } else if (adjustedCurrentTime < shift.start) {
-        const startHour = shift.start % 24;
-        shiftInfo.textContent = `Смена начнется в ${String(startHour).padStart(2, '0')}:00`;
       } else {
         shiftInfo.textContent = 'Смена закончилась';
       }
@@ -1147,121 +1144,110 @@ document.addEventListener('click', function(event) {
 });
 
 function updateHomeActiveShifts() {
-  const now = new Date();
-  const hours = now.getHours();
-  const minutes = now.getMinutes();
-  const currentTime = hours + minutes / 60;
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const currentTime = hours + minutes / 60;
 
-  const shifts = [
-    { id: 1, start: 6, end: 18 },
-    { id: 2, start: 9, end: 21 },
-    { id: 3, start: 10, end: 22 },
-    { id: 4, start: 14, end: 26 }
-  ];
+    const shifts = [
+        { id: 1, start: 6, end: 18, name: '06:00-18:00' },
+        { id: 2, start: 9, end: 21, name: '09:00-21:00' },
+        { id: 3, start: 10, end: 22, name: '10:00-22:00' },
+        { id: 4, start: 14, end: 26, name: '14:00-02:00' }
+    ];
 
-  const isWorkingDay = isShiftDay(now);
-  const activeShiftsContainer = document.getElementById('home-active-shifts');
+    const isWorkingDay = isShiftDay(now);
+    const activeShiftsContainer = document.getElementById('home-active-shifts');
 
-  if (!activeShiftsContainer) {
-    console.error('Контейнер для активных смен не найден!');
-    return;
-  }
-
-  // Очищаем контейнер
-  while (activeShiftsContainer.firstChild) {
-    activeShiftsContainer.removeChild(activeShiftsContainer.firstChild);
-  }
-
-  if (!isWorkingDay) {
-    const dayOffEl = document.createElement('div');
-    dayOffEl.className = 'active-shift-item';
-    dayOffEl.textContent = 'Сегодня выходной';
-    activeShiftsContainer.appendChild(dayOffEl);
-    return;
-  }
-
-  let hasActiveShifts = false;
-
-  shifts.forEach(shift => {
-    let adjustedCurrentTime = currentTime;
-    if (shift.end > 24 && currentTime < (shift.end - 24)) {
-      adjustedCurrentTime += 24;
+    if (!activeShiftsContainer) {
+        console.error('Контейнер для активных смен не найден!');
+        return;
     }
 
-    const isShiftTime = adjustedCurrentTime >= shift.start && adjustedCurrentTime < shift.end;
-    
-    if (isShiftTime) {
-      hasActiveShifts = true;
-      const progress = (adjustedCurrentTime - shift.start) / (shift.end - shift.start);
-      const remainingHours = Math.floor(shift.end - adjustedCurrentTime);
-      const remainingMinutes = Math.floor(((shift.end - adjustedCurrentTime) % 1) * 60);
+    // Очищаем контейнер
+    activeShiftsContainer.innerHTML = '';
 
-      const startHour = shift.start % 24;
-      const endHour = shift.end % 24 || 24;
+    if (!isWorkingDay) {
+        const dayOffEl = document.createElement('div');
+        dayOffEl.className = 'active-shift-item';
+        dayOffEl.textContent = 'Сегодня выходной';
+        activeShiftsContainer.appendChild(dayOffEl);
+        return;
+    }
 
-      const shiftEl = document.createElement('div');
-      shiftEl.className = 'active-shift-item';
-
-      // Создаем элементы для времени смены
-      const timeEl = document.createElement('div');
-      timeEl.className = 'active-shift-time';
-      timeEl.textContent = `${String(startHour).padStart(2, '0')}:00 - ${String(endHour).padStart(2, '0')}:00`;
-      shiftEl.appendChild(timeEl);
-
-      // Создаем контейнер для прогресс-бара
-      const progressEl = document.createElement('div');
-      progressEl.className = 'active-shift-progress';
-      progressEl.id = `home-shift-progress-${shift.id}`;
-      shiftEl.appendChild(progressEl);
-
-      // Создаем элемент для информации о времени
-      const infoEl = document.createElement('div');
-      infoEl.className = 'active-shift-info';
-      infoEl.textContent = `До конца смены: ${remainingHours}ч ${remainingMinutes}мин`;
-      shiftEl.appendChild(infoEl);
-
-      activeShiftsContainer.appendChild(shiftEl);
-
-      // Создаем прогресс бар
-      new ProgressBar.Line(`#home-shift-progress-${shift.id}`, {
-        color: '#1abc9c',
-        strokeWidth: 1,
-        trailWidth: 0.2,
-        duration: 1400,
-        text: {
-          value: Math.round(progress * 100) + '%',
-          style: {
-            position: 'absolute',
-            right: '-30px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            padding: 0,
-            margin: 0,
-            fontSize: '9px',
-            fontWeight: '400',
-            color: 'var(--text-secondary)',
-            minWidth: '25px'
-          }
+    shifts.forEach(shift => {
+        let adjustedCurrentTime = currentTime;
+        if (shift.end > 24 && currentTime < (shift.end - 24)) {
+            adjustedCurrentTime += 24;
         }
-      }).animate(progress);
-    }
-  });
 
-  if (!hasActiveShifts) {
-    const noShiftsEl = document.createElement('div');
-    noShiftsEl.className = 'active-shift-item';
-    noShiftsEl.textContent = 'Сейчас нет активных смен';
-    activeShiftsContainer.appendChild(noShiftsEl);
-  }
+        const isShiftTime = adjustedCurrentTime >= shift.start && adjustedCurrentTime < shift.end;
+        const isShiftCompleted = adjustedCurrentTime >= shift.end;
+        let progress = 0;
+        
+        if (isShiftTime) {
+            progress = ((adjustedCurrentTime - shift.start) / (shift.end - shift.start)) * 100;
+        } else if (isShiftCompleted) {
+            progress = 100;
+        }
+
+        const shiftEl = document.createElement('div');
+        shiftEl.className = 'active-shift-item';
+        if (isShiftTime) {
+            shiftEl.classList.add('current-shift');
+        } else if (isShiftCompleted) {
+            shiftEl.classList.add('completed-shift');
+        }
+
+        // Создаем элементы для времени смены
+        const timeEl = document.createElement('div');
+        timeEl.className = 'active-shift-time';
+        timeEl.textContent = shift.name;
+        shiftEl.appendChild(timeEl);
+
+        // Создаем контейнер для прогресс-бара
+        const progressContainer = document.createElement('div');
+        progressContainer.className = 'progress-container';
+
+        // Создаем HTML5 progress элемент
+        const progressEl = document.createElement('progress');
+        progressEl.className = 'shift-progress';
+        progressEl.value = progress;
+        progressEl.max = 100;
+        
+        // Добавляем процент выполнения
+        const percentEl = document.createElement('span');
+        percentEl.className = 'progress-percent';
+        percentEl.textContent = Math.round(progress) + '%';
+        
+        progressContainer.appendChild(progressEl);
+        progressContainer.appendChild(percentEl);
+        shiftEl.appendChild(progressContainer);
+
+        // Создаем элемент для информации о времени
+        const infoEl = document.createElement('div');
+        infoEl.className = 'active-shift-info';
+        
+        if (isShiftTime) {
+            const remainingHours = Math.floor(shift.end - adjustedCurrentTime);
+            const remainingMinutes = Math.floor(((shift.end - adjustedCurrentTime) % 1) * 60);
+            infoEl.textContent = `До конца: ${remainingHours}ч ${remainingMinutes}мин`;
+        } else if (isShiftCompleted) {
+            infoEl.textContent = 'Смена завершена';
+        } else {
+            infoEl.textContent = 'Не активна';
+        }
+        shiftEl.appendChild(infoEl);
+
+        activeShiftsContainer.appendChild(shiftEl);
+    });
 }
-
-// Обновляем при загрузке страницы
-document.addEventListener('DOMContentLoaded', () => {
-  updateHomeActiveShifts();
-});
 
 // Обновляем каждую минуту
 setInterval(updateHomeActiveShifts, 60000);
+
+// Запускаем сразу при загрузке
+document.addEventListener('DOMContentLoaded', updateHomeActiveShifts);
 
 document.addEventListener('DOMContentLoaded', function() {
   const container = document.querySelector('.widget-container');
